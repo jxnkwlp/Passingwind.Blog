@@ -1,0 +1,50 @@
+﻿body {
+  font-family: 'Segoe UI', 'Microsoft YaHei', Tahoma, Arial, Helvetica, sans-serif;
+  padding-top: 60px;
+}
+.page-header {
+  margin-top: 20px;
+}
+.table-toolbar {
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.table-toolbar .table-toolbar-item {
+  float: left;
+}
+.table-toolbar .table-toolbar-item + .table-toolbar-item {
+  margin-left: 10px;
+}
+.table-item-list .item-checkbox {
+  width: 30px;
+  text-align: center;
+}
+.table-item-list .item-author {
+  text-align: center;
+}
+.table-item-list .item-comments {
+  text-align: center;
+}
+.table-item-list .item-state {
+  text-align: center;
+}
+.table-item-list .item-date {
+  text-align: center;
+}
+.table-item-list .item-order {
+  text-align: center;
+}
+.table-item-list .item-center {
+  text-align: center;
+}
+.table-item-list .item-avatar {
+  padding: 5px;
+  width: 50px;
+}
+.post-category-list {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.dashboard {
+  padding: 50px 0;
+}
