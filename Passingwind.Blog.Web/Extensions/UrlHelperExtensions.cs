@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Passingwind.Blog.Web;
 using Passingwind.Blog.Web.Controllers;
 
 namespace Microsoft.AspNetCore.Mvc
@@ -24,6 +21,16 @@ namespace Microsoft.AspNetCore.Mvc
                 controller: "Account",
                 values: new { userId, code },
                 protocol: scheme);
+        }
+
+        public static string PostCommentLink(this IUrlHelper urlHelper, string slug, string scheme, string host, string fragment)
+        {
+            return urlHelper.RouteUrl(
+                routeName: RouteNames.Post,
+                values: new { slug },
+                protocol: scheme,
+                host: host,
+                fragment: fragment);
         }
     }
 }

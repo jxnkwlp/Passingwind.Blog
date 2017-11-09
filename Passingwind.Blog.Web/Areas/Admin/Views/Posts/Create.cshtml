@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "Post Create";
+}
+@model PostViewModel
+
+
+
+<div class="page-header">
+    <h1>Post Create</h1>
+</div>
+
+<form asp-action="create">
+
+    @Html.Partial("_CreateOrEdit")
+
+</form>
+
+@section head{
+    <link href="~/lib/select2/dist/css/select2.css" rel="stylesheet" />
+    <link href="~/lib/select2-bootstrap-theme/dist/select2-bootstrap.css" rel="stylesheet" />
+    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+}
+
+@section scripts{
+<script src="https://cdn.bootcss.com/moment.js/2.18.1/moment.min.js"></script> 
+
+    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script> 
+    <script src="~/lib/select2/dist/js/select2.js"></script>
+    <script>
+        $(function (e) { 
+            var allTags = @(Json.Serialize(Model.AllTags));
+            $.fn.select2.defaults.set("theme", "bootstrap");
+            $("#@(Html.IdFor(t => t.SelectTags))").select2({
+                tags: true,
+                data: allTags
+            });
+             
+       //     $('#PublishedTime').datetimepicker( );
+        })
+    </script>
+
+    @Html.Partial("_Editor", new Tuple<string, string>("Content", Model.Content))
+
+}

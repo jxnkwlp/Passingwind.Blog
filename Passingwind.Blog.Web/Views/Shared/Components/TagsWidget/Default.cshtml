@@ -1,0 +1,20 @@
+﻿@{
+    var max = Model.Max(t => (int?)t.Count);
+}
+@model IList<TagsViewModel>
+
+
+<aside class="widget">
+    <h2 class="widget-title">Tags</h2>
+    <div class="tagcloud">
+        @foreach (var item in Model)
+        {
+            var ft = 14.0;
+
+            <text>
+            <a asp-route="tags" asp-route-name="@item.Name" class="tag-link" title="@item.Count topics" style="font-size: 16px;">@item.Name </a>
+            </text>
+        }
+
+    </div>
+</aside>

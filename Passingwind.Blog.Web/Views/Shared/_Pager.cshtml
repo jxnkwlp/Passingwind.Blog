@@ -1,0 +1,9 @@
+﻿
+@{
+    var pageMeta = ViewData["pageMeta"] as IPagedList<PostViewModel>;
+}
+
+@if (pageMeta != null)
+{
+    @Html.Pager(pageMeta).PagerClass("paging-wrap").ShowLast(false).ShowNext(false).PagerDisplayAuto(true).ShowPreviousMore(true).ShowNextMore(true)
+}

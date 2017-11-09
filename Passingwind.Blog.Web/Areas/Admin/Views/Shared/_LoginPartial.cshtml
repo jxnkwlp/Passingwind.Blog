@@ -1,0 +1,16 @@
+﻿@inject SignInManager SignInManager
+@inject UserManager UserManager
+
+
+<ul class="nav navbar-nav navbar-right">
+    <li>
+        <a href="#." class="dropdown-toggle" data-toggle="dropdown"> Hello, @UserManager.GetUserName(User)! <span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+            <li><a asp-route="home" target="_blank">View Site</a></li>
+            <li><a asp-controller="Users" asp-action="profile">My profile</a></li>
+            <li class="divider"></li>
+            <li><a asp-area="" asp-controller="account" asp-action="changepassword">Change Password</a></li>
+            <li><a asp-route="@(RouteNames.Logout)">Log Out</a></li>
+        </ul>
+    </li>
+</ul>

@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "Comment List";
+}
+@model IPagedList<CommentViewModel>
+
+<div class="page-header">
+    <h1>Comment List</h1>
+</div>
+
+<form asp-action="list">
+
+    <div class="table-toolbar clearfix row">
+        <div class="col-md-9">
+            <div class="btn-group btn-group-sm">
+                <button type="submit" class="btn btn-danger" asp-action="Deletes">Delete</button>
+                <button type="submit" class="btn btn-warning" asp-action="UnApproves">UnApprove</button>
+                <button type="submit" class="btn btn-success" asp-action="Approves">Approve</button>
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
+
+    <table class="table table-bordered table-striped table-item-list">
+        <thead>
+            <tr>
+                <th class="item-checkbox"><input type="checkbox" /></th>
+                <th class="item-title" colspan="2">Content </th>
+                <th class="item-date">Create on </th>
+                <th class="item-author">Author </th>
+                <th class="item-author">Email </th>
+                <th class="item-state">IsApproved</th>
+                <th class="item-state">IsSpam</th>
+
+            </tr>
+        </thead>
+
+        @if (Model.Count == 0)
+        {
+            <text>
+            <tr>
+                <td colspan="10" class="text-center">Empty</td>
+            </tr>
+            </text>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <text>
+                <tr>
+                    <td class="item-checkbox"><input type="checkbox" name="itemId" value="@item.Id" /></td>
+                    <td class="item-avatar">
+                        <img src="@(AvatarHelper.GetSrc(item.Email))" alt="@item.Author" title="@item.Author" style="width:40px;height:40px;" />
+                    </td>
+                    <td class="item-title">
+                        <a asp-action="details" asp-route-id="@item.Id">@item.Content</a>
+                    </td>
+                    <td class="item-date">@item.CreationTime</td>
+                    <td class="item-author">@item.Author</td>
+                    <td class="item-author">@item.Email</td>
+                    <td class="item-state">@Html.DisplayFor(t=>item.IsApproved)</td>
+                    <td class="item-state">@Html.DisplayFor(t => item.IsSpam) </td>
+                </tr>
+                </text>
+            }
+        }
+
+    </table>
+
+</form>
+
+<div class="clearfix">
+    @Html.Pager(Model).ItemWrap("li").PagerWrap("ul").PagerClass("pagination pull-right")
+</div>

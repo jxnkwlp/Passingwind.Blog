@@ -1,0 +1,99 @@
+﻿ 
+@model UserViewModel
+ 
+
+<div class="form-horizontal" role="form">
+    <div class="form-group">
+        <label class="col-sm-2 control-label" asp-for="UserName"></label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" placeholder="user name" asp-for="UserName">
+        </div>
+        <div class="col-sm-3">
+            <span asp-validation-for="UserName" class="help-block text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label" asp-for="Email"></label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" placeholder="email" asp-for="Email">
+        </div>
+        <div class="col-sm-3">
+            <span asp-validation-for="Email" class="help-block text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" asp-for="DisplayName"></label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" asp-for="DisplayName">
+        </div>
+        <div class="col-sm-3">
+            <span asp-validation-for="DisplayName" class="help-block text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" asp-for="PhoneNumber"></label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" asp-for="PhoneNumber">
+        </div>
+        <div class="col-sm-3">
+            <span asp-validation-for="PhoneNumber" class="help-block text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label" asp-for="UserDescription"></label>
+        <div class="col-sm-4">
+            <textarea class="form-control" asp-for="UserDescription"></textarea>
+        </div>
+        <div class="col-sm-3">
+            <span asp-validation-for="UserDescription" class="help-block text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label" asp-for="Lockouted"></label>
+        <div class="col-sm-4">
+            <div class="checkbox">
+                <label>
+                    <input asp-for="Lockouted" />
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <span asp-validation-for="UserDescription" class="help-block text-danger"></span>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label" asp-for="SelectRoles"></label>
+        <div class="col-sm-4">
+
+            @foreach (var item in Model.Roles)
+            {
+                <div class="checkbox">
+                    @if (Model.SelectRoles.Contains(item.Name))
+                    {
+                        <label><input type="checkbox" name="SelectRoles" value="@item.Name" checked="checked" /> @item.Name</label>
+                    }
+                    else
+                    {
+                        <label><input type="checkbox" name="SelectRoles" value="@item.Name" /> @item.Name</label>
+                    }
+
+                </div>
+            }
+
+        </div>
+        <div class="col-sm-3">
+            <span asp-validation-for="UserDescription" class="help-block text-danger"></span>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+    </div>
+</div>

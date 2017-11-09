@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Tools ";
+}
+
+<style>
+    .btn-fileupload {
+        position: relative;
+    }
+
+        .btn-fileupload input[type=file] {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+</style>
+
+<div class="page-header">
+    <h1>Tools </h1>
+</div>
+
+<div class="form-group">
+    <p>使用 BlogML 文件导入</p>
+    <div>
+        <form asp-action="Import" enctype="multipart/form-data">
+             
+            <a class="btn btn-default btn-fileupload">导入<input type="file" name="file" onchange="form.submit();" /></a>
+
+        </form>
+    </div>
+</div>
+
+<div class="form-group">
+    <p>导出成 XML 文件 (BlogML)</p>
+
+    <div>
+        <form asp-route="">
+            <button type="submit" class="btn btn-default" asp-action="Export">导出</button>
+        </form>
+    </div>
+</div>
+
+@*<div class="form-group">
+        <p>权限</p>
+
+        <div>
+
+            <div class="alert alert-info"></div>
+
+        </div>
+    </div>*@

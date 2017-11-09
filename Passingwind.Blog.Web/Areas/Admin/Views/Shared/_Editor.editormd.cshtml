@@ -1,0 +1,21 @@
+﻿
+@model Tuple<string, string>
+
+ <script>
+        $(function () {
+            var editor = editormd('@Model.Item1'+'-editor', {
+                path: "/lib/editor.md/lib/",
+                height: '500px',
+                //autoHeight:true,
+                placeholder: '',
+                emoji: false,
+                watch: false,
+                imageUpload: true,
+                imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL: "@Url.Action("upload", "file", new { editor = "editormd" })",
+                saveHTMLToTextarea: false
+
+            });
+
+        });
+</script>

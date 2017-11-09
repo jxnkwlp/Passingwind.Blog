@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Role Edit";
+}
+
+@model RoleViewModel
+
+
+
+<div class="page-header">
+    <h1>Role Edit</h1>
+</div>
+
+<form  asp-action="edit">
+
+    @Html.Partial("_CreateOrEdit")
+
+</form>

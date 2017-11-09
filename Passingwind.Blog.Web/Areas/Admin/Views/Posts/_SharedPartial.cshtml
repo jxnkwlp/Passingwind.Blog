@@ -1,0 +1,25 @@
+@model PostViewModel
+
+@section head{
+    <link href="~/lib/select2/dist/css/select2.css" rel="stylesheet" />
+    <link href="~/lib/select2-bootstrap-theme/dist/select2-bootstrap.css" rel="stylesheet" />
+}
+
+@section scripts{
+    <script src="~/lib/select2/dist/js/select2.js"></script>
+    <script>
+        $(function (e) {
+
+            var allTags = @(Json.Serialize(Model.AllTags));
+            $.fn.select2.defaults.set("theme", "bootstrap");
+            $("#@(Html.IdFor(t => t.SelectTags))").select2({
+                tags: true,
+                data: allTags
+            });
+
+        })
+    </script>
+
+    @Html.Partial("_Editor", new Tuple<string, string>("Content", Model.Content))
+
+}

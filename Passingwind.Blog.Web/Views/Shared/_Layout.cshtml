@@ -1,72 +1,198 @@
-﻿<!DOCTYPE html>
+﻿@inject BasicSettings basicSettings
+@inject AdvancedSettings advancedSettings
+@inject UserManager userManager
+@inject SignInManager signInManager
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Passingwind.Blog.Web</title>
+    <link rel="shortcut icon" href="~/favicon.ico" />
+    <title>@ViewData["Title"]</title>
+    <meta name="keywords" content="@ViewData["KeyWorlds"]" />
+    <meta name="description" content="@ViewData["Description"]" />
 
-    <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
+    <!-- archive  -->
+    <link rel="contents" title="Archive" href="~/archive" />
+    <!-- rsd  -->
+    <link type="application/rsd+xml" rel="edituri" title="RSD" href="~/rsd.xml" />
+    <!-- opensearch  -->
+    <link rel="search" type="application/opensearchdescription+xml" href="~/opensearch.xml" title="@basicSettings.Title" />
+    <!-- syndication  -->
+    <link rel="alternate" type="application/atom+xml" title="@(basicSettings.Title) (ATOM)" href="~/syndication.xml?format=atom" />
+    <link rel="alternate" type="application/rss+xml" title="@(basicSettings.Title) (RSS)" href="~/syndication.xml" />
+
+    <!--
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Kreon:400,700" rel="stylesheet" />
+     -->
+    <environment names="Development">
+        <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+        <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+
+    <!--  SyntaxHighlighter  -->
+    <link href="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/styles/shThemeDefault.min.css" rel="stylesheet">
+
+    <!--  customer head -->
+    @Html.Raw(advancedSettings.HeaderHtml)
+    @RenderSection("head", false)
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+
+    <div class="site-header-wrap">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Passingwind.Blog.Web</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+            <header class="site-header">
+                <div class="site-title">
+                    <h1 class="blog-title"><a asp-route="home">@basicSettings.Title </a></h1>
+                    <p class="blog-description">@basicSettings.Description </p>
+                </div>
+                <div class="social-links">
+                    <a href="https://github.com/jxnkwlp/" rel="external nofollow" target="_blank"><i class="fa fa-git"></i></a>
+                </div>
+                <a id="togglemenu" href="#togglemenu" class="header-navigation-toggle">Menu</a>
+
+            </header>
+
+            <nav id="main-navigation" class="main-navigation">
+                <ul>
+                    <li><a asp-route="home">Home</a></li>
+                    <li><a asp-route="archive">Archive</a></li>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                    <li><a href="~/admin/">Admin</a></li>
+                    <li><a asp-route="@(RouteNames.Logout)">Log Out</a></li>
+                    }
+                    else
+                    {
+                    <li><a asp-route="login">Login</a></li>
+                    }
                 </ul>
-                @await Html.PartialAsync("_LoginPartial")
-            </div>
+
+            </nav>
+
         </div>
-    </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2017 - Passingwind.Blog.Web</p>
-        </footer>
     </div>
 
-    <environment include="Development">
+
+    <div class="site-content clearfix">
+        <div class="container clearfix">
+            <div class="content-area">
+
+                <div class="site-main">
+
+                    @RenderBody()
+
+                </div>
+
+            </div>
+            <div class="widget-area">
+
+                <!--  page widget -->
+                @(await Component.InvokeAsync("PageListWidget"))
+
+                <!--  category widget -->
+                @(await Component.InvokeAsync("CategoryListWidget"))
+
+                <!--  tags widget -->
+                @(await Component.InvokeAsync("TagsWidget"))
+
+                <!--  search widget
+                @(await Component.InvokeAsync("SearchWidget"))-->
+                <!--  MonthList widget -->
+                @(await Component.InvokeAsync("MonthListWidget"))
+
+            </div>
+
+        </div>
+
+        <div class="container">
+
+            @Html.Partial("_Pager")
+
+        </div>
+    </div>
+
+    <div class="footer-wrap">
+        <div class="container">
+            <div class="site-info">
+
+                <div class="footer-copyright">
+                    <p>
+                        Copyright © @DateTime.Now.Year. Power by <a href="#">Passingwind</a>. <a href="#">@basicSettings.IcpNumber </a> <a asp-route="sitemap">sitemap</a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-pjax/jquery.pjax.js"></script>
+        <script src="~/js/site.js"></script>
     </environment>
-    <environment exclude="Development">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+    <environment names="Staging,Production">
+        <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+                asp-fallback-test="window.jQuery">
         </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
-        </script>
+        <script src="https://cdn.bootcss.com/jquery.pjax/2.0.1/jquery.pjax.min.js"
+                asp-fallback-src="~/lib/jquery-pjax/jquery.pjax.js"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
+
+    <!--  SyntaxHighlighter  -->
+    <script type="text/javascript" src="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shCore.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shAutoloader.js"></script>
+    <script>
+        var SyntaxHighlighter_Root = 'https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/';
+        SyntaxHighlighter.autoloader(
+            'applescript            ' + SyntaxHighlighter_Root + 'shBrushAppleScript.js',
+            'actionscript3 as3      ' + SyntaxHighlighter_Root + 'shBrushAS3.js',
+            'bash shell             ' + SyntaxHighlighter_Root + 'shBrushBash.js',
+            'coldfusion cf          ' + SyntaxHighlighter_Root + 'shBrushColdFusion.js',
+            'cpp c                  ' + SyntaxHighlighter_Root + 'shBrushCpp.js',
+            'c# c-sharp csharp      ' + SyntaxHighlighter_Root + 'shBrushCSharp.js',
+            'css                    ' + SyntaxHighlighter_Root + 'shBrushCss.js',
+            'delphi pascal          ' + SyntaxHighlighter_Root + 'shBrushDelphi.js',
+            'diff patch pas         ' + SyntaxHighlighter_Root + 'shBrushDiff.js',
+            'erl erlang             ' + SyntaxHighlighter_Root + 'shBrushErlang.js',
+            'groovy                 ' + SyntaxHighlighter_Root + 'shBrushGroovy.js',
+            'haxe                   ' + SyntaxHighlighter_Root + 'shBrushHaxe.js',
+            'java                   ' + SyntaxHighlighter_Root + 'shBrushJava.js',
+            'jfx javafx             ' + SyntaxHighlighter_Root + 'shBrushJavaFX.js',
+            'js jscript javascript  ' + SyntaxHighlighter_Root + 'shBrushJScript.js',
+            'perl pl                ' + SyntaxHighlighter_Root + 'shBrushPerl.js',
+            'php                    ' + SyntaxHighlighter_Root + 'shBrushPhp.js',
+            'text plain             ' + SyntaxHighlighter_Root + 'shBrushPlain.js',
+            'ps powershell          ' + SyntaxHighlighter_Root + 'shBrushPowerShell.js',
+            'py python              ' + SyntaxHighlighter_Root + 'shBrushPython.js',
+            'ruby rails ror rb      ' + SyntaxHighlighter_Root + 'shBrushRuby.js',
+            'sass scss              ' + SyntaxHighlighter_Root + 'shBrushSass.js',
+            'scala                  ' + SyntaxHighlighter_Root + 'shBrushScala.js',
+            'sql                    ' + SyntaxHighlighter_Root + 'shBrushSql.js',
+            'vb vbnet               ' + SyntaxHighlighter_Root + 'shBrushVb.js',
+            'xml xhtml xslt html    ' + SyntaxHighlighter_Root + 'shBrushXml.js'
+        );
+        SyntaxHighlighter.all();
+    </script>
+
     @RenderSection("Scripts", required: false)
+
+    <!--  customer footer -->
+    @Html.Raw(advancedSettings.FooterHtml)
 </body>
 </html>

@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Categoty Create";
+}
+@model CategoryViewModel
+
+
+
+<div class="page-header">
+    <h1>Categoty Create</h1>
+</div>
+
+<form asp-action="create">
+
+    @Html.Partial("_CreateOrEdit")
+
+</form>

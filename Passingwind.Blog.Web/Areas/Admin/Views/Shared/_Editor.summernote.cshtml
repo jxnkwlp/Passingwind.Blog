@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Error";
+
+    bool isMarkdHtml = string.IsNullOrEmpty(Model) ? true : (Model.Contains("<p>"));
+}
+@model string
+
+@if (isMarkdHtml)
+{
+    <environment names="Development,Staging,Production">
+        <link href="~/lib/editor.md/css/editormd.css" rel="stylesheet" />
+        <script src="~/lib/editor.md/editormd.js"></script>
+    </environment>
+
+    <text>
+    <script>
+        $(function () {
+            var editor = editormd("@Model", {
+                path: "/lib/editor.md/lib/",
+                height: '380px',
+                //autoHeight:true,
+                placeholder: '',
+                emoji: true,
+                watch: false,
+                imageUpload: true,
+                imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL: "./php/upload.php",
+                saveHTMLToTextarea: false
+
+            });
+
+        });
+    </script>
+    </text>
+}
+else
+{
+
+    <environment names="Development,Staging,Production">
+        <!-- include codemirror (codemirror.css, codemirror.js, xml.js, formatting.js) -->
+        <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/codemirror/3.20.0/codemirror.min.css">
+        <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/codemirror/3.20.0/theme/monokai.min.css">
+        <script type="text/javascript" src="//cdn.bootcss.com/codemirror/3.20.0/codemirror.min.js"></script>
+        <script type="text/javascript" src="//cdn.bootcss.com/codemirror/3.20.0/mode/xml/xml.min.js"></script>
+        <script type="text/javascript" src="//cdn.bootcss.com/codemirror/2.36.0/formatting.min.js"></script>
+        @*<link href="//cdn.bootcss.com/codemirror/5.22.0/codemirror.css" rel="stylesheet">
+            <link href="//cdn.bootcss.com/codemirror/5.22.0/theme/midnight.css" rel="stylesheet">
+            <script src="//cdn.bootcss.com/codemirror/5.22.0/codemirror.js"></script>
+            <script src="//cdn.bootcss.com/codemirror/5.22.0/mode/xml/xml.js"></script>*@
+
+        <link href="~/lib/summernote/summernote.css" rel="stylesheet" />
+        <script src="~/lib/summernote/summernote.js"></script>
+    </environment>
+
+    <text>
+    <script>
+        $(function (e) {
+            $('#@Model').find('textarea').remove('hide').summernote({
+                height: 380,
+                codemirror: { // codemirror options
+                    mode: 'text/html',
+                    htmlMode: true,
+                    lineNumbers: true,
+                    theme: 'monokai'
+                }
+            });
+        })
+    </script>
+    </text>
+}

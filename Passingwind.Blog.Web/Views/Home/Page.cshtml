@@ -1,0 +1,18 @@
+﻿@{
+}
+
+@model PageViewModel
+
+
+<div class="post-wrap page-single">
+    <article>
+        <header class="entry-header">
+            <h2 class="entry-title">@Model.Title</h2>
+        </header>
+        <div class="entry-summary">
+            @(Model.Content.ToHtmlString())
+        </div>
+
+    </article>
+
+</div>

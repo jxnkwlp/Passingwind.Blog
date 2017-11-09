@@ -1,3 +1,10 @@
 ﻿@{
-    Layout = "_Layout";
+    if (Context.Request.IsPJax())
+    {
+        Layout = null;
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
 }

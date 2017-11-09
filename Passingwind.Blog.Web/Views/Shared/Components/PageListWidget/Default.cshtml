@@ -1,0 +1,16 @@
+﻿@{
+}
+@model IList<PageViewModel>
+
+
+<aside class="widget">
+    <h2 class="widget-title">Page List </h2>
+    <ul class="widget-link-list">
+        @foreach (var item in Model)
+        {
+            <text>
+            <li><a asp-route="page" asp-route-slug="@item.Slug">@item.Title</a></li>
+        </text>
+        }
+    </ul>
+</aside>

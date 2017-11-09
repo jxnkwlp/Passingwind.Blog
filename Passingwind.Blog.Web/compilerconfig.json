@@ -1,6 +1,32 @@
-﻿[
+[
   {
-    "outputFile": "wwwroot/v20171106/css/site.css",
-    "inputFile": "wwwroot/v20171106/css/site.less"
+    "outputFile": "wwwroot/css/site.css",
+    "inputFile": "wwwroot/css/site.less",
+    "sourceMap": false
+  },
+  {
+    "outputFile": "wwwroot/css/account.css",
+    "inputFile": "wwwroot/css/account.less",
+    "sourceMap": false
+  },
+  {
+    "outputFile": "wwwroot/css/admin/site.css",
+    "inputFile": "wwwroot/css/admin/site.less",
+    "sourceMap": false
+  },
+  {
+    "outputFile": "wwwroot/css/admin/editor.css",
+    "inputFile": "wwwroot/css/admin/editor.less",
+    "sourceMap": false
+  },
+  {
+    "outputFile": "wwwroot/js/comments.min.js",
+    "inputFile": "wwwroot/js/comments.js",
+    "sourceMap": false
+  },
+  {
+    "outputFile": "wwwroot/js/admin/site.min.js",
+    "inputFile": "wwwroot/js/admin/site.js",
+    "sourceMap": false
   }
 ]

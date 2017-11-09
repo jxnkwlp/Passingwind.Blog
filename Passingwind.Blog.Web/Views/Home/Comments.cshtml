@@ -1,0 +1,12 @@
+﻿@{ 
+    Layout = null;
+}
+
+@model IList<CommentViewModel>
+
+<ul class="">
+    @foreach (var comment in Model)
+    {
+        @Html.Partial("comment", comment)
+    }
+</ul>

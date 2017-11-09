@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passingwind.Blog.Core", "Passingwind.Blog.Core\Passingwind.Blog.Core.csproj", "{B486CE9E-651F-4CBD-BB5F-7C90BA61830E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passingwind.Blog.Core", "Passingwind.Blog.Core\Passingwind.Blog.Core.csproj", "{B486CE9E-651F-4CBD-BB5F-7C90BA61830E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passingwind.Blog.Web", "Passingwind.Blog.Web\Passingwind.Blog.Web.csproj", "{97094CC1-A7ED-4929-B965-381E379B15B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passingwind.Blog.Web", "Passingwind.Blog.Web\Passingwind.Blog.Web.csproj", "{97094CC1-A7ED-4929-B965-381E379B15B5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9958796B-F1E6-4253-A835-9034F9956D02}"
 	ProjectSection(SolutionItems) = preProject

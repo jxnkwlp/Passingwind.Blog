@@ -1,0 +1,16 @@
+﻿@{
+
+}
+
+@model IList<MonthListItemViewModel>
+
+<aside class="widget widget-archives">
+    <h2 class="widget-title">Archives</h2>
+    <ul class="widget-archives-list">
+        @foreach (var item in Model)
+        {
+            <li><a asp-route="monthlist" asp-route-year="@item.DateTime.Year" asp-route-month="@item.DateTime.Month.ToString("00")">@item.Title </a>&nbsp;(@item.Count)</li>
+        }
+
+    </ul>
+</aside>

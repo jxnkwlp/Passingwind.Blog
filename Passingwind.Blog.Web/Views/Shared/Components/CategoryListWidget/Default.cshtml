@@ -1,0 +1,18 @@
+﻿@model IList<CategoryViewModel>
+
+
+<aside class="widget">
+    <h2 class="widget-title">Category List </h2>
+    <div class="widget-text">
+        <ul class="widget-link-list">
+            @foreach (var item in Model)
+            {
+                <li>
+                    <a class="rsswidget" asp-route="@(RouteNames.SyndicationCategory)" asp-route-slug="@item.Slug"><img class="rss-widget-icon" src="@Url.Content("~/images/rss.png")" alt="RSS" /></a>
+                    <a asp-route="category" asp-route-name="@item.Slug">@item.Name </a>
+                </li>
+            }
+
+        </ul>
+    </div>
+</aside>

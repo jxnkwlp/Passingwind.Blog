@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "Email ";
+}
+
+@model EmailSettings
+
+
+<div class="page-header">
+    <h1>Email </h1>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="form " role="form">
+
+            <form asp-route="">
+
+                <div class="form-group">
+                    <label class="control-label" asp-for="Email"></label>
+                    <input class="form-control" placeholder="" asp-for="Email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="UserName"></label>
+                    <input class="form-control" placeholder="" asp-for="UserName">
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="Password"></label>
+                    <input class="form-control" placeholder="" asp-for="Password">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="SmtpHost"></label>
+                    <input class="form-control" placeholder="" asp-for="SmtpHost">
+                    <span asp-validation-for="SmtpHost" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="SmtpPort"></label>
+                    <input class="form-control" placeholder="" asp-for="SmtpPort">
+                    <span asp-validation-for="SmtpPort" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" asp-for="DisplayName"></label>
+                    <input class="form-control" placeholder="" asp-for="DisplayName">
+                    <span asp-validation-for="DisplayName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" asp-for="EnableSsl" /> @Html.DisplayNameFor(t => t.EnableSsl)
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="">
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </div>
+                </div>
+
+            </form>
+
+            <hr />
+
+            <form asp-action="EmailTest">
+                <div class="form-group">
+                    <label class="control-label">Send To</label>
+                    <input class="form-control" placeholder="" name="sendto"/>
+                    <span asp-validation-for="DisplayName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <div class="">
+                        <button type="submit" class="btn btn-primary">Test Send</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</div>

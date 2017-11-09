@@ -1,0 +1,93 @@
+﻿@{
+    ViewData["Title"] = "Archive";
+}
+
+@model ArchiveViewModel
+
+
+
+<div class="archives">
+
+    <header class="page-header">
+        <h1 class="page-title">Archive</h1>
+    </header>
+
+    <ul class="archive-page-menu">
+        @foreach (var category in Model.Categories)
+        {
+            <li><a href="#@category.Slug" rel="directory">@category.Name</a></li>
+        }
+        @if (Model.NoCategoryPosts.Count > 0)
+        {
+            <li><a href="#no-category" rel="directory">None</a></li>
+        }
+    </ul>
+
+    <div class="archive-page-content">
+        @foreach (var category in Model.Categories)
+        {
+            <h2 id="@category.Slug">
+                <a asp-route="@(RouteNames.SyndicationCategory)" asp-route-slug="@category.Slug"><img src="../images/rss.png" /></a> @category.Name (@category.Count)
+            </h2>
+            <table summary=".net">
+                <tr>
+                    <th class="date">Date</th>
+                    <th>Title</th>
+                    <th class="comments">Comments</th>
+                </tr>
+
+                @if (category.Posts.Count == 0)
+                {
+                    <tr>
+                        <td colspan="10">Empty </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var post in category.Posts)
+                    {
+                        <tr>
+                            <td class="date">@post.PublishedTime.ToString("yyyy-MM-dd")</td>
+                            <td class="title"><a href="@(Url.PostUrl(post))">@post.Title</a></td>
+                            <td class="comments">@post.CommentsCount</td>
+                        </tr>
+                    }
+                }
+            </table>
+        }
+
+        @if (Model.NoCategoryPosts.Count > 0)
+        {
+            <h2 id="no-category">
+                None (@Model.NoCategoryPosts.Count)
+            </h2>
+            <table summary="none">
+                <tr>
+                    <th class="date">Date</th>
+                    <th>Title</th>
+                    <th class="comments">Comments</th>
+                </tr>
+                @if (Model.NoCategoryPosts.Count == 0)
+                {
+                    <tr>
+                        <td colspan="10">Empty </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var post in Model.NoCategoryPosts)
+                    {
+                        <tr>
+                            <td class="date">@post.PublishedTime.ToString("yyyy-MM-dd")</td>
+                            <td class="title"><a href="@(Url.PostUrl(post))">@post.Title</a></td>
+                            <td class="comments">@post.CommentsCount</td>
+                        </tr>
+                    }
+                }
+            </table>
+
+        }
+
+    </div>
+
+</div>

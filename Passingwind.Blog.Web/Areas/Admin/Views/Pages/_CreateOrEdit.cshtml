@@ -1,0 +1,60 @@
+﻿@model PageViewModel
+
+
+<div class="form" role="form">
+    <div class="form-group">
+        <label class="control-label" asp-for="Title"></label>
+        <input class="form-control" placeholder="" asp-for="Title">
+        <span asp-validation-for="Title" class="help-block text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label" asp-for="Slug"></label>
+        <input class="form-control" placeholder="" asp-for="Slug">
+        <span asp-validation-for="Slug" class="help-block text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label" asp-for="Content"></label>
+
+        <div id="Content-editor">
+            <textarea class="form-control" asp-for="Content"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label" asp-for="Keywords"></label>
+        <input class="form-control" placeholder="" asp-for="Keywords">
+        <span asp-validation-for="Keywords" class="help-block text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label" asp-for="Description"></label>
+        <textarea class="form-control" asp-for="Description"></textarea>
+        <span asp-validation-for="Description" class="help-block text-danger"></span>
+    </div>
+
+    <div class="form-group ">
+        <label class="control-label" asp-for="DisplayOrder"></label>
+        <div class="row">
+            <div class="col-md-4"><input class="form-control" placeholder="" asp-for="DisplayOrder"></div>
+        </div>
+
+        <span asp-validation-for="DisplayOrder" class="help-block text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" asp-for="Published" /> @Html.DisplayNameFor(t => t.Published)
+            </label>
+        </div>
+        <span asp-validation-for="Published" class="help-block text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <div class="">
+            <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+    </div>
+</div>

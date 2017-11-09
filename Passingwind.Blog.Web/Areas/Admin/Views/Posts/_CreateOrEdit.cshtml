@@ -1,0 +1,113 @@
+﻿@model PostViewModel
+
+<div class="row form">
+    <div class="col-md-9">
+
+        <div class="form-group">
+            <label class="control-label" asp-for="Title"></label>
+            <input class="form-control" placeholder="" asp-for="Title">
+            <span asp-validation-for="Title" class="help-block text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" asp-for="Content"></label>
+            <div id="Content-editor">
+                <textarea class="form-control" asp-for="Content"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" asp-for="Slug"></label>
+            <input class="form-control" placeholder="" asp-for="Slug">
+            <span asp-validation-for="Slug" class="help-block text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label class="control-label" asp-for="Description"></label>
+            <textarea class="form-control" asp-for="Description"></textarea>
+        </div>
+
+
+    </div>
+    <div class="col-md-3">
+
+        <!--  发布 -->
+        <div class="panel panel-default">
+            <div class="panel-heading">发布</div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label><input type="checkbox" asp-for="IsDraft" /> @Html.DisplayNameFor(t => t.IsDraft)</label>
+                    </div>
+                </div>
+
+                <button class="btn btn-default btn-block">Submit</button>
+
+            </div>
+        </div>
+
+
+        <!-- 属性 -->
+        <div class="panel panel-default">
+            <div class="panel-heading">属性</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Published" asp-for="PublishedTime" />
+                    <span asp-validation-for="Slug" class="help-block text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label><input type="checkbox" asp-for="EnableCommented" /> @Html.DisplayNameFor(t => t.EnableCommented)</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 分类 -->
+        <div class="panel panel-default">
+            <div class="panel-heading">分类</div>
+            <div class="panel-body post-category-list">
+                @foreach (var item in Model.AllCategories)
+                {
+                    if (Model.SelectCategories.Contains(item.Id))
+                    {
+                        <div class="checkbox">
+                            <label><input type="checkbox" asp-name="SelectCategories" value="@item.Id" checked="checked" /> @item.Name </label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="checkbox">
+                            <label><input type="checkbox" asp-name="SelectCategories" value="@item.Id" /> @item.Name</label>
+                        </div>
+                    }
+
+                }
+
+            </div>
+        </div>
+
+        <!-- 标签 -->
+        <div class="panel panel-default">
+            <div class="panel-heading">标签</div>
+            <div class="panel-body post-tags">
+                @{
+                    var tags = Model.SelectTags.Select(t => new SelectListItem() { Text = t, Value = t, Selected = true });
+                }
+                <select class="form-control" asp-name="SelectTags" asp-id="SelectTags" multiple="multiple" asp-items="tags"></select>
+
+            </div>
+        </div>
+
+        <!-- 作者 -->
+        <!-- <div class="panel panel-default">
+               <div class="panel-heading">作者</div>
+               <div class="panel-body post-authors">
+                   <select class="form-control"></select>
+               </div>
+           </div>-->
+
+
+    </div>
+</div>

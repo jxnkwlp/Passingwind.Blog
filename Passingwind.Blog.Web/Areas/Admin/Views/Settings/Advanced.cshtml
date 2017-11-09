@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "Advanced ";
+}
+
+@model AdvancedSettings
+
+
+<div class="page-header">
+    <h1>Advanced </h1>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="form " role="form">
+
+            <form asp-route="">
+
+                <div class="form-group">
+                    <label class="control-label" asp-for="HeaderHtml"></label>
+                    <textarea class="form-control" placeholder="" asp-for="HeaderHtml"></textarea>
+                    <span asp-validation-for="HeaderHtml" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" asp-for="FooterHtml"></label>
+                    <textarea class="form-control" placeholder="" asp-for="FooterHtml"></textarea>
+                    <span asp-validation-for="FooterHtml" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" asp-for="EnableOpenSearch" /> @Html.DisplayNameFor(t => t.EnableOpenSearch)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" asp-for="EnableRegister" /> @Html.DisplayNameFor(t => t.EnableRegister)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" asp-for="EditorName"></label>
+                     
+                    <select asp-for="EditorName" class="form-control">
+                        <option value="">Auto Select</option>
+                        <option value="editor.md">editor.md</option>
+                        <option value="tinymce">tinymce</option>
+                    </select>
+                    
+                </div>
+
+                <div class="form-group">
+                    <div class="">
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>

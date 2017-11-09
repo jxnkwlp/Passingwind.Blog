@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Page Create";
+}
+@model PageViewModel
+
+
+
+<div class="page-header">
+    <h1>Page Create</h1>
+</div>
+
+<form asp-action="create">
+
+    @Html.Partial("_CreateOrEdit")
+
+</form>
+
+@section scripts{
+
+    @Html.Partial("_Editor", new Tuple<string, string>("Content", Model.Content))
+
+}

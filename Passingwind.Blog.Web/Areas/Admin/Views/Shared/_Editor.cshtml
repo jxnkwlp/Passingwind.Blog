@@ -1,0 +1,53 @@
+﻿@{
+    if (string.IsNullOrEmpty(Model.Item1))
+    {
+        return;
+    }
+
+    bool isMarkdHtml = string.IsNullOrEmpty(Model.Item2) ? true : (!Model.Item2.Contains("<p>"));
+
+}
+@inject AdvancedSettings advancedSettings
+
+@model Tuple<string, string>
+
+@if (advancedSettings.EditorName == "editor.md")
+{
+    <environment names="Development,Staging,Production">
+        <link href="~/lib/editor.md/css/editormd.min.css" rel="stylesheet" />
+        <script src="~/lib/editor.md/editormd.min.js"></script>
+    </environment>
+
+    @Html.Partial("_Editor.editormd")
+}
+else if (advancedSettings.EditorName == "tinymce")
+{
+    <environment names="Development,Staging,Production">
+        <script src="~/lib/tinymce/tinymce.min.js"></script>
+    </environment>
+
+    @Html.Partial("_Editor.tinymce")
+}
+else
+{ 
+    if (isMarkdHtml)
+    {
+        <environment names="Development,Staging,Production">
+            <link href="~/lib/editor.md/css/editormd.min.css" rel="stylesheet" />
+            <script src="~/lib/editor.md/editormd.min.js"></script>
+        </environment>
+
+        @Html.Partial("_Editor.editormd")
+    }
+    else
+    {
+        <environment names="Development,Staging,Production">
+            <script src="~/lib/tinymce/tinymce.min.js"></script>
+        </environment>
+
+        @Html.Partial("_Editor.tinymce")
+    }
+
+}
+
+
