@@ -18,7 +18,7 @@ namespace Passingwind.Blog
         [Required]
         public string Slug { get; set; }
 
-        public int DisplayOrder { get; set; }
+        public int DisplayOrder { get; set; } = 1;
 
         public IList<PostCategory> Posts { get; set; } = new List<PostCategory>();
     }

@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Routing;
 using Passingwind.Blog.Data;
 using Passingwind.Blog.BlogML;
 using System.Diagnostics;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace Passingwind.Blog.Web
 {
@@ -87,6 +88,13 @@ namespace Passingwind.Blog.Web
 
             services.AddMvc();
 
+            // services.AddResponseCaching();
+            services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
+            services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+            });
+
             services.AddAuthorization(options =>
             {
                 // options.AddPolicy("Admin", p => p.AddRequirements(new AdminRequirement()));
@@ -116,9 +124,24 @@ namespace Passingwind.Blog.Web
                 app.UseExceptionHandler("/error");
             }
 
-            app.UseStatusCodePagesWithRedirects("~/error/{0}");
+            //app.UseStatusCodePagesWithRedirects("~/error/{0}");
 
-            app.UseStaticFiles();
+            app.UseResponseCompression();
+
+            // app.UseResponseCaching();
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = context =>
+                {
+                    // Cache static file for 1 year
+                    if (!string.IsNullOrEmpty(context.Context.Request.Query["v"]))
+                    {
+                        context.Context.Response.Headers.Add("cache-control", new[] { "public,max-age=31536000" });
+                        context.Context.Response.Headers.Add("Expires", new[] { DateTime.UtcNow.AddYears(1).ToString("R") }); // Format RFC1123
+                    }
+                }
+            });
 
             app.UseImageAxdMiddleware();
 

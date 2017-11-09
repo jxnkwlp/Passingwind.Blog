@@ -301,6 +301,9 @@ body {
   margin: 0;
   margin-bottom: 25px;
 }
+.entry-summary img {
+  max-width: 100%;
+}
 .entry-content {
   width: 100%;
   max-width: 100%;

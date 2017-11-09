@@ -3,12 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <UserSecretsId>aspnet-Passingwind.Blog.Web-A2CEF7EF-96E8-41A3-8016-EFD2F6C0C385</UserSecretsId>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Controllers\ManageController.cs" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="1.20.0" />
@@ -22,96 +18,6 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="wwwroot\html\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Areas\Admin\Views\Categories\Create.cshtml" />
-    <None Include="Areas\Admin\Views\Categories\Edit.cshtml" />
-    <None Include="Areas\Admin\Views\Categories\List.cshtml" />
-    <None Include="Areas\Admin\Views\Categories\_CreateOrEdit.cshtml" />
-    <None Include="Areas\Admin\Views\Comments\Details.cshtml" />
-    <None Include="Areas\Admin\Views\Comments\List.cshtml" />
-    <None Include="Areas\Admin\Views\Comments\Reply.cshtml" />
-    <None Include="Areas\Admin\Views\Default\Index.cshtml" />
-    <None Include="Areas\Admin\Views\Default\UnAuthorized.cshtml" />
-    <None Include="Areas\Admin\Views\Pages\Create.cshtml" />
-    <None Include="Areas\Admin\Views\Pages\Edit.cshtml" />
-    <None Include="Areas\Admin\Views\Pages\List.cshtml" />
-    <None Include="Areas\Admin\Views\Pages\_CreateOrEdit.cshtml" />
-    <None Include="Areas\Admin\Views\Posts\Create.cshtml" />
-    <None Include="Areas\Admin\Views\Posts\Edit.cshtml" />
-    <None Include="Areas\Admin\Views\Posts\List.cshtml" />
-    <None Include="Areas\Admin\Views\Posts\_CreateOrEdit.cshtml" />
-    <None Include="Areas\Admin\Views\Posts\_SharedPartial.cshtml" />
-    <None Include="Areas\Admin\Views\Roles\Create.cshtml" />
-    <None Include="Areas\Admin\Views\Roles\Edit.cshtml" />
-    <None Include="Areas\Admin\Views\Roles\List.cshtml" />
-    <None Include="Areas\Admin\Views\Roles\_CreateOrEdit.cshtml" />
-    <None Include="Areas\Admin\Views\Settings\Advanced.cshtml" />
-    <None Include="Areas\Admin\Views\Settings\Basic.cshtml" />
-    <None Include="Areas\Admin\Views\Settings\Comments.cshtml" />
-    <None Include="Areas\Admin\Views\Settings\Email.cshtml" />
-    <None Include="Areas\Admin\Views\Shared\Error.cshtml" />
-    <None Include="Areas\Admin\Views\Shared\_Editor.cshtml" />
-    <None Include="Areas\Admin\Views\Shared\_Editor.editormd.cshtml" />
-    <None Include="Areas\Admin\Views\Shared\_Editor.summernote.cshtml" />
-    <None Include="Areas\Admin\Views\Shared\_Editor.tinymce.cshtml" />
-    <None Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
-    <None Include="Areas\Admin\Views\Shared\_LoginPartial.cshtml" />
-    <None Include="Areas\Admin\Views\Shared\_ValidationScriptsPartial.cshtml" />
-    <None Include="Areas\Admin\Views\Tags\List.cshtml" />
-    <None Include="Areas\Admin\Views\Tools\Index.cshtml" />
-    <None Include="Areas\Admin\Views\Users\Create.cshtml" />
-    <None Include="Areas\Admin\Views\Users\Edit.cshtml" />
-    <None Include="Areas\Admin\Views\Users\List.cshtml" />
-    <None Include="Areas\Admin\Views\Users\Profile.cshtml" />
-    <None Include="Areas\Admin\Views\Users\_CreateOrEdit.cshtml" />
-    <None Include="Areas\Admin\Views\_ViewImports.cshtml" />
-    <None Include="Areas\Admin\Views\_ViewStart.cshtml" />
-    <None Include="Views\Account\AccessDenied.cshtml" />
-    <None Include="Views\Account\ChangePassword.cshtml" />
-    <None Include="Views\Account\ConfirmEmail.cshtml" />
-    <None Include="Views\Account\ExternalLogin.cshtml" />
-    <None Include="Views\Account\ForgotPassword.cshtml" />
-    <None Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
-    <None Include="Views\Account\Lockout.cshtml" />
-    <None Include="Views\Account\Login.cshtml" />
-    <None Include="Views\Account\LoginWith2fa.cshtml" />
-    <None Include="Views\Account\LoginWithRecoveryCode.cshtml" />
-    <None Include="Views\Account\Register.cshtml" />
-    <None Include="Views\Account\ResetPassword.cshtml" />
-    <None Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <None Include="Views\Account\SignedOut.cshtml" />
-    <None Include="Views\Home\Archive.cshtml" />
-    <None Include="Views\Home\Comment.cshtml" />
-    <None Include="Views\Home\CommentForm.cshtml" />
-    <None Include="Views\Home\Comments.cshtml" />
-    <None Include="Views\Home\Index.cshtml" />
-    <None Include="Views\Home\Page.cshtml" />
-    <None Include="Views\Home\Post.cshtml" />
-    <None Include="Views\Home\Posts.cshtml" />
-    <None Include="Views\Shared\Components\CategoryListWidget\Default.cshtml" />
-    <None Include="Views\Shared\Components\Comments\Default.cshtml" />
-    <None Include="Views\Shared\Components\LinkListWidget\Default.cshtml" />
-    <None Include="Views\Shared\Components\MonthListWidget\Default.cshtml" />
-    <None Include="Views\Shared\Components\PageListWidget\Default.cshtml" />
-    <None Include="Views\Shared\Components\SearchWidget\Default.cshtml" />
-    <None Include="Views\Shared\Components\TagsWidget\Default.cshtml" />
-    <None Include="Views\Shared\Error.cshtml" />
-    <None Include="Views\Shared\NotFound.cshtml" />
-    <None Include="Views\Shared\_Layout.Account.cshtml" />
-    <None Include="Views\Shared\_Layout.cshtml" />
-    <None Include="Views\Shared\_Pager.cshtml" />
-    <None Include="Views\Shared\_SelectLanguagePartial.cshtml" />
-    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
-    <None Include="wwwroot\js\comments.es5.min.js" />
-    <None Include="wwwroot\v20171106\js\admin\site.js" />
-    <None Include="wwwroot\v20171106\js\admin\site.min.js" />
   </ItemGroup>
 
   <ItemGroup>

@@ -129,10 +129,7 @@ namespace Passingwind.Blog.Web.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var entity = model.ToEntity();
-
-                // parse slug
-                entity.Slug = entity.GetSeName();
-
+                
                 // parse slug
                 entity.Slug = entity.GetSeName();
 

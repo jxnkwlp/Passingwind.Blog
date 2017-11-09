@@ -150,7 +150,7 @@ namespace Passingwind.Blog.Web.Controllers
                 }
             }
 
-            await SetTitleAsync(_basicSettings.Title, page: page);
+            await SetTitleAsync("");
 
             return View("Posts", await GetPosts(page));
         }

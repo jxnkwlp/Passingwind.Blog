@@ -40,7 +40,7 @@
     </environment>
 
     <!--  SyntaxHighlighter  -->
-    <link href="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/styles/shCore.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/styles/shCore.min.css" rel="stylesheet" type="text/css" />
     <link href="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/styles/shThemeDefault.min.css" rel="stylesheet">
 
     <!--  customer head -->
@@ -129,7 +129,7 @@
 
                 <div class="footer-copyright">
                     <p>
-                        Copyright © @DateTime.Now.Year. Power by <a href="#">Passingwind</a>. <a href="#">@basicSettings.IcpNumber </a> <a asp-route="sitemap">sitemap</a>
+                        Copyright © @DateTime.Now.Year. Power by <a href="#">Passingwind</a>. <a href="#">@basicSettings.IcpNumber </a> <a asp-route="sitemap">sitemap</a>, build by asp.net core .
                     </p>
 
                 </div>
@@ -140,7 +140,7 @@
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/jquery-pjax/jquery.pjax.js"></script>
+        @*<script src="~/lib/jquery-pjax/jquery.pjax.js"></script>*@
         <script src="~/js/site.js"></script>
     </environment>
     <environment names="Staging,Production">
@@ -148,15 +148,15 @@
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery">
         </script>
-        <script src="https://cdn.bootcss.com/jquery.pjax/2.0.1/jquery.pjax.min.js"
+        @*<script src="https://cdn.bootcss.com/jquery.pjax/2.0.1/jquery.pjax.min.js"
                 asp-fallback-src="~/lib/jquery-pjax/jquery.pjax.js"></script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>*@
     </environment>
 
 
     <!--  SyntaxHighlighter  -->
-    <script type="text/javascript" src="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shCore.js"></script>
-    <script type="text/javascript" src="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shAutoloader.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shCore.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shAutoloader.min.js"></script>
     <script>
         var SyntaxHighlighter_Root = 'https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/';
         SyntaxHighlighter.autoloader(

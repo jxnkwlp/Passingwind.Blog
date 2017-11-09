@@ -30,7 +30,7 @@ function asyncRequest(element) {
 }
 
 function asyncOnSuccess(element, data, contentType) {
-
+    $(element).find('[type=submit]').removeAttr('disabled');
     if (data.parentId) $('#comment-' + data.parentId).find('#comment-respond').remove();
 
     if (!data.result) {
@@ -117,6 +117,5 @@ $(document).on("submit", "form[id=commentForm]", function (evt) {
     evt.preventDefault();
     $(this).find('[type=submit]').attr('disabled', 'disabled');
     asyncRequest(this);
-    $(this).find('[type=submit]').removeAttr('disabled');
 });
 

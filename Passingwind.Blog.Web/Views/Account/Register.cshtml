@@ -1,11 +1,10 @@
 ﻿@model RegisterViewModel
 @{
     Layout = "_Layout.Account";
-    ViewData["Title"] = Localizer["Register"] ;
+    ViewData["Title"] = "Register";
 }
 
 @inject AdvancedSettings advancedSettings
-@inject IViewLocalizer Localizer
 
 
 
@@ -28,16 +27,16 @@
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
-                    <div class="form-group has-feedback">
-                        <input type="password" class="form-control" placeholder="Password" asp-for="Password" />
-                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                    <div class="form-group has-feedback">
-                        <input type="password" class="form-control" placeholder="Retype password" asp-for="ConfirmPassword" />
-                        <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
-                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                    </div>
+                <div class="form-group has-feedback">
+                    <input type="password" class="form-control" placeholder="Password" asp-for="Password" />
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="password" class="form-control" placeholder="Retype password" asp-for="ConfirmPassword" />
+                    <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
                     <div class="row">
                         <div class="col-xs-8">
                             <div class="checkbox icheck">
@@ -47,7 +46,7 @@
                             </div>
                         </div>
                         <div class="col-xs-4">
-                            <button type="submit" class="btn btn-primary btn-block">@Localizer["Register"]</button>
+                            <button type="submit" class="btn btn-primary btn-block">Register</button>
                         </div>
                     </div>
             }
@@ -58,7 +57,7 @@
 
             <hr />
 
-            <a asp-action="login" class="text-center">@Localizer["I already have a membership"]</a>
+            <a asp-action="login" class="text-center">I already have a membership</a>
         </div>
 
     </form>

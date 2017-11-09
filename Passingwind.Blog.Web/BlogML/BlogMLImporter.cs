@@ -46,6 +46,9 @@ namespace Passingwind.Blog.BlogML
         private User _author;
 
         public int PostCount { get; set; }
+        public int PageCount { get; set; }
+        public int CategoryCount { get; set; }
+        public int TagsCount { get; set; }
 
         public string XmlData
         {
@@ -107,7 +110,7 @@ namespace Passingwind.Blog.BlogML
 
                 await LoadBlogPosts();
 
-                Message = string.Format("Imported {0} new posts", PostCount);
+                Message = $"Imported {PostCount} new posts, {PageCount} new pages, {CategoryCount} new categories";
             }
             catch (Exception ex)
             {
@@ -340,6 +343,8 @@ namespace Passingwind.Blog.BlogML
                 if (!_categoryManager.GetQueryable().Any(t => t.Slug == c.Slug))
                 {
                     await _categoryManager.CreateAsync(c);
+
+                    CategoryCount++;
                 }
                 else
                 {
@@ -430,7 +435,7 @@ namespace Passingwind.Blog.BlogML
 
                         if (await AddPage(extPost))
                         {
-                            PostCount++;
+                            PageCount++;
                         }
                         else
                         {
@@ -518,7 +523,7 @@ namespace Passingwind.Blog.BlogML
                     }
                     catch (Exception)
                     {
-                    } 
+                    }
                 }
 
                 p.CommentsCount = extPost.Comments.Count;

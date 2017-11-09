@@ -35,28 +35,21 @@ namespace Passingwind.Blog.Web
                 if (httpContext.Request.Query.TryGetValue("picture", out StringValues pciture))
                 {
                     var path = pciture.ToString();
-                    // path = path.Remove(0, 8);
 
-                    //var pictureServerDirectory = Path.Combine(_hostingEnvironment.WebRootPath, "Uploads/picture");
-                    //if (!Directory.Exists(pictureServerDirectory))
-                    //{
-                    //    Directory.CreateDirectory(pictureServerDirectory);
-                    //}
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        path = path.Remove(0, 1);
 
-                    var filePath = Path.Combine("Uploads/picture", (path));
+                        var filePath = Path.Combine("/Uploads/picture", path);
 
-                    httpContext.Response.Redirect(_urlEncoder.Encode(filePath), true);
+                        httpContext.Response.Redirect(_urlEncoder.Encode(filePath), true);
+                    }
 
                     return Task.FromResult(0);
-
-                    // var fileServerPath = Path.Combine(_hostingEnvironment.WebRootPath, filePath);
-
-                    // httpContext.Response.WriteAsync()
                 }
             }
 
             return _next(httpContext);
-
         }
     }
 
