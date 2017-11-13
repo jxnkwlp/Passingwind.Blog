@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Passingwind.Blog.Web.Areas.Admin.Controllers
 {
     [Area("admin")]
+    [Authorize]
     //[Authorize(Policy = "Admin")] 
     public abstract class AdminControllerBase : Controller
     {

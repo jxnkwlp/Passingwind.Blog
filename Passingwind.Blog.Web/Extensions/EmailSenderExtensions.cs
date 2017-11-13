@@ -24,17 +24,36 @@ namespace Passingwind.Blog.Web
             if (comment == null)
                 throw new ArgumentNullException(nameof(comment));
 
-            // 发送给管理员提示
+            // 发送给管理员提示 
+            string content = $@"文章“{post.Title}”有新评论了，<a href='{HtmlEncoder.Default.Encode(commentLink)}'>点此</a>查看。<br/>
+    <table>
+        <tr>
+            <th>Name</th>
+            <td>{comment.Author}</td> 
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{comment.Email}</td> 
+        </tr>
+        <tr>
+            <th>Website</th>
+            <td>{comment.Website}</td> 
+        </tr>
+        <tr>
+            <th>Content</th>
+            <td>{comment.Content}</td>
+        </tr>
+    </table>
+";
 
-            string content = $"文章“{post.Title}”有新评论了，<a href='{HtmlEncoder.Default.Encode(commentLink)}'>点此</a>查看。";
             await emailSender.SendEmailAsync(emailSettings.Email, $"文章“{post.Title}”评论提醒", content);
 
             // 发送给 被回复者
             if (!string.IsNullOrEmpty(comment.ParentId) && parentComment != null && !string.IsNullOrEmpty(parentComment.Email))
             {
-                string content2 = $"你的评论“{comment.Content}”有了新回复，<a href='{HtmlEncoder.Default.Encode(commentLink)}'>点此</a>查看。";
+                string content2 = $"你的评论“{parentComment.Content}”有了新回复“{comment.Content}”，<a href='{HtmlEncoder.Default.Encode(commentLink)}'>点此</a>查看源网站。";
 
-                await emailSender.SendEmailAsync(parentComment.Email, $"文章“{post.Title}”评论提醒", content);
+                await emailSender.SendEmailAsync(parentComment.Email, $"文章“{post.Title}”评论回复提醒", content);
             }
         }
     }
