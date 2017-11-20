@@ -12,7 +12,7 @@
     <div class="table-toolbar clearfix row">
         <div class="col-md-9">
             <div class="btn-group btn-group-sm">
-                <button type="submit" class="btn btn-danger" asp-action="Deletes">Delete</button>
+                <button type="submit" class="btn btn-danger" asp-action="Deletes"  onclick="return confirm('Are you sure ? ')">Delete</button>
                 <button type="submit" class="btn btn-warning" asp-action="UnApproves">UnApprove</button>
                 <button type="submit" class="btn btn-success" asp-action="Approves">Approve</button>
             </div>
@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <table class="table table-bordered table-striped table-item-list">
+    <table class="table table-bordered table-striped table-item-list table-responsive">
         <thead>
             <tr>
                 <th class="item-checkbox"><input type="checkbox" /></th>

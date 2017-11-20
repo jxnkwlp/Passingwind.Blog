@@ -162,6 +162,17 @@ namespace Passingwind.Blog
             return post.CommentsCount;
         }
 
+        public async Task<int> ReduceCommentsCountAsync(string postId)
+        {
+            var post = await FindByIdAsync(postId);
+            if (post != null && post.CommentsCount > 0)
+                post.CommentsCount--;
+
+            await UpdateAsync(post);
+
+            return post.CommentsCount;
+        }
+
         #endregion Comments
 
         public IQueryable<Post> GetQueryable()

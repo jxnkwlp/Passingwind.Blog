@@ -15,6 +15,7 @@ using Passingwind.Blog.Data;
 using Passingwind.Blog.BlogML;
 using System.Diagnostics;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Passingwind.Blog.Web
 {
@@ -146,6 +147,11 @@ namespace Passingwind.Blog.Web
             app.UseImageAxdMiddleware();
 
             app.UseSession();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseAuthentication();
 

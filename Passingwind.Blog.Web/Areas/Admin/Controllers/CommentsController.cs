@@ -167,6 +167,11 @@ namespace Passingwind.Blog.Web.Areas.Admin.Controllers
             {
                 foreach (var item in itemId)
                 {
+                    var comment = await _commentManager.FindByIdAsync(item);
+
+                    if (comment != null && !string.IsNullOrEmpty(comment.PostId))
+                        await _postManager.ReduceCommentsCountAsync(comment.PostId);
+
                     await _commentManager.SetIsDeletedAsync(item);
                 }
 

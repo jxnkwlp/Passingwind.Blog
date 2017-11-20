@@ -6,8 +6,9 @@
     <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MailKit" Version="1.20.0" />
+  <ItemGroup> 
+    <PackageReference Include="MailKit" Version="1.20.0" /> 
+    <PackageReference Include="MaxMind.GeoIP2" Version="2.9.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" PrivateAssets="All" />
@@ -22,6 +23,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Passingwind.Blog.Core\Passingwind.Blog.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="GeoLite2-City.mmdb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

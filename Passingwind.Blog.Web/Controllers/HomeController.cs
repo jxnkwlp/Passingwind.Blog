@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 using Passingwind.Blog.Web.Services;
+using MaxMind.GeoIP2;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Passingwind.Blog.Web.Controllers
 {
@@ -28,7 +30,9 @@ namespace Passingwind.Blog.Web.Controllers
         private readonly CommentsSettings _commentsSettings;
         private readonly EmailSettings _emailSettings;
 
-        public HomeController(PostManager postManager, CategoryManager categoryManager, TagsManager tagManager, PageManager pageManager, CommentManager commentManager, UserManager userManager, BasicSettings basicSettings, CommentsSettings commentsSettings, EmailSettings emailSettings, IEmailSender emailSender)
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        public HomeController(PostManager postManager, CategoryManager categoryManager, TagsManager tagManager, PageManager pageManager, CommentManager commentManager, UserManager userManager, BasicSettings basicSettings, CommentsSettings commentsSettings, EmailSettings emailSettings, IEmailSender emailSender, IHostingEnvironment hostingEnvironment)
         {
             this._postManager = postManager;
             this._categoryManager = categoryManager;
@@ -42,6 +46,8 @@ namespace Passingwind.Blog.Web.Controllers
             this._basicSettings = basicSettings;
             this._commentsSettings = commentsSettings;
             this._emailSettings = emailSettings;
+
+            this._hostingEnvironment = hostingEnvironment;
         }
 
         #region Post List
@@ -391,11 +397,12 @@ namespace Passingwind.Blog.Web.Controllers
                     Email = model.Email,
                     ParentId = model.ParentId,
                     PostId = post.Id,
+                    Country = GetIpLocation(),
                 };
 
                 var httpFeatures = HttpContext.Features.Get<IHttpConnectionFeature>();
 
-                comment.IP = httpFeatures.LocalIpAddress?.ToString();
+                comment.IP = Request.HttpContext.Connection.RemoteIpAddress?.ToString();  //httpFeatures.LocalIpAddress?.ToString();
 
                 comment.IsApproved = !_commentsSettings.EnableCommentsModeration;
 
@@ -546,6 +553,27 @@ namespace Passingwind.Blog.Web.Controllers
 
             model.Tags = await _postManager.GetTagsStringListAsync(entity.Id);
 
+        }
+
+        private string GetIpLocation()
+        {
+            try
+            {
+                using (var reader = new DatabaseReader(_hostingEnvironment.ContentRootPath + "\\GeoLite2-City.mmdb"))
+                {
+                    // Determine the IP Address of the request
+                    var ipAddress = HttpContext.Connection.RemoteIpAddress;
+
+                    // Get the city from the IP Address
+                    var city = reader.City(ipAddress);
+
+                    return city.Country.Name + " " + city.City.Name;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         #endregion
