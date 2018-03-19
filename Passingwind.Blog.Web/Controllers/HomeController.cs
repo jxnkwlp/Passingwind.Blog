@@ -374,6 +374,11 @@ namespace Passingwind.Blog.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddComment(CommentFormViewModel model)
         {
+            if (string.IsNullOrEmpty(Request.Form["_guid_"]))
+            {
+                return Json(new { result = false, });
+            }
+             
             if (!_commentsSettings.EnableComments)
                 return Json(new { result = false, message = "Comment Not Allowed! " }); //ReturnCommentResult(null, new { result = false });
 
@@ -414,7 +419,10 @@ namespace Passingwind.Blog.Web.Controllers
 
                 await _commentManager.CreateAsync(comment);
 
-                await _postManager.IncreaseCommentsCountAsync(post.Id);
+                if (comment.IsApproved)
+                {
+                    await _postManager.IncreaseCommentsCountAsync(post.Id);
+                }
 
                 SaveCommentFormUser(new LastCommentFormUserInfo() { Author = model.Author, Email = model.Email, Website = model.Website });
 

@@ -7,6 +7,8 @@
         <form id="commentForm" asp-route="commentForm" asp-route-postId="@Model.PostId">
             <input type="hidden" asp-for="ParentId" />
 
+            <input type="hidden" name="_guid_" value="@Guid.NewGuid()" />
+
             <div class="comment-form-comment">
                 <textarea asp-for="@Model.Content" rows="5" placeholder="write something ... " required></textarea>
             </div>

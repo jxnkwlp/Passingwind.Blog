@@ -28,7 +28,7 @@ namespace Passingwind.Blog.Web
             string content = $@"文章“{post.Title}”有新评论了，<a href='{HtmlEncoder.Default.Encode(commentLink)}'>点此</a>查看。<br/>
     <table>
         <tr>
-            <th>Name</th>
+            <th>Author</th>
             <td>{comment.Author}</td> 
         </tr>
         <tr>
@@ -38,6 +38,10 @@ namespace Passingwind.Blog.Web
         <tr>
             <th>Website</th>
             <td>{comment.Website}</td> 
+        </tr>
+        <tr>
+            <th>From</th>
+            <td>{comment.Country}</td> 
         </tr>
         <tr>
             <th>Content</th>

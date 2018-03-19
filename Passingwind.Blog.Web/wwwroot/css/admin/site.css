@@ -19,7 +19,11 @@
   width: 30px;
   text-align: center;
 }
+.table-item-list .item-title {
+  min-width: 300px;
+}
 .table-item-list .item-author {
+  min-width: 100px;
   text-align: center;
 }
 .table-item-list .item-comments {
@@ -29,6 +33,7 @@
   text-align: center;
 }
 .table-item-list .item-date {
+  min-width: 150px;
   text-align: center;
 }
 .table-item-list .item-order {

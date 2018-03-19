@@ -34,19 +34,31 @@ namespace Passingwind.Blog.Web.Areas.Admin.Controllers
         }
 
 
-        public IActionResult List(string postId, int page, string q)
+        public async Task<IActionResult> List(string postId, int page, string q)
         {
             var query = _commentManager.GetQueryable().Where(t => !t.IsDeleted);
 
             if (!string.IsNullOrEmpty(postId))
             {
+                ViewBag.showPost = false;
                 query = query.Where(t => t.PostId == postId);
+            }
+            else
+            {
+                ViewBag.showPost = true;
             }
 
             if (!string.IsNullOrWhiteSpace(q))
                 query = query.Where(t => t.Author.Contains(q) || t.Email.Contains(q) || t.Content.Contains(q));
 
             var models = query.ToPagedList(page, TableListItem, s => s.Select(t => t.ToModel()).ToList());
+
+            foreach (var item in models)
+            {
+                var entity = await _postManager.FindByIdAsync(item.PostId);
+                if (entity != null)
+                    item.Post = entity.ToModel();
+            }
 
             return View(models);
         }
@@ -194,6 +206,9 @@ namespace Passingwind.Blog.Web.Areas.Admin.Controllers
                 foreach (var item in itemId)
                 {
                     await _commentManager.UpdateIsApprovedAsync(item, true);
+
+                    var comment = await _commentManager.FindByIdAsync(item);
+                    await _postManager.IncreaseCommentsCountAsync(comment.PostId);
                 }
 
                 AlertSuccess("已设置。");
@@ -215,6 +230,9 @@ namespace Passingwind.Blog.Web.Areas.Admin.Controllers
                 foreach (var item in itemId)
                 {
                     await _commentManager.UpdateIsApprovedAsync(item, false);
+
+                    var comment = await _commentManager.FindByIdAsync(item);
+                    await _postManager.ReduceCommentsCountAsync(comment.PostId);
                 }
 
                 AlertSuccess("已设置。");

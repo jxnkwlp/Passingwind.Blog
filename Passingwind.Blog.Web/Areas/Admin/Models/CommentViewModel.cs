@@ -11,7 +11,7 @@ namespace Passingwind.Blog.Web.Areas.Admin.Models
         [Display(Name = "Post")]
         public string PostId { get; set; }
 
-       
+
         public PostViewModel Post { get; set; }
 
         [Required]
