@@ -65,7 +65,8 @@ namespace Passingwind.Blog.Web.Models
 
         public string ParentId { get; set; }
 
-
+        [Required]
+        public string CaptchaCode { get; set; }
     }
 
     public class LastCommentFormUserInfo

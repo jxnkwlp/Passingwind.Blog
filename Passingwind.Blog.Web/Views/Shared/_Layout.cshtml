@@ -42,7 +42,9 @@
     <!--  SyntaxHighlighter  -->
     <link href="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/styles/shCore.min.css" rel="stylesheet" type="text/css" />
     <link href="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/styles/shThemeDefault.min.css" rel="stylesheet">
-
+    <style>
+        .syntaxhighlighter { padding: 2px 0; }
+    </style>
     <!--  customer head -->
     @Html.Raw(advancedSettings.HeaderHtml)
     @RenderSection("head", false)
@@ -70,12 +72,12 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                    <li><a href="~/admin/">Admin</a></li>
-                    <li><a asp-route="@(RouteNames.Logout)">Log Out</a></li>
+                        <li><a href="~/admin/">Admin</a></li>
+                        <li><a asp-route="@(RouteNames.Logout)">Log Out</a></li>
                     }
                     else
                     {
-                    <li><a asp-route="login">Login</a></li>
+                        <li><a asp-route="login">Login</a></li>
                     }
                 </ul>
 
@@ -97,6 +99,8 @@
 
             </div>
             <div class="widget-area">
+
+
 
                 <!--  page widget -->
                 @(await Component.InvokeAsync("PageListWidget"))
@@ -149,8 +153,8 @@
                 asp-fallback-test="window.jQuery">
         </script>
         @*<script src="https://cdn.bootcss.com/jquery.pjax/2.0.1/jquery.pjax.min.js"
-                asp-fallback-src="~/lib/jquery-pjax/jquery.pjax.js"></script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>*@
+                    asp-fallback-src="~/lib/jquery-pjax/jquery.pjax.js"></script>
+            <script src="~/js/site.min.js" asp-append-version="true"></script>*@
     </environment>
 
 

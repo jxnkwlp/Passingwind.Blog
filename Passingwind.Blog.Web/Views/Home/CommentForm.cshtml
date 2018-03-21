@@ -25,6 +25,16 @@
                 <input asp-for="@Model.Website" placeholder="(Optional) eg: http://www.youname.com" />
             </div>
 
+            <div class="comment-form-captchacode">
+                <label for="author">Captcha <span class="required">*</span></label>
+                <input asp-for="@Model.CaptchaCode" placeholder="" />
+            </div>
+
+            <div class="comment-form-captchaimg"> 
+                <img id="captchaimg" src="@(Url.CaptchaImageLink())" onclick="chagecaptcha()"/>
+                <script>function chagecaptcha() { document.getElementById('captchaimg').src = '@(Url.CaptchaImageLink())' + '?' + new Date().valueOf() }</script>
+            </div>
+
             <div class="form-submit">
                 <input name="submit" type="submit" class="submit btn btn-default" value="Post Comment" />
 

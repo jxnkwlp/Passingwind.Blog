@@ -85,6 +85,7 @@ function asyncOnSuccess(element, data, contentType) {
 }
 function initCommentForm() {
     $('#comment-respond').find('textarea').val('');
+    $('#comment-respond').find('[name=CaptchaCode]').val('');
 }
 function moveCommentForm(commentId) {
 
@@ -117,6 +118,6 @@ $(document).on("submit", "form[id=commentForm]", function (evt) {
     evt.preventDefault();
     $(this).find('[type=submit]').attr('disabled', 'disabled');
     asyncRequest(this);
-   
+
 });
 

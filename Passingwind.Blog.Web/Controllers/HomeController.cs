@@ -13,6 +13,7 @@ using System.Diagnostics;
 using Passingwind.Blog.Web.Services;
 using MaxMind.GeoIP2;
 using Microsoft.AspNetCore.Hosting;
+using Passingwind.Blog.Web.Captcha;
 
 namespace Passingwind.Blog.Web.Controllers
 {
@@ -30,9 +31,13 @@ namespace Passingwind.Blog.Web.Controllers
         private readonly CommentsSettings _commentsSettings;
         private readonly EmailSettings _emailSettings;
 
+        private readonly CaptchaService _captchaService;
+
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public HomeController(PostManager postManager, CategoryManager categoryManager, TagsManager tagManager, PageManager pageManager, CommentManager commentManager, UserManager userManager, BasicSettings basicSettings, CommentsSettings commentsSettings, EmailSettings emailSettings, IEmailSender emailSender, IHostingEnvironment hostingEnvironment)
+
+
+        public HomeController(PostManager postManager, CategoryManager categoryManager, TagsManager tagManager, PageManager pageManager, CommentManager commentManager, UserManager userManager, BasicSettings basicSettings, CommentsSettings commentsSettings, EmailSettings emailSettings, IEmailSender emailSender, CaptchaService captchaService, IHostingEnvironment hostingEnvironment)
         {
             this._postManager = postManager;
             this._categoryManager = categoryManager;
@@ -46,6 +51,8 @@ namespace Passingwind.Blog.Web.Controllers
             this._basicSettings = basicSettings;
             this._commentsSettings = commentsSettings;
             this._emailSettings = emailSettings;
+
+            this._captchaService = captchaService;
 
             this._hostingEnvironment = hostingEnvironment;
         }
@@ -378,12 +385,18 @@ namespace Passingwind.Blog.Web.Controllers
             {
                 return Json(new { result = false, });
             }
-             
+
             if (!_commentsSettings.EnableComments)
                 return Json(new { result = false, message = "Comment Not Allowed! " }); //ReturnCommentResult(null, new { result = false });
 
             if (string.IsNullOrEmpty(model.PostId))
                 return Json(new { result = false, message = "Error" });  //return ReturnCommentResult(null, new { result = false });
+
+
+            if (!_captchaService.Validate(model.CaptchaCode))
+            {
+                return Json(new { result = false, message = "" });
+            }
 
             var post = await _postManager.FindByIdAsync(model.PostId);
 

@@ -85,6 +85,7 @@ function asyncOnSuccess(element, data, contentType) {
 }
 function initCommentForm() {
     $('#comment-respond').find('textarea').val('');
+    $('#comment-respond').find('[name=CaptchaCode]').val('');
 }
 function moveCommentForm(commentId) {
 

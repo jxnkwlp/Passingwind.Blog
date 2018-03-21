@@ -16,6 +16,7 @@ using Passingwind.Blog.BlogML;
 using System.Diagnostics;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.HttpOverrides;
+using Passingwind.Blog.Web.Captcha;
 
 namespace Passingwind.Blog.Web
 {
@@ -79,6 +80,7 @@ namespace Passingwind.Blog.Web
             //services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddTransient<BlogMLImporter>();
             services.AddTransient<BlogMLExporter>();
+            services.AddTransient<CaptchaService>();
             services.AddTransient<IFileService, LocalFileService>();
 
             services.AddScoped<DbInitializer>();

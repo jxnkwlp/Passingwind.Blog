@@ -32,5 +32,11 @@ namespace Microsoft.AspNetCore.Mvc
                 host: host,
                 fragment: fragment);
         }
+
+        public static string CaptchaImageLink(this IUrlHelper urlHelper)
+        {
+            return urlHelper.Action("index", "Captcha");
+        }
+
     }
 }

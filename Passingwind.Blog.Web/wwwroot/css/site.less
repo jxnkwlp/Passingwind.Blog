@@ -525,7 +525,7 @@ body {
             margin-top: 10px;
             margin-bottom: 35px;
 
-            .comment-form-comment, .comment-form-author, .comment-form-email, .comment-form-url {
+            .comment-form-comment, .comment-form-author, .comment-form-email, .comment-form-url, .comment-form-captchacode, .comment-form-captchaimg {
                 margin-bottom: 15px;
             }
 
@@ -534,13 +534,13 @@ body {
                 display: block;
                 float: left;
                 box-sizing: border-box;
-                margin-right: 1.9344%;
+                margin-right: 15px;
             }
 
             input {
                 box-sizing: border-box;
                 width: 100%;
-                max-width: 300px;
+                max-width: 256px;
                 font-size: 14px;
                 color: #666;
                 border: 1px solid #dadada;
@@ -555,6 +555,18 @@ body {
                 padding: 6px;
                 vertical-align: top;
                 border: 1px solid #dadada;
+            }
+
+            .comment-form-captchaimg {
+                margin-left: 89px;
+
+                img {
+                    // width: 90px;
+                }
+
+                @media (max-width:375px) {
+                    margin-left: 0;
+                }
             }
 
             .form-submit {

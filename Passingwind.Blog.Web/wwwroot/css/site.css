@@ -454,7 +454,9 @@ body {
 .comments-area .comment-respond .comment-form .comment-form-comment,
 .comments-area .comment-respond .comment-form .comment-form-author,
 .comments-area .comment-respond .comment-form .comment-form-email,
-.comments-area .comment-respond .comment-form .comment-form-url {
+.comments-area .comment-respond .comment-form .comment-form-url,
+.comments-area .comment-respond .comment-form .comment-form-captchacode,
+.comments-area .comment-respond .comment-form .comment-form-captchaimg {
   margin-bottom: 15px;
 }
 .comments-area .comment-respond .comment-form label {
@@ -462,12 +464,12 @@ body {
   display: block;
   float: left;
   box-sizing: border-box;
-  margin-right: 1.9344%;
+  margin-right: 15px;
 }
 .comments-area .comment-respond .comment-form input {
   box-sizing: border-box;
   width: 100%;
-  max-width: 300px;
+  max-width: 256px;
   font-size: 14px;
   color: #666;
   border: 1px solid #dadada;
@@ -481,6 +483,14 @@ body {
   padding: 6px;
   vertical-align: top;
   border: 1px solid #dadada;
+}
+.comments-area .comment-respond .comment-form .comment-form-captchaimg {
+  margin-left: 89px;
+}
+@media (max-width: 375px) {
+  .comments-area .comment-respond .comment-form .comment-form-captchaimg {
+    margin-left: 0;
+  }
 }
 .comments-area .comment-respond .comment-form .form-submit input[type=submit] {
   width: auto;
