@@ -1,3 +1,3 @@
 # Passingwind.Blog 2017 
-»ùÓÚasp.net core 2.0, microsoft.identity.core ºÍ entity framework core ¡£
-µØÖ·£º[http://blog.wuliping.cn](http://blog.wuliping.cn)
+åŸºäºasp.net core 2.0, microsoft.identity.core å’Œ entity framework core ã€‚
+åœ°å€ï¼š[http://blog.wuliping.cn](http://blog.wuliping.cn)
