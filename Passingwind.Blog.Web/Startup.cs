@@ -17,6 +17,8 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.HttpOverrides;
 using Passingwind.Blog.Web.Captcha;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Passingwind.Blog.Web
 {
@@ -32,6 +34,13 @@ namespace Passingwind.Blog.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             // services.AddAutoRegisterService();
 
             services.AddDbContextPool<BlogDbContext>(options =>
@@ -89,7 +98,7 @@ namespace Passingwind.Blog.Web
             services.AddMemoryCache();
             services.AddSession();
 
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // services.AddResponseCaching();
             services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
@@ -125,6 +134,7 @@ namespace Passingwind.Blog.Web
             else
             {
                 app.UseExceptionHandler("/error");
+                app.UseHsts();
             }
 
             //app.UseStatusCodePagesWithRedirects("~/error/{0}");
@@ -145,6 +155,9 @@ namespace Passingwind.Blog.Web
                     }
                 }
             });
+
+            app.UseHttpsRedirection();
+            app.UseCookiePolicy();
 
             app.UseImageAxdMiddleware();
 

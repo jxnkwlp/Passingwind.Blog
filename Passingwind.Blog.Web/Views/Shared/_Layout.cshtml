@@ -59,7 +59,9 @@
                     <p class="blog-description">@basicSettings.Description </p>
                 </div>
                 <div class="social-links">
-                    <a href="https://github.com/jxnkwlp/" rel="external nofollow" target="_blank"><i class="fa fa-git"></i></a>
+                    <a href="https://github.com/jxnkwlp/" rel="external nofollow" target="_blank" title="gihub"><i class="fa fa-git"></i></a>
+                    <a href="~/syndication.xml" target="_blank" title="Rss"><i class="fa fa-rss"></i></a>
+                    <a href="http://www.wuliping.cn" target="_blank" title="Home"><i class="fa fa-home"></i></a>
                 </div>
                 <a id="togglemenu" href="#togglemenu" class="header-navigation-toggle">Menu</a>
 
@@ -99,8 +101,7 @@
 
             </div>
             <div class="widget-area">
-
-
+                 
 
                 <!--  page widget -->
                 @(await Component.InvokeAsync("PageListWidget"))
@@ -116,13 +117,16 @@
                 <!--  MonthList widget -->
                 @(await Component.InvokeAsync("MonthListWidget"))
 
+                <!--  MonthList widget -->
+                @(await Component.InvokeAsync("LinkListWidget"))
+
             </div>
 
         </div>
 
         <div class="container">
 
-            @Html.Partial("_Pager")
+            <partial name="_Pager" />
 
         </div>
     </div>
@@ -157,6 +161,7 @@
             <script src="~/js/site.min.js" asp-append-version="true"></script>*@
     </environment>
 
+    <script src="//cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
 
     <!--  SyntaxHighlighter  -->
     <script type="text/javascript" src="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shCore.min.js"></script>
