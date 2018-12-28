@@ -18,7 +18,7 @@ html {
 }
 ol li,
 ul li {
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 a {
   text-decoration: none;
@@ -213,7 +213,7 @@ body {
 @media (min-width: 1100px) {
   .main-navigation ul li {
     width: auto;
-    margin-right: .5em;
+    margin-right: 0.5em;
   }
 }
 .main-navigation ul li a {
@@ -260,7 +260,7 @@ body {
   display: inline-block;
   width: auto;
   margin-bottom: 0;
-  margin-left: .5em;
+  margin-left: 0.5em;
   list-style: none;
   text-align: left;
 }
@@ -315,7 +315,7 @@ body {
 .entry-content h4,
 .entry-content h5 {
   font-weight: 400;
-  margin-bottom: .2em;
+  margin-bottom: 0.2em;
   margin-top: 0;
 }
 .entry-content p {
@@ -621,7 +621,7 @@ body {
 }
 .widget .widget-title {
   color: #2a2a2a;
-  padding: .6rem 1rem .6rem 0;
+  padding: 0.6rem 1rem 0.6rem 0;
   border-bottom: 1px solid #ccc;
   margin-top: 0;
   margin-bottom: 1.2rem;
@@ -671,7 +671,7 @@ body {
   -webkit-appearance: none;
 }
 .widget-search .search-option {
-  margin-top: .75em;
+  margin-top: 0.75em;
 }
 .widget-search .search-option input[type=radio] {
   margin-right: 6px;
