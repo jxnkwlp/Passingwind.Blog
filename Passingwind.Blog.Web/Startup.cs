@@ -133,6 +133,7 @@ namespace Passingwind.Blog.Web
 			{
 				app.UseDeveloperExceptionPage();
 				app.UseDatabaseErrorPage();
+				app.UseStatusCodePages();
 			}
 			else
 			{
