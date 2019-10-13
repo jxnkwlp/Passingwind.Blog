@@ -6,202 +6,166 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="~/favicon.ico" />
-    <title>@ViewData["Title"]</title>
-    <meta name="keywords" content="@ViewData["KeyWorlds"]" />
-    <meta name="description" content="@ViewData["Description"]" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="shortcut icon" href="~/favicon.ico" />
+	<title>@ViewData["Title"]</title>
+	<meta name="keywords" content="@ViewData["KeyWorlds"]" />
+	<meta name="description" content="@ViewData["Description"]" />
 
-    <!-- archive  -->
-    <link rel="contents" title="Archive" href="~/archive" />
-    <!-- rsd  -->
-    <link type="application/rsd+xml" rel="edituri" title="RSD" href="~/rsd.xml" />
-    <!-- opensearch  -->
-    <link rel="search" type="application/opensearchdescription+xml" href="~/opensearch.xml" title="@basicSettings.Title" />
-    <!-- syndication  -->
-    <link rel="alternate" type="application/atom+xml" title="@(basicSettings.Title) (ATOM)" href="~/syndication.xml?format=atom" />
-    <link rel="alternate" type="application/rss+xml" title="@(basicSettings.Title) (RSS)" href="~/syndication.xml" />
+	<!-- archive  -->
+	<link rel="contents" title="Archive" href="~/archive" />
+	<!-- rsd  -->
+	<link type="application/rsd+xml" rel="edituri" title="RSD" href="~/rsd.xml" />
+	<!-- opensearch  -->
+	<link rel="search" type="application/opensearchdescription+xml" href="~/opensearch.xml" title="@basicSettings.Title" />
+	<!-- syndication  -->
+	<link rel="alternate" type="application/atom+xml" title="@(basicSettings.Title) (ATOM)" href="~/syndication.xml?format=atom" />
+	<link rel="alternate" type="application/rss+xml" title="@(basicSettings.Title) (RSS)" href="~/syndication.xml" />
 
-    <!--
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Kreon:400,700" rel="stylesheet" />
-     -->
-    <environment names="Development">
-        <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-        <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
-        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    </environment>
-    <environment names="Staging,Production">
-        <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
+	<!--
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Kreon:400,700" rel="stylesheet" />
+	 -->
+	<environment names="Development">
+		<link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+		<link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+		<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	</environment>
+	<environment names="Staging,Production">
+		<link rel="stylesheet"
+			  href="//cdn.bootcss.com/bootstrap/3.4.1/css/bootstrap.min.css"
+			  asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
+			  asp-fallback-test-class="sr-only"
+			  asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+		<link rel="stylesheet"
+			  href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"
+			  asp-fallback-href="~/lib/font-awesome/css/font-awesome.min.css"
+			  asp-fallback-test-class="sr-only"
+			  asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+		<link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+	</environment>
 
-    <!--  SyntaxHighlighter  -->
-    <link href="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/styles/shCore.min.css" rel="stylesheet" type="text/css" />
-    <link href="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/styles/shThemeDefault.min.css" rel="stylesheet">
-    <style>
-        .syntaxhighlighter { padding: 2px 0; }
-    </style>
-    <!--  customer head -->
-    @Html.Raw(advancedSettings.HeaderHtml)
-    @RenderSection("head", false)
+	<!--  customer head -->
+	@Html.Raw(advancedSettings.HeaderHtml)
+	@RenderSection("head", false)
 </head>
 <body>
 
-    <div class="site-header-wrap">
-        <div class="container">
-            <header class="site-header">
-                <div class="site-title">
-                    <h1 class="blog-title"><a asp-route="home">@basicSettings.Title </a></h1>
-                    <p class="blog-description">@basicSettings.Description </p>
-                </div>
-                <div class="social-links">
-                    <a href="https://github.com/jxnkwlp/" rel="external nofollow" target="_blank" title="gihub"><i class="fa fa-git"></i></a>
-                    <a href="~/syndication.xml" target="_blank" title="Rss"><i class="fa fa-rss"></i></a>
-                    <a href="http://www.wuliping.cn" target="_blank" title="Home"><i class="fa fa-home"></i></a>
-                </div>
-                <a id="togglemenu" href="#togglemenu" class="header-navigation-toggle">Menu</a>
+	<div class="site-header-wrap">
+		<div class="container">
+			<header class="site-header">
+				<div class="site-title">
+					<h1 class="blog-title"><a asp-route="home">@basicSettings.Title </a></h1>
+					<p class="blog-description">@basicSettings.Description </p>
+				</div>
+				<div class="social-links">
+					<a href="https://github.com/jxnkwlp/" rel="external nofollow" target="_blank" title="gihub"><i class="fa fa-git"></i></a>
+					<a href="~/syndication.xml" target="_blank" title="Rss"><i class="fa fa-rss"></i></a>
+					<a href="http://www.wuliping.cn" target="_blank" title="Home"><i class="fa fa-home"></i></a>
+				</div>
+				<a id="togglemenu" href="#togglemenu" class="header-navigation-toggle">Menu</a>
 
-            </header>
+			</header>
 
-            <nav id="main-navigation" class="main-navigation">
-                <ul>
-                    <li><a asp-route="home">Home</a></li>
-                    <li><a asp-route="archive">Archive</a></li>
+			<nav id="main-navigation" class="main-navigation">
+				<ul>
+					<li><a asp-route="home">Home</a></li>
+					<li><a asp-route="archive">Archive</a></li>
 
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <li><a href="~/admin/">Admin</a></li>
-                        <li><a asp-route="@(RouteNames.Logout)">Log Out</a></li>
-                    }
-                    else
-                    {
-                        <li><a asp-route="@(RouteNames.LogIn)">Login</a></li>
-                    }
-                </ul>
+					@if (User.Identity.IsAuthenticated)
+					{
+						<li><a href="~/admin/">Admin</a></li>
+						<li><a asp-route="@(RouteNames.Logout)">Log Out</a></li>
+					}
+					else
+					{
+						<li><a asp-route="@(RouteNames.LogIn)">Login</a></li>
+					}
+				</ul>
 
-            </nav>
+			</nav>
 
-        </div>
-    </div>
-
-
-    <div class="site-content clearfix">
-        <div class="container clearfix">
-            <div class="content-area">
-
-                <div class="site-main">
-
-                    @RenderBody()
-
-                </div>
-
-            </div>
-            <div class="widget-area">
-                 
-
-                <!--  page widget -->
-                @(await Component.InvokeAsync("PageListWidget"))
-
-                <!--  category widget -->
-                @(await Component.InvokeAsync("CategoryListWidget"))
-
-                <!--  tags widget -->
-                @(await Component.InvokeAsync("TagsWidget"))
-
-                <!--  search widget
-                @(await Component.InvokeAsync("SearchWidget"))-->
-                <!--  MonthList widget -->
-                @(await Component.InvokeAsync("MonthListWidget"))
-
-                <!--  MonthList widget -->
-                @(await Component.InvokeAsync("LinkListWidget"))
-
-            </div>
-
-        </div>
-
-        <div class="container">
-
-            <partial name="_Pager" />
-
-        </div>
-    </div>
-
-    <div class="footer-wrap">
-        <div class="container">
-            <div class="site-info">
-
-                <div class="footer-copyright">
-                    <p>
-                        Copyright © @DateTime.Now.Year. Power by <a href="#">Passingwind</a>. <a href="#">@basicSettings.IcpNumber </a> <a asp-route="sitemap">sitemap</a>, build by asp.net core .
-                    </p>
-
-                </div>
-            </div>
-        </div>
-    </div>
+		</div>
+	</div>
 
 
-    <environment names="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        @*<script src="~/lib/jquery-pjax/jquery.pjax.js"></script>*@
-        <script src="~/js/site.js"></script>
-    </environment>
-    <environment names="Staging,Production">
-        <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery">
-        </script>
-        @*<script src="https://cdn.bootcss.com/jquery.pjax/2.0.1/jquery.pjax.min.js"
-                    asp-fallback-src="~/lib/jquery-pjax/jquery.pjax.js"></script>
-            <script src="~/js/site.min.js" asp-append-version="true"></script>*@
-    </environment>
+	<div class="site-content clearfix">
+		<div class="container clearfix">
+			<div class="content-area">
 
-    <script src="//cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+				<div class="site-main">
 
-    <!--  SyntaxHighlighter  -->
-    <script type="text/javascript" src="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shCore.min.js"></script>
-    <script type="text/javascript" src="https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/shAutoloader.min.js"></script>
-    <script>
-        var SyntaxHighlighter_Root = 'https://cdn.bootcss.com/SyntaxHighlighter/3.0.83/scripts/';
-        SyntaxHighlighter.autoloader(
-            'applescript            ' + SyntaxHighlighter_Root + 'shBrushAppleScript.js',
-            'actionscript3 as3      ' + SyntaxHighlighter_Root + 'shBrushAS3.js',
-            'bash shell             ' + SyntaxHighlighter_Root + 'shBrushBash.js',
-            'coldfusion cf          ' + SyntaxHighlighter_Root + 'shBrushColdFusion.js',
-            'cpp c                  ' + SyntaxHighlighter_Root + 'shBrushCpp.js',
-            'c# c-sharp csharp      ' + SyntaxHighlighter_Root + 'shBrushCSharp.js',
-            'css                    ' + SyntaxHighlighter_Root + 'shBrushCss.js',
-            'delphi pascal          ' + SyntaxHighlighter_Root + 'shBrushDelphi.js',
-            'diff patch pas         ' + SyntaxHighlighter_Root + 'shBrushDiff.js',
-            'erl erlang             ' + SyntaxHighlighter_Root + 'shBrushErlang.js',
-            'groovy                 ' + SyntaxHighlighter_Root + 'shBrushGroovy.js',
-            'haxe                   ' + SyntaxHighlighter_Root + 'shBrushHaxe.js',
-            'java                   ' + SyntaxHighlighter_Root + 'shBrushJava.js',
-            'jfx javafx             ' + SyntaxHighlighter_Root + 'shBrushJavaFX.js',
-            'js jscript javascript  ' + SyntaxHighlighter_Root + 'shBrushJScript.js',
-            'perl pl                ' + SyntaxHighlighter_Root + 'shBrushPerl.js',
-            'php                    ' + SyntaxHighlighter_Root + 'shBrushPhp.js',
-            'text plain             ' + SyntaxHighlighter_Root + 'shBrushPlain.js',
-            'ps powershell          ' + SyntaxHighlighter_Root + 'shBrushPowerShell.js',
-            'py python              ' + SyntaxHighlighter_Root + 'shBrushPython.js',
-            'ruby rails ror rb      ' + SyntaxHighlighter_Root + 'shBrushRuby.js',
-            'sass scss              ' + SyntaxHighlighter_Root + 'shBrushSass.js',
-            'scala                  ' + SyntaxHighlighter_Root + 'shBrushScala.js',
-            'sql                    ' + SyntaxHighlighter_Root + 'shBrushSql.js',
-            'vb vbnet               ' + SyntaxHighlighter_Root + 'shBrushVb.js',
-            'xml xhtml xslt html    ' + SyntaxHighlighter_Root + 'shBrushXml.js'
-        );
-        SyntaxHighlighter.all();
-    </script>
+					@RenderBody()
 
-    @RenderSection("Scripts", required: false)
+				</div>
 
-    <!--  customer footer -->
-    @Html.Raw(advancedSettings.FooterHtml)
+			</div>
+			<div class="widget-area">
+
+
+				<!--  page widget -->
+				@(await Component.InvokeAsync("PageListWidget"))
+
+				<!--  category widget -->
+				@(await Component.InvokeAsync("CategoryListWidget"))
+
+				<!--  tags widget -->
+				@(await Component.InvokeAsync("TagsWidget"))
+
+				<!--  search widget
+				@(await Component.InvokeAsync("SearchWidget"))-->
+				<!--  MonthList widget -->
+				@(await Component.InvokeAsync("MonthListWidget"))
+
+				<!--  MonthList widget -->
+				@(await Component.InvokeAsync("LinkListWidget"))
+
+			</div>
+
+		</div>
+
+		<div class="container">
+
+			<partial name="_Pager" />
+
+		</div>
+	</div>
+
+	<div class="footer-wrap">
+		<div class="container">
+			<div class="site-info">
+
+				<div class="footer-copyright">
+					<p>
+						Copyright © @DateTime.Now.Year. Power by <a href="#">Passingwind</a>. <a href="#">@basicSettings.IcpNumber </a> <a asp-route="sitemap">sitemap</a>, build by asp.net core .
+					</p>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<environment names="Development">
+		<script src="~/lib/jquery/jquery.js"></script>
+		<script src="~/lib/bootstrap/js/bootstrap.js"></script>
+		<script src="~/js/site.js" asp-append-version="true"></script>
+	</environment>
+	<environment names="Staging,Production">
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"
+				asp-fallback-src="~/lib/jquery/jquery.min.js"
+				asp-fallback-test="window.jQuery">
+		</script>
+		<script src="//cdn.bootcss.com/bootstrap/3.4.1/js/bootstrap.min.js"
+				asp-fallback-src="~/lib/bootstrap/js/bootstrap.min.js"
+				asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
+		</script>
+		<script src="~/js/site.min.js" asp-append-version="true"></script>
+	</environment>
+
+	@RenderSection("Scripts", required: false)
+
+	<!--  customer footer -->
+	@Html.Raw(advancedSettings.FooterHtml)
 </body>
 </html>
