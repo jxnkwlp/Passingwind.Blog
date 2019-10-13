@@ -12,9 +12,9 @@ namespace Passingwind.Blog.Web.Services
     {
         const string DefaultPath = "~/Uploads/";
 
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public LocalFileService(IHostingEnvironment hostingEnvironment)
+        public LocalFileService(IWebHostEnvironment hostingEnvironment)
         {
             this._hostingEnvironment = hostingEnvironment;
         }

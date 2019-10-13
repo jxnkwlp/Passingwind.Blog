@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Passingwind.Blog.Web.Captcha;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace Passingwind.Blog.Web
 {
@@ -45,9 +46,7 @@ namespace Passingwind.Blog.Web
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
-			// services.AddAutoRegisterService();
-
-			services.AddDbContextPool<BlogDbContext>(options =>
+			services.AddDbContext<BlogDbContext>(options =>
 			{
 				var dbType = Configuration.GetValue<string>("DbType");
 				if (string.Equals(dbType, "sqlite", StringComparison.OrdinalIgnoreCase))
@@ -62,6 +61,12 @@ namespace Passingwind.Blog.Web
 				{
 					throw new NotSupportedException("Unknow the databse type !");
 				}
+
+#if DEBUG
+				options.EnableSensitiveDataLogging(true);
+				options.EnableDetailedErrors(true);
+#endif
+
 			}) // default Scoped ServiceLifetime
 			.AddScoped<DbContext, BlogDbContext>()
 			// .AddScoped<DbInitializer>()
@@ -96,13 +101,11 @@ namespace Passingwind.Blog.Web
 			services.AddTransient<CaptchaService>();
 			services.AddTransient<IFileService, LocalFileService>();
 
-			services.AddScoped<DbInitializer>();
-
 			services.AddMemoryCache();
 			services.AddSession();
 
-			services.AddMvc()
-				.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+			services.AddControllersWithViews();
+			services.AddRazorPages();
 
 			services.AddResponseCaching();
 			services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
@@ -123,12 +126,9 @@ namespace Passingwind.Blog.Web
 			services.AddScoped(s => s.GetService<SettingManager>().LoadSetting<FeedSettings>());
 		}
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, DbInitializer dbInitializer)
+		// This method gets called by the runtime. Use  this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
-			// init database 
-			dbInitializer.Initialize();
-
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
@@ -146,6 +146,11 @@ namespace Passingwind.Blog.Web
 			app.UseResponseCompression();
 			app.UseResponseCaching();
 
+			if (UseHttps)
+			{
+				app.UseHttpsRedirection();
+			}
+
 			app.UseStaticFiles(new StaticFileOptions()
 			{
 				OnPrepareResponse = context =>
@@ -159,14 +164,14 @@ namespace Passingwind.Blog.Web
 				}
 			});
 
-			if (UseHttps)
-			{
-				app.UseHttpsRedirection();
-			}
+			app.UseImageAxdMiddleware();
+
+			app.UseRouting();
+
+			app.UseAuthentication();
+			app.UseAuthorization();
 
 			app.UseCookiePolicy();
-
-			app.UseImageAxdMiddleware();
 
 			app.UseSession();
 
@@ -175,95 +180,97 @@ namespace Passingwind.Blog.Web
 				ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 			});
 
-			app.UseAuthentication();
-
-			app.UseMvc(RegisterRoutes);
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapControllers();
+				RegisterControllerRoutes(endpoints);
+			});
 		}
 
-		private void RegisterRoutes(IRouteBuilder routes)
+		private void RegisterControllerRoutes(IEndpointRouteBuilder endpoint)
 		{
-			routes.MapAreaRoute(
+			endpoint.MapAreaControllerRoute(
 					name: "admin",
 					areaName: "admin",
-					template: "admin/{controller=Default}/{action=Index}/{id?}");
+					pattern: "admin/{controller=Default}/{action=Index}/{id?}");
 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 				name: RouteNames.LogIn,
-				template: "account/login",
+				pattern: "account/login",
 				defaults: new { controller = "account", action = "login" });
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 				name: RouteNames.Logout,
-				template: "account/logout",
+				pattern: "account/logout",
 				defaults: new { controller = "account", action = "logout" });
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 				name: RouteNames.Register,
-				template: "account/register",
+				pattern: "account/register",
 				defaults: new { controller = "account", action = "register" });
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 				name: RouteNames.ChangePassword,
-				template: "account/changePassword",
+				pattern: "account/changePassword",
 				defaults: new { controller = "account", action = "changepassword" });
 
 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 				name: RouteNames.Home,
-				template: "",
+				pattern: "",
 				defaults: new { controller = "Home", action = "Index" });
 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 			   name: RouteNames.Archive,
-			   template: "archive",
+			   pattern: "archive",
 			   defaults: new { controller = "home", action = "archive" });
 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 				name: RouteNames.Post,
-				template: "post/{slug}",
+				pattern: "post/{slug}",
 				defaults: new { controller = "home", action = "post" });
 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 				name: RouteNames.Page,
-				template: "page/{slug}",
+				pattern: "page/{slug}",
 				defaults: new { controller = "home", action = "page" });
 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 			  name: RouteNames.Author,
-			  template: "author/{username}",
+			  pattern: "author/{username}",
 			  defaults: new { controller = "home", action = "index" });
 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 			   name: RouteNames.Tags,
-			   template: "tag/{name}",
+			   pattern: "tag/{name}",
 			   defaults: new { controller = "home", action = "index" });
 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 			   name: RouteNames.Category,
-			   template: "category/{name}",
+			   pattern: "category/{name}",
 			   defaults: new { controller = "home", action = "index" });
 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 			   name: RouteNames.Monthlist,
-			   template: "{year:int}/{month:range(1,12)}",
+			   pattern: "{year:int}/{month:range(1,12)}",
 			   defaults: new { controller = "home", action = "index" });
 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 				name: RouteNames.Search,
-				template: "search",
+				pattern: "search",
 				defaults: new { controller = "home", action = "index" });
 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 				name: RouteNames.CommentForm,
-				template: "comment/{slug}",
+				pattern: "comment/{postId}",
 				defaults: new { controller = "home", action = "AddComment" });
 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 				name: RouteNames.NotFound,
-				template: "notfound",
+				pattern: "notfound",
 				defaults: new { controller = "home", action = "notfound" });
 
 			// default 
-			routes.MapRoute(
+			endpoint.MapControllerRoute(
 					name: "default",
-					template: "{controller=Home}/{action=Index}/{id?}");
+					pattern: "{controller=Home}/{action=Index}/{id?}");
 		}
 
 	}

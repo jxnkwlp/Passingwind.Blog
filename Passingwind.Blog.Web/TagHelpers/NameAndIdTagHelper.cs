@@ -1,99 +1,98 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using System;
 
 namespace Passingwind.Blog.Web.TagHelpers
 {
-    [HtmlTargetElement(Attributes = "asp-name")]
-    public class NameTagHelper : TagHelper
-    {
-        private const string NameAttributeName = "asp-name";
+	[HtmlTargetElement(Attributes = "asp-name")]
+	public class NameTagHelper : TagHelper
+	{
+		private const string NameAttributeName = "asp-name";
 
-        [HtmlAttributeName(NameAttributeName)]
-        public ModelExpression Name { get; set; }
+		[HtmlAttributeName(NameAttributeName)]
+		public ModelExpression Name { get; set; }
 
-        [ViewContext, HtmlAttributeNotBound]
-        public ViewContext ViewContext { get; set; }
+		[ViewContext, HtmlAttributeNotBound]
+		public ViewContext ViewContext { get; set; }
 
-        private IHtmlGenerator _generator;
+		private IHtmlGenerator _generator;
 
-        public NameTagHelper(IHtmlGenerator generator)
-        {
-            this._generator = generator;
+		public NameTagHelper(IHtmlGenerator generator)
+		{
+			this._generator = generator;
 
-        }
+		}
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-            if (output == null)
-            {
-                throw new ArgumentNullException(nameof(output));
-            }
+		public override void Process(TagHelperContext context, TagHelperOutput output)
+		{
+			if (context == null)
+			{
+				throw new ArgumentNullException(nameof(context));
+			}
+			if (output == null)
+			{
+				throw new ArgumentNullException(nameof(output));
+			}
 
-            if (this.Name != null)
-            {
-                if (this.Name.Metadata == null)
-                {
-                    throw new ArgumentException(nameof(Name));
-                }
+			if (this.Name != null)
+			{
+				if (this.Name.Metadata == null)
+				{
+					throw new ArgumentException(nameof(Name));
+				}
+				 
+				string value = NameAndIdProvider.GetFullHtmlFieldName(ViewContext, this.Name.Name);
 
-                string value = NameAndIdProvider.GetFullHtmlFieldName(ViewContext, this.Name.Name);
+				output.Attributes.SetAttribute("name", value);
+			}
+		}
+	}
 
-                output.Attributes.SetAttribute("name", value);
-            }
-        }
-    }
+	[HtmlTargetElement(Attributes = "asp-id")]
+	public class IdTagHelper : TagHelper
+	{
+		private const string IdAttributeName = "asp-id";
 
-    [HtmlTargetElement(Attributes = "asp-id")]
-    public class IdTagHelper : TagHelper
-    {
-        private const string IdAttributeName = "asp-id";
+		[HtmlAttributeName(IdAttributeName)]
+		public ModelExpression Id { get; set; }
 
-        [HtmlAttributeName(IdAttributeName)]
-        public ModelExpression Id { get; set; }
+		[ViewContext, HtmlAttributeNotBound]
+		public ViewContext ViewContext { get; set; }
 
-        [ViewContext, HtmlAttributeNotBound]
-        public ViewContext ViewContext { get; set; }
+		private IHtmlGenerator _generator;
 
-        private IHtmlGenerator _generator;
+		public IdTagHelper(IHtmlGenerator generator)
+		{
+			this._generator = generator;
 
-        public IdTagHelper(IHtmlGenerator generator)
-        {
-            this._generator = generator;
+		}
 
-        }
+		public override void Process(TagHelperContext context, TagHelperOutput output)
+		{
+			if (context == null)
+			{
+				throw new ArgumentNullException(nameof(context));
+			}
+			if (output == null)
+			{
+				throw new ArgumentNullException(nameof(output));
+			}
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-            if (output == null)
-            {
-                throw new ArgumentNullException(nameof(output));
-            }
+			if (this.Id != null)
+			{
+				if (this.Id.Metadata == null)
+				{
+					throw new ArgumentException(nameof(Id));
+				}
 
-            if (this.Id != null)
-            {
-                if (this.Id.Metadata == null)
-                {
-                    throw new ArgumentException(nameof(Id));
-                }
+				string idFieldName = NameAndIdProvider.GetFullHtmlFieldName(ViewContext, this.Id.Name);
+				string idFieldValue = NameAndIdProvider.CreateSanitizedId(this.ViewContext, idFieldName, _generator.IdAttributeDotReplacement);
 
-                string idFieldName = NameAndIdProvider.GetFullHtmlFieldName(ViewContext, this.Id.Name);
-                string idFieldValue = NameAndIdProvider.CreateSanitizedId(this.ViewContext, idFieldName, _generator.IdAttributeDotReplacement);
-
-                output.Attributes.SetAttribute("id", idFieldValue);
-            }
-        }
-    }
+				output.Attributes.SetAttribute("id", idFieldValue);
+			}
+		}
+	}
 
 
 }

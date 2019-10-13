@@ -5,11 +5,11 @@ namespace Passingwind.Blog
 {
     public class Page : AuditedEntity
     {
-        [Required, MaxLength(500)]
+        [Required, MaxLength(512)]
         public string Title { get; set; }
 
-        [Required]
-        public string Slug { get; set; }
+		[Required, MaxLength(1024)]
+		public string Slug { get; set; }
 
         public string Content { get; set; }
 
