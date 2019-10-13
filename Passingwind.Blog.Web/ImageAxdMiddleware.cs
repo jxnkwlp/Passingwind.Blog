@@ -18,10 +18,10 @@ namespace Passingwind.Blog.Web
     public class ImageAxdMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly UrlEncoder _urlEncoder;
 
-        public ImageAxdMiddleware(RequestDelegate next, IHostingEnvironment hostingEnvironment, UrlEncoder urlEncoder)
+        public ImageAxdMiddleware(RequestDelegate next, IWebHostEnvironment hostingEnvironment, UrlEncoder urlEncoder)
         {
             _next = next;
             _hostingEnvironment = hostingEnvironment;

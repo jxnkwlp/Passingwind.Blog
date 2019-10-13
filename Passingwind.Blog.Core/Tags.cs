@@ -5,7 +5,7 @@ namespace Passingwind.Blog
 {
     public class Tags : Entity
     {
-        [Required, MaxLength(100)]
+        [Required, MaxLength(128)]
         public string Name { get; set; }
 
         public IList<PostTags> Posts { get; set; } = new List<PostTags>();

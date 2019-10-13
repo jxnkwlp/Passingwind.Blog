@@ -7,181 +7,185 @@ using System.Threading.Tasks;
 
 namespace Passingwind.Blog
 {
-    public class PostManager
-    {
-        protected readonly EntityStore _store;
+	public class PostManager
+	{
+		protected readonly EntityStore _store;
 
-        public PostManager(EntityStore store)
-        {
-            this._store = store;
-        }
+		public PostManager(EntityStore store)
+		{
+			this._store = store;
+		}
 
-        public async Task<Post> CreateAsync(Post post)
-        {
-            if (post == null)
-                throw new ArgumentNullException(nameof(post));
+		public async Task<Post> CreateAsync(Post post)
+		{
+			if (post == null)
+				throw new ArgumentNullException(nameof(post));
 
-            return await _store.CreateAsync(post);
-        }
+			return await _store.CreateAsync(post);
+		}
 
-        public async Task<Post> UpdateAsync(Post post)
-        {
-            if (post == null)
-                throw new ArgumentNullException(nameof(post));
+		public async Task<Post> UpdateAsync(Post post)
+		{
+			if (post == null)
+				throw new ArgumentNullException(nameof(post));
 
-            return await _store.UpdateAsync(post);
-        }
+			return await _store.UpdateAsync(post);
+		}
 
-        public async Task DeleteAsync(Post post)
-        {
-            if (post == null)
-                throw new ArgumentNullException(nameof(post));
+		public async Task DeleteAsync(Post post)
+		{
+			if (post == null)
+				throw new ArgumentNullException(nameof(post));
 
-            await _store.DeleteAsync(post);
-        }
+			await _store.DeleteAsync(post);
+		}
 
-        public async Task DeleteByIdAsync(string postId)
-        {
-            var post = await _store.FindByIdAsync<Post>(new string[] { postId });
-            if (post != null)
-                await DeleteAsync(post);
-        }
+		public async Task DeleteByIdAsync(string postId)
+		{
+			var post = await _store.FindByIdAsync<Post>(new string[] { postId });
+			if (post != null)
+				await DeleteAsync(post);
+		}
 
-        public async Task<Post> FindByIdAsync(string postId)
-        {
-            // ef core 没有延迟加载
-            return await _store.Posts
-                .Include(t => t.User)
-                .Include(t => t.Categories).ThenInclude(c => c.Category)
-                .Include(t => t.Tags).ThenInclude(t => t.Tags)
-                .FirstOrDefaultAsync(t => t.Id == postId);
-        }
+		public async Task<Post> FindByIdAsync(string postId)
+		{
+			return await _store.Posts
+				.Include(t => t.User)
+				.Include(t => t.Categories).ThenInclude(c => c.Category)
+				.Include(t => t.Tags).ThenInclude(t => t.Tags)
+				.FirstOrDefaultAsync(t => t.Id == postId);
+		}
 
-        public async Task<Post> FindBySlugAsync(string slug)
-        {
-            // ef core 没有延迟加载
-            return await _store.Posts
-                  .Include(t => t.User)
-                  .Include(t => t.Categories).ThenInclude(c => c.Category)
-                  .Include(t => t.Tags).ThenInclude(t => t.Tags)
-                  .FirstOrDefaultAsync(t => t.Slug.Equals(slug, StringComparison.OrdinalIgnoreCase));
-        }
+		public async Task<Post> FindBySlugAsync(string slug)
+		{
+			// BUG 20191013
+			// https://github.com/aspnet/EntityFrameworkCore/issues/18020
+			// https://github.com/aspnet/EntityFrameworkCore/issues/1222
+			// https://github.com/aspnet/EntityFrameworkCore/issues/18234
+			// String equals with StringComparison.InvariantCultureIgnoreCase can't work !
 
-        public async Task UpdateIsPublishAsync(string postId, bool published)
-        {
-            var post = await _store.FindByIdAsync<Post>(new string[] { postId });
-            if (post != null)
-            {
-                post.IsDraft = !published;
+			return await _store.Posts
+				  .Include(t => t.User)
+				  .Include(t => t.Categories).ThenInclude(c => c.Category)
+				  .Include(t => t.Tags).ThenInclude(t => t.Tags)
+				  .FirstOrDefaultAsync(t => t.Slug.ToLower() == slug.ToLower());
+		}
 
-                await _store.UpdateAsync(post);
-            }
-        }
+		public async Task UpdateIsPublishAsync(string postId, bool published)
+		{
+			var post = await _store.FindByIdAsync<Post>(new string[] { postId });
+			if (post != null)
+			{
+				post.IsDraft = !published;
 
-        public async Task<int> IncreaseViewCountAsync(string postId)
-        {
-            var post = await FindByIdAsync(postId);
-            if (post != null)
-                post.ViewsCount++;
+				await _store.UpdateAsync(post);
+			}
+		}
 
-            await UpdateAsync(post);
+		public async Task<int> IncreaseViewCountAsync(string postId)
+		{
+			var post = await FindByIdAsync(postId);
+			if (post != null)
+				post.ViewsCount++;
 
-            return post.CommentsCount;
-        }
+			await UpdateAsync(post);
 
-        #region Category
+			return post.CommentsCount;
+		}
 
-        public Task<IList<PostCategory>> GetPostCategoriesAsync(string postId)
-        {
-            return Task.FromResult<IList<PostCategory>>(_store.GetQueryable<PostCategory>().Where(t => t.PostId == postId).ToList());
-        }
+		#region Category
 
-        public Task<IList<Category>> GetCategoriesAsync(string postId)
-        {
-            var categoryIds = _store.GetQueryable<PostCategory>().Where(t => t.PostId == postId).Select(t => t.CategoryId);
+		public Task<IList<PostCategory>> GetPostCategoriesAsync(string postId)
+		{
+			return Task.FromResult<IList<PostCategory>>(_store.GetQueryable<PostCategory>().Where(t => t.PostId == postId).ToList());
+		}
 
-            return Task.FromResult<IList<Category>>(_store.GetQueryable<Category>().Where(t => categoryIds.Contains(t.Id)).ToList());
-        }
+		public Task<IList<Category>> GetCategoriesAsync(string postId)
+		{
+			var categoryIds = _store.GetQueryable<PostCategory>().Where(t => t.PostId == postId).Select(t => t.CategoryId);
 
-        public async Task RemoveCategoryAsync(Post post, string categoryId)
-        {
-            var postCategory = await _store.FindByAsync<PostCategory>(t => t.CategoryId == categoryId && t.PostId == post.Id);
-            if (postCategory != null)
-            {
-                await _store.DeleteAsync(postCategory);
-            }
-        }
+			return Task.FromResult<IList<Category>>(_store.GetQueryable<Category>().Where(t => categoryIds.Contains(t.Id)).ToList());
+		}
 
-        public async Task RemoveCategoryAsync(PostCategory postCategory)
-        {
-            if (postCategory != null)
-            {
-                await _store.DeleteAsync(postCategory);
-            }
-        }
+		public async Task RemoveCategoryAsync(Post post, string categoryId)
+		{
+			var postCategory = await _store.FindByAsync<PostCategory>(t => t.CategoryId == categoryId && t.PostId == post.Id);
+			if (postCategory != null)
+			{
+				await _store.DeleteAsync(postCategory);
+			}
+		}
 
-        #endregion Category
+		public async Task RemoveCategoryAsync(PostCategory postCategory)
+		{
+			if (postCategory != null)
+			{
+				await _store.DeleteAsync(postCategory);
+			}
+		}
 
-        #region tags
+		#endregion Category
 
-        public Task<IList<string>> GetTagsStringListAsync(string postId)
-        {
-            var tagsIds = _store.GetQueryable<PostTags>().Where(t => t.PostId == postId).Select(t => t.TagsId).ToList();
+		#region tags
 
-            var query = _store.GetQueryable<Tags>().Where(t => tagsIds.Contains(t.Id)).Select(t => t.Name).ToList();
+		public Task<IList<string>> GetTagsStringListAsync(string postId)
+		{
+			var tagsIds = _store.GetQueryable<PostTags>().Where(t => t.PostId == postId).Select(t => t.TagsId).ToList();
 
-            return Task.FromResult<IList<string>>(query);
-        }
+			var query = _store.GetQueryable<Tags>().Where(t => tagsIds.Contains(t.Id)).Select(t => t.Name).ToList();
 
-        public Task<IList<PostTags>> GetTagsAsync(string postId)
-        {
-            return Task.FromResult<IList<PostTags>>(_store.GetQueryable<PostTags>().Where(t => t.PostId == postId).ToList());
-        }
+			return Task.FromResult<IList<string>>(query);
+		}
 
-        public async Task RemoveTagsAsync(Post post, string tagId)
-        {
-            var postTags = await _store.FindByAsync<PostTags>(t => t.TagsId == tagId && t.PostId == post.Id);
-            if (postTags != null)
-            {
-                await _store.DeleteAsync(postTags);
-            }
-        }
+		public Task<IList<PostTags>> GetTagsAsync(string postId)
+		{
+			return Task.FromResult<IList<PostTags>>(_store.GetQueryable<PostTags>().Where(t => t.PostId == postId).ToList());
+		}
 
-        #endregion tags
+		public async Task RemoveTagsAsync(Post post, string tagId)
+		{
+			var postTags = await _store.FindByAsync<PostTags>(t => t.TagsId == tagId && t.PostId == post.Id);
+			if (postTags != null)
+			{
+				await _store.DeleteAsync(postTags);
+			}
+		}
 
-        #region Comments
+		#endregion tags
 
-        public async Task<int> IncreaseCommentsCountAsync(string postId)
-        {
-            var post = await FindByIdAsync(postId);
-            if (post != null)
-                post.CommentsCount++;
+		#region Comments
 
-            await UpdateAsync(post);
+		public async Task<int> IncreaseCommentsCountAsync(string postId)
+		{
+			var post = await FindByIdAsync(postId);
+			if (post != null)
+				post.CommentsCount++;
 
-            return post.CommentsCount;
-        }
+			await UpdateAsync(post);
 
-        public async Task<int> ReduceCommentsCountAsync(string postId)
-        {
-            var post = await FindByIdAsync(postId);
-            if (post != null && post.CommentsCount > 0)
-                post.CommentsCount--;
+			return post.CommentsCount;
+		}
 
-            await UpdateAsync(post);
+		public async Task<int> ReduceCommentsCountAsync(string postId)
+		{
+			var post = await FindByIdAsync(postId);
+			if (post != null && post.CommentsCount > 0)
+				post.CommentsCount--;
 
-            return post.CommentsCount;
-        }
+			await UpdateAsync(post);
 
-        #endregion Comments
+			return post.CommentsCount;
+		}
 
-        public IQueryable<Post> GetQueryable()
-        {
-            return _store.Posts
-                .Include(t => t.User)
-                .Include(t => t.Categories).ThenInclude(c => c.Category)
-                .Include(t => t.Tags).ThenInclude(t => t.Tags)
-                .OrderByDescending(t => t.CreationTime).ThenByDescending(t => t.PublishedTime);
-        }
-    }
+		#endregion Comments
+
+		public IQueryable<Post> GetQueryable()
+		{
+			return _store.Posts
+				.Include(t => t.User)
+				.Include(t => t.Categories).ThenInclude(c => c.Category)
+				.Include(t => t.Tags).ThenInclude(t => t.Tags)
+				.OrderByDescending(t => t.CreationTime).ThenByDescending(t => t.PublishedTime);
+		}
+	}
 }

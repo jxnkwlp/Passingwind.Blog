@@ -1,19 +1,18 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 using Passingwind.Blog.Pager;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace Passingwind.Blog.Web.Pager
 {
-    public class MvcPager : IHtmlContent
+	public class MvcPager : IHtmlContent
     {
         private readonly IUrlHelperFactory _urlHelperFactory;
         //private readonly IHtmlGenerator _htmlGenerator;
