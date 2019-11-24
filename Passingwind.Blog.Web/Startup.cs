@@ -1,25 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Passingwind.Blog.Web.Models;
-using Passingwind.Blog.Web.Services;
-using Microsoft.AspNetCore.Routing;
-using Passingwind.Blog.Data;
-using Passingwind.Blog.BlogML;
-using System.Diagnostics;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.AspNetCore.HttpOverrides;
-using Passingwind.Blog.Web.Captcha;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Passingwind.Blog.BlogML;
+using Passingwind.Blog.Data;
+using Passingwind.Blog.Web.Captcha;
+using Passingwind.Blog.Web.Services;
+using System;
 
 namespace Passingwind.Blog.Web
 {
@@ -44,6 +38,12 @@ namespace Passingwind.Blog.Web
 				// This lambda determines whether user consent for non-essential cookies is needed for a given request.
 				options.CheckConsentNeeded = context => true;
 				options.MinimumSameSitePolicy = SameSiteMode.None;
+			});
+
+			// If using IIS:
+			services.Configure<IISServerOptions>(options =>
+			{
+				options.AllowSynchronousIO = true;
 			});
 
 			services.AddDbContext<BlogDbContext>(options =>
@@ -98,11 +98,16 @@ namespace Passingwind.Blog.Web
 			//services.AddTransient<ISmsSender, AuthMessageSender>();
 			services.AddTransient<BlogMLImporter>();
 			services.AddTransient<BlogMLExporter>();
-			services.AddTransient<CaptchaService>();
+			services.AddTransient<ICaptchaService, CaptchaService>();
 			services.AddTransient<IFileService, LocalFileService>();
 
 			services.AddMemoryCache();
-			services.AddSession();
+			services.AddSession(options =>
+			{
+				// options.IdleTimeout = TimeSpan.FromSeconds(60);
+				options.Cookie.IsEssential = true;
+				options.Cookie.HttpOnly = true;
+			});
 
 			services.AddControllersWithViews();
 			services.AddRazorPages();

@@ -4,120 +4,122 @@
 /*  comment.js */
 
 function asyncRequest(element) {
-    if (!element)
-        return;
+  if (!element)
+    return;
 
-    var loading = $(element.getAttribute("data-ajax-loading"));
+  var loading = $(element.getAttribute("data-ajax-loading"));
 
-    $.ajax({
-        type: 'post',
-        url: element.getAttribute("action") || undefined,
-        data: $(element).serializeArray(),
-        beforeSend: function (xhr) {
-            if (loading)
-                loading.show();
-        },
-        complete: function () {
-            if (loading)
-                loading.hide();
-        },
-        success: function (data, status, xhr) {
-            asyncOnSuccess(element, data, xhr.getResponseHeader("Content-Type") || "text/html");
-        },
-        error: function () {
-            console.error('post comment error.');
-        }
-    });
+  $.ajax({
+    type: 'post',
+    url: element.getAttribute("action") || undefined,
+    data: $(element).serializeArray(),
+    beforeSend: function (xhr) {
+      if (loading)
+        loading.show();
+    },
+    complete: function () {
+      if (loading)
+        loading.hide();
+    },
+    success: function (data, status, xhr) {
+      asyncOnSuccess(element, data, xhr.getResponseHeader("Content-Type") || "text/html");
+    },
+    error: function () {
+      console.error('post comment error.');
+    }
+  });
 }
+
 
 function asyncOnSuccess(element, data, contentType) {
-    $(element).find('[type=submit]').removeAttr('disabled');
-    if (data.parentId)
-        $('#comment-' + data.parentId).find('#comment-respond').remove();
+  $(element).find('[type=submit]').removeAttr('disabled');
+  if (data.parentId)
+    $('#comment-' + data.parentId).find('#comment-respond').remove();
 
-    if (!data.result) {
-        if (data.message) { alert(data.message); }
-        return;
-    }
+  if (!data.result) {
+    if (data.message) { _alert({ text: data.message, icon: 'error' }); }
+    return;
+  }
 
-    if (data.commentId) {
-        $.get(data.url, function (html) {
-            var parentId = data.parentId;
-            if (parentId === null) {
-                $('.comment-list > ul').append(html);
-            } else {
-                $(html).prependTo($('#comment-' + parentId).find(' > ul'));
-            }
+  if (data.commentId) {
+    _alert({ text: 'Submited', icon: 'success' });
+    $.get(data.url, function (html) {
+      var parentId = data.parentId;
+      if (parentId === null) {
+        $('.comment-list > ul').append(html);
+      } else {
+        $(html).prependTo($('#comment-' + parentId).find(' > ul'));
+      }
 
-            initCommentForm();
-        });
-    }
-    //var commentData = data.comment;
-    //// parse and format data
-    //var $templateContainer = $("<div/>");
-    //$templateContainer.html($('#commentTemplate').html());
+      initCommentForm();
+    });
+  }
+  //var commentData = data.comment;
+  //// parse and format data
+  //var $templateContainer = $("<div/>");
+  //$templateContainer.html($('#commentTemplate').html());
 
-    //$templateContainer.find('li').attr('id', 'comment-' + commentData.id).attr('data-id', commentData.id);
-    //$templateContainer.find('.comment-actions a').data('id', commentData.id);
-    //$templateContainer.find('.comment-time time').attr('datetime', commentData.createOn).html(new Date(commentData.createOn).toLocaleString().replace(/年|月/g, "-").replace(/日|上午|下午/g, " "));
-    //$templateContainer.find('.comment-author .avatar').attr('src', commentData.avatarUrl);
-    //$templateContainer.find('.comment-author .author-name a').attr('href', commentData.website);
-    //$templateContainer.find('.comment-author .author-name a').html(commentData.author);
-    //$templateContainer.find('.comment-content p').html(commentData.content);
+  //$templateContainer.find('li').attr('id', 'comment-' + commentData.id).attr('data-id', commentData.id);
+  //$templateContainer.find('.comment-actions a').data('id', commentData.id);
+  //$templateContainer.find('.comment-time time').attr('datetime', commentData.createOn).html(new Date(commentData.createOn).toLocaleString().replace(/年|月/g, "-").replace(/日|上午|下午/g, " "));
+  //$templateContainer.find('.comment-author .avatar').attr('src', commentData.avatarUrl);
+  //$templateContainer.find('.comment-author .author-name a').attr('href', commentData.website);
+  //$templateContainer.find('.comment-author .author-name a').html(commentData.author);
+  //$templateContainer.find('.comment-content p').html(commentData.content);
 
-    //// end parse and format data
+  //// end parse and format data
 
-    ////console.log($templateContainer);
+  ////console.log($templateContainer);
 
-    ////var commentsContainer = commentData.parentId == null ? $('.comment-list > ul') : $('#comment-' + parentId + ' > ul');
-    ////console.log(commentsContainer);
-    ////$("<span>Hello world!</span>").insertAfter(commentsContainer);
-    //// $($templateContainer.html()).insertAfter(commentsContainer);
+  ////var commentsContainer = commentData.parentId == null ? $('.comment-list > ul') : $('#comment-' + parentId + ' > ul');
+  ////console.log(commentsContainer);
+  ////$("<span>Hello world!</span>").insertAfter(commentsContainer);
+  //// $($templateContainer.html()).insertAfter(commentsContainer);
 
-    //var parentId = commentData.parentId;
-    //if (parentId == null) {
-    //    $('.comment-list > ul').append($templateContainer.html());
-    //} else {
-    //    $($templateContainer.html()).prependTo($('#comment-' + parentId).find(' > ul'));
-    //}
+  //var parentId = commentData.parentId;
+  //if (parentId == null) {
+  //    $('.comment-list > ul').append($templateContainer.html());
+  //} else {
+  //    $($templateContainer.html()).prependTo($('#comment-' + parentId).find(' > ul'));
+  //}
 
-    //initCommentForm();
+  //initCommentForm();
 }
 function initCommentForm() {
-    $('#comment-respond').find('textarea').val('');
-    $('#comment-respond').find('[name=CaptchaCode]').val('');
+  $('#comment-respond').find('textarea').val('');
+  $('#comment-respond').find('[name=CaptchaCode]').val('');
 }
 function moveCommentForm(commentId) {
 
-    $('#comment-respond').hide(); // remove all 
+  $('#comment-respond').hide(); // remove all 
 
-    var container = $('#comment-' + commentId); //li#comment
-    if (container.find($('#comment-respond')).size() > 0) {
-        container.find($('#comment-respond')).remove();
-    }
+  var container = $('#comment-' + commentId); //li#comment
+  if (container.find($('#comment-respond')).size() > 0) {
+    container.find($('#comment-respond')).remove();
+  }
 
-    // container.find($('#comment-respond')).show();
+  // container.find($('#comment-respond')).show();
 
-    $($('#comment-respond').prop('outerHTML')).show().insertAfter(container.find('>.comment-body'));
+  $($('#comment-respond').prop('outerHTML')).show().insertAfter(container.find('>.comment-body'));
 
-    var $form = container.find('#commentForm');
+  var $form = container.find('#commentForm');
 
-    $form.find('input[type=hidden][name=ParentId]').val(commentId);
-    $form.find('.cancel').show();
+  $form.find('input[type=hidden][name=ParentId]').val(commentId);
+  $form.find('.cancel').show();
 
-    $.validator.unobtrusive.parse($form);
+  $.validator.unobtrusive.parse($form);
 }
 function canelCommentForm(obj) {
-    $(obj).closest('#comment-respond').remove();
+  $(obj).closest('#comment-respond').remove();
 }
 function showCommentForm() {
-    $('#comment-respond').show();
-    $('html,body').animate({ scrollTop: $('#comment-respond').offset().top }, 'fast');
+  $('#comment-respond').show();
+  $('html,body').animate({ scrollTop: $('#comment-respond').offset().top }, 'fast');
 }
 $(document).on("submit", "form[id=commentForm]", function (evt) {
-    evt.preventDefault();
-    $(this).find('[type=submit]').attr('disabled', 'disabled');
-    asyncRequest(this);
+  evt.preventDefault();
+  $(this).find('[type=submit]').attr('disabled', 'disabled');
+  asyncRequest(this);
 
 });
 

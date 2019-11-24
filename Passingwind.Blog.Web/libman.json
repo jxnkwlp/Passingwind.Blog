@@ -10,7 +10,7 @@
 			"library": "jquery@2.2.4",
 			"destination": "wwwroot/lib/jquery"
 		},
-		{ 
+		{
 			"library": "jquery-validate@1.19.1",
 			"destination": "wwwroot/lib/jquery-validate"
 		},
@@ -37,6 +37,10 @@
 		{
 			"library": "jquery.pjax@2.0.1",
 			"destination": "wwwroot/lib/jquery.pjax"
+		},
+		{
+			"library": "sweetalert@2.1.2",
+			"destination": "wwwroot/lib/sweetalert"
 		}
 	]
 }
