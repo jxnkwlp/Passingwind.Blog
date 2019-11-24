@@ -1,27 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Passingwind.Blog.Web.Captcha;
 
 namespace Passingwind.Blog.Web.Controllers
 {
-    public class CaptchaController : Controller
-    {
-        private CaptchaService _captchaService;
+	public class CaptchaController : Controller
+	{
+		private ICaptchaService _captchaService;
 
-        public CaptchaController(CaptchaService captchaService)
-        {
-            _captchaService = captchaService;
+		public CaptchaController(ICaptchaService captchaService)
+		{
+			_captchaService = captchaService;
+		}
 
-        }
+		public IActionResult Index(string id)
+		{
+			var imageData = _captchaService.GenerateCaptchaImage(id);
 
-        public IActionResult Index()
-        {
-            var bytes = _captchaService.NewCaptchaImage();
-
-            return File(bytes, "image/png");
-        }
-    }
+			return File(imageData.Data, "image/png");
+		}
+	}
 }

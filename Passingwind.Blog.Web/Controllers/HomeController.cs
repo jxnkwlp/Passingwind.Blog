@@ -14,612 +14,632 @@ using Passingwind.Blog.Web.Services;
 using MaxMind.GeoIP2;
 using Microsoft.AspNetCore.Hosting;
 using Passingwind.Blog.Web.Captcha;
+using System.IO;
 
 namespace Passingwind.Blog.Web.Controllers
 {
-    public class HomeController : Controller
-    {
-        private readonly PostManager _postManager;
-        private readonly CategoryManager _categoryManager;
-        private readonly TagsManager _tagManager;
-        private readonly PageManager _pageManager;
-        private readonly CommentManager _commentManager;
-        private readonly UserManager _userManager;
-        private readonly IEmailSender _emailSender;
+	public class HomeController : Controller
+	{
+		private readonly PostManager _postManager;
+		private readonly CategoryManager _categoryManager;
+		private readonly TagsManager _tagManager;
+		private readonly PageManager _pageManager;
+		private readonly CommentManager _commentManager;
+		private readonly UserManager _userManager;
+		private readonly IEmailSender _emailSender;
+
+		private readonly BasicSettings _basicSettings;
+		private readonly CommentsSettings _commentsSettings;
+		private readonly EmailSettings _emailSettings;
+
+		private readonly ICaptchaService _captchaService;
+
+		private readonly IWebHostEnvironment _hostingEnvironment;
+		private readonly IHttpContextAccessor _httpContextAccessor;
+
+		public HomeController(PostManager postManager, CategoryManager categoryManager, TagsManager tagManager, PageManager pageManager, CommentManager commentManager, UserManager userManager, BasicSettings basicSettings, CommentsSettings commentsSettings, EmailSettings emailSettings, IEmailSender emailSender, ICaptchaService captchaService, IWebHostEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
+		{
+			this._postManager = postManager;
+			this._categoryManager = categoryManager;
+			this._tagManager = tagManager;
+			this._pageManager = pageManager;
+			this._commentManager = commentManager;
+			this._userManager = userManager;
+
+			this._emailSender = emailSender;
+
+			this._basicSettings = basicSettings;
+			this._commentsSettings = commentsSettings;
+			this._emailSettings = emailSettings;
+
+			this._captchaService = captchaService;
+
+			this._hostingEnvironment = hostingEnvironment;
+			_httpContextAccessor = httpContextAccessor;
+		}
+
+		#region Post List
+
+		public async Task<IActionResult> Index(int page)
+		{
+			page = page <= 1 ? 1 : page;
+
+			if (Request.IsCategoryUrl())
+			{
+				var categoryValue = this.RouteData.Values["name"];
+
+				string categoryName = categoryValue?.ToString();
 
-        private readonly BasicSettings _basicSettings;
-        private readonly CommentsSettings _commentsSettings;
-        private readonly EmailSettings _emailSettings;
+				if (categoryName != null)
+				{
+					var result = await GetPostsByCategory(categoryName, page);
 
-        private readonly CaptchaService _captchaService;
+					if (result.Item1 == null)
+					{
+						return View("NotFound");
+					}
+
+					await SetTitleAsync(result.Item1.Name, page: page);
+
+					return View("Posts", result.Item2);
+				}
+			}
+			else if (Request.IsTagsUrl())
+			{
+				var tagValue = this.RouteData.Values["name"];
+
+				string tagName = tagValue?.ToString();
 
-        private readonly IHostingEnvironment _hostingEnvironment;
+				if (tagName != null)
+				{
+					var result = await GetPostsByTag(tagName, page);
+
+					if (result.Item1 == null)
+					{
+						return View("NotFound");
+					}
 
+					await SetTitleAsync(result.Item1.Name, page: page);
 
+					return View("Posts", result.Item2);
+				}
+			}
+			else if (Request.IsAuthorUrl())
+			{
+				var value = this.RouteData.Values["username"];
 
-        public HomeController(PostManager postManager, CategoryManager categoryManager, TagsManager tagManager, PageManager pageManager, CommentManager commentManager, UserManager userManager, BasicSettings basicSettings, CommentsSettings commentsSettings, EmailSettings emailSettings, IEmailSender emailSender, CaptchaService captchaService, IHostingEnvironment hostingEnvironment)
-        {
-            this._postManager = postManager;
-            this._categoryManager = categoryManager;
-            this._tagManager = tagManager;
-            this._pageManager = pageManager;
-            this._commentManager = commentManager;
-            this._userManager = userManager;
+				string username = value?.ToString();
 
-            this._emailSender = emailSender;
+				if (!string.IsNullOrEmpty(username))
+				{
+					var result = await GetPostsByAuthor(username, page);
 
-            this._basicSettings = basicSettings;
-            this._commentsSettings = commentsSettings;
-            this._emailSettings = emailSettings;
+					if (result.user == null)
+					{
+						return View("NotFound");
+					}
 
-            this._captchaService = captchaService;
+					await SetTitleAsync(result.user.DisplayName, page: page);
 
-            this._hostingEnvironment = hostingEnvironment;
-        }
+					return View("Posts", result.post);
+				}
 
-        #region Post List
+			}
+			else if (Request.IsMonthListUrl())
+			{
+				var yearValue = this.RouteData.Values["year"];
+				var monthValue = this.RouteData.Values["month"];
 
-        public async Task<IActionResult> Index(int page)
-        {
-            page = page <= 1 ? 1 : page;
+				if (yearValue != null && monthValue != null)
+				{
+					int year = 0;
+					int month = 0;
 
-            if (Request.IsCategoryUrl())
-            {
-                var categoryValue = this.RouteData.Values["name"];
+					if (int.TryParse(yearValue.ToString(), out year))
+					{
+						if (int.TryParse(monthValue.ToString(), out month))
+						{
+							var result = await GetPostsByMonth(year, month, page);
 
-                string categoryName = categoryValue?.ToString();
+							await SetTitleAsync(result.Item1.ToString("yyyy/MM"), page: page);
 
-                if (categoryName != null)
-                {
-                    var result = await GetPostsByCategory(categoryName, page);
+							return View("Posts", result.Item2);
+						}
+					}
 
-                    if (result.Item1 == null)
-                    {
-                        return View("NotFound");
-                    }
+					return View("NotFound");
+				}
+			}
+			else if (Request.IsSearchUrl())
+			{
+				string searchTerm = Request.Query["q"];
 
-                    await SetTitleAsync(result.Item1.Name, page: page);
+				if (!string.IsNullOrEmpty(searchTerm))
+				{
+					var result = await GetPostsBySearch(searchTerm, page);
 
-                    return View("Posts", result.Item2);
-                }
-            }
-            else if (Request.IsTagsUrl())
-            {
-                var tagValue = this.RouteData.Values["name"];
+					await SetTitleAsync(searchTerm, page: page);
 
-                string tagName = tagValue?.ToString();
+					return View("Posts", result);
+				}
+			}
 
-                if (tagName != null)
-                {
-                    var result = await GetPostsByTag(tagName, page);
+			await SetTitleAsync("");
 
-                    if (result.Item1 == null)
-                    {
-                        return View("NotFound");
-                    }
+			return View("Posts", await GetPosts(page));
+		}
 
-                    await SetTitleAsync(result.Item1.Name, page: page);
+		private async Task<Tuple<Tags, IPagedList<PostViewModel>>> GetPostsByTag(string tagName, int page)
+		{
+			var query = _postManager.GetQueryable();
 
-                    return View("Posts", result.Item2);
-                }
-            }
-            else if (Request.IsAuthorUrl())
-            {
-                var value = this.RouteData.Values["username"];
+			var tag = await _tagManager.FindByNameAsync(tagName);
+			if (tag != null)
+			{
+				query = query.Where(t => t.Tags.Any(c => c.TagsId == tag.Id));
+			}
 
-                string username = value?.ToString();
+			var result = await GetPosts(query, page);
 
-                if (!string.IsNullOrEmpty(username))
-                {
-                    var result = await GetPostsByAuthor(username, page);
+			return new Tuple<Tags, IPagedList<PostViewModel>>(tag, result);
+		}
 
-                    if (result.user == null)
-                    {
-                        return View("NotFound");
-                    }
+		private async Task<Tuple<Category, IPagedList<PostViewModel>>> GetPostsByCategory(string categoryName, int page)
+		{
+			var query = _postManager.GetQueryable();
 
-                    await SetTitleAsync(result.user.DisplayName, page: page);
+			var category = await _categoryManager.GetBySlugAsync(categoryName);
+			if (category != null)
+			{
+				query = query.Where(t => t.Categories.Any(c => c.CategoryId == category.Id));
+			}
 
-                    return View("Posts", result.post);
-                }
+			var result = await GetPosts(query, page);
 
-            }
-            else if (Request.IsMonthListUrl())
-            {
-                var yearValue = this.RouteData.Values["year"];
-                var monthValue = this.RouteData.Values["month"];
+			return new Tuple<Category, IPagedList<PostViewModel>>(category, result);
+		}
 
-                if (yearValue != null && monthValue != null)
-                {
-                    int year = 0;
-                    int month = 0;
+		private async Task<(User user, IPagedList<PostViewModel> post)> GetPostsByAuthor(string username, int page)
+		{
+			var query = _postManager.GetQueryable();
 
-                    if (int.TryParse(yearValue.ToString(), out year))
-                    {
-                        if (int.TryParse(monthValue.ToString(), out month))
-                        {
-                            var result = await GetPostsByMonth(year, month, page);
+			var user = await _userManager.FindByNameAsync(username);
 
-                            await SetTitleAsync(result.Item1.ToString("yyyy/MM"), page: page);
+			if (user == null)
+				return new ValueTuple<User, IPagedList<PostViewModel>>(null, null);
 
-                            return View("Posts", result.Item2);
-                        }
-                    }
+			query = query.Where(t => t.User != null && t.User.Id == user.Id);
 
-                    return View("NotFound");
-                }
-            }
-            else if (Request.IsSearchUrl())
-            {
-                string searchTerm = Request.Query["q"];
+			var result = await GetPosts(query, page);
 
-                if (!string.IsNullOrEmpty(searchTerm))
-                {
-                    var result = await GetPostsBySearch(searchTerm, page);
+			return new ValueTuple<User, IPagedList<PostViewModel>>(user, result);
+		}
 
-                    await SetTitleAsync(searchTerm, page: page);
+		private async Task<Tuple<DateTime, IPagedList<PostViewModel>>> GetPostsByMonth(int year, int month, int page)
+		{
+			var query = _postManager.GetQueryable().Where(t => t.PublishedTime.Year == year && t.PublishedTime.Month == month);
 
-                    return View("Posts", result);
-                }
-            }
+			var result = await GetPosts(query, page);
 
-            await SetTitleAsync("");
+			return new Tuple<DateTime, IPagedList<PostViewModel>>(new DateTime(year, month, 1), result);
+		}
 
-            return View("Posts", await GetPosts(page));
-        }
+		private async Task<IPagedList<PostViewModel>> GetPostsBySearch(string q, int page)
+		{
+			var query = _postManager.GetQueryable().Where(t => t.Title.Contains(q));
 
-        private async Task<Tuple<Tags, IPagedList<PostViewModel>>> GetPostsByTag(string tagName, int page)
-        {
-            var query = _postManager.GetQueryable();
+			var result = await GetPosts(query, page);
 
-            var tag = await _tagManager.FindByNameAsync(tagName);
-            if (tag != null)
-            {
-                query = query.Where(t => t.Tags.Any(c => c.TagsId == tag.Id));
-            }
+			return result;
+		}
 
-            var result = await GetPosts(query, page);
+		private async Task<IPagedList<PostViewModel>> GetPosts(int page)
+		{
+			var query = _postManager.GetQueryable();
 
-            return new Tuple<Tags, IPagedList<PostViewModel>>(tag, result);
-        }
+			return await GetPosts(query, page);
+		}
 
-        private async Task<Tuple<Category, IPagedList<PostViewModel>>> GetPostsByCategory(string categoryName, int page)
-        {
-            var query = _postManager.GetQueryable();
+		private async Task<IPagedList<PostViewModel>> GetPosts(IQueryable<Post> query, int page)
+		{
+			var pageSize = _basicSettings.PageShowCount;
+			if (pageSize <= 1) pageSize = 1;
 
-            var category = await _categoryManager.GetBySlugAsync(categoryName);
-            if (category != null)
-            {
-                query = query.Where(t => t.Categories.Any(c => c.CategoryId == category.Id));
-            }
+			var queryResult = await Task.FromResult(query.Where(t => !t.IsDraft).OrderByDescending(t => t.PublishedTime).ToPagedList(page, pageSize));
 
-            var result = await GetPosts(query, page);
+			var models = new List<PostViewModel>();
 
-            return new Tuple<Category, IPagedList<PostViewModel>>(category, result);
-        }
+			foreach (var item in queryResult)
+			{
+				var model = item.ToModel();
 
-        private async Task<(User user, IPagedList<PostViewModel> post)> GetPostsByAuthor(string username, int page)
-        {
-            var query = _postManager.GetQueryable();
+				await PreparePostViewModel(model, item);
 
-            var user = await _userManager.FindByNameAsync(username);
+				models.Add(model);
+			}
 
-            query = query.Where(t => string.Equals(t.User.UserName, username, StringComparison.CurrentCultureIgnoreCase));
+			var result = new PagedList<PostViewModel>(models, queryResult.PageNumber, queryResult.PageSize, queryResult.TotalItems);
 
-            var result = await GetPosts(query, page);
+			ViewData["pageMeta"] = result;
 
-            return new ValueTuple<User, IPagedList<PostViewModel>>(user, result);
-        }
+			return await Task.FromResult(result);
+		}
 
-        private async Task<Tuple<DateTime, IPagedList<PostViewModel>>> GetPostsByMonth(int year, int month, int page)
-        {
-            var query = _postManager.GetQueryable().Where(t => t.PublishedTime.Year == year && t.PublishedTime.Month == month);
+		#endregion
 
-            var result = await GetPosts(query, page);
+		#region Post
 
-            return new Tuple<DateTime, IPagedList<PostViewModel>>(new DateTime(year, month, 1), result);
-        }
+		public async Task<IActionResult> Post(string id, string slug)
+		{
+			if (string.IsNullOrWhiteSpace(id) && string.IsNullOrWhiteSpace(slug))
+			{
+				return View("NotFound");
+			}
 
-        private async Task<IPagedList<PostViewModel>> GetPostsBySearch(string q, int page)
-        {
-            var query = _postManager.GetQueryable().Where(t => t.Title.Contains(q));
+			PostViewModel model = null;
+			if (!string.IsNullOrWhiteSpace(id))
+			{
+				model = await GetPostById(id);
+			}
+			else
+			{
+				model = await GetPostBySlug(slug);
+			}
 
-            var result = await GetPosts(query, page);
 
-            return result;
-        }
+			if (model == null)
+			{
+				return View("NotFound");
+			}
 
-        private async Task<IPagedList<PostViewModel>> GetPosts(int page)
-        {
-            var query = _postManager.GetQueryable();
+			await _postManager.IncreaseViewCountAsync(model.Id);
 
-            return await GetPosts(query, page);
-        }
+			await SetTitleAsync(model.Title, string.Join(",", model.Tags), model.Description);
 
-        private async Task<IPagedList<PostViewModel>> GetPosts(IQueryable<Post> query, int page)
-        {
-            var pageSize = _basicSettings.PageShowCount;
-            if (pageSize <= 1) pageSize = 1;
+			return View(model);
+		}
 
-            var queryResult = await Task.FromResult(query.Where(t => !t.IsDraft).OrderByDescending(t => t.PublishedTime).ToPagedList(page, pageSize));
+		private async Task<PostViewModel> GetPostBySlug(string slug)
+		{
+			var post = await _postManager.FindBySlugAsync(slug);
 
-            var models = new List<PostViewModel>();
+			if (post != null)
+			{
+				var model = post.ToModel();
 
-            foreach (var item in queryResult)
-            {
-                var model = item.ToModel();
+				await PreparePostViewModel(model, post);
 
-                await PreparePostViewModel(model, item);
+				return model;
+			}
 
-                models.Add(model);
-            }
+			return null;
+		}
 
-            var result = new PagedList<PostViewModel>(models, queryResult.PageNumber, queryResult.PageSize, queryResult.TotalItems);
+		private async Task<PostViewModel> GetPostById(string id)
+		{
+			var post = await _postManager.FindByIdAsync(id);
 
-            ViewData["pageMeta"] = result;
+			if (post != null)
+			{
+				var model = post.ToModel();
 
-            return await Task.FromResult(result);
-        }
+				await PreparePostViewModel(model, post);
 
-        #endregion
+				return model;
+			}
 
-        #region Post
+			return null;
+		}
 
-        [Route("post/{slug?}")]
-        public async Task<IActionResult> Post(string id, string slug)
-        {
-            if (string.IsNullOrWhiteSpace(slug))
-            {
-                return View("NotFound");
-            }
+		#endregion
 
-            var model = await GetPost(slug);
+		#region Page
 
-            if (model == null)
-            {
-                return View("NotFound");
-            }
+		[Route("page/{slug?}")]
+		public async Task<IActionResult> Page(string slug)
+		{
+			if (string.IsNullOrWhiteSpace(slug))
+			{
+				return View("NotFound");
+			}
 
-            await _postManager.IncreaseViewCountAsync(model.Id);
+			var model = await GetPage(slug);
 
-            await SetTitleAsync(model.Title, string.Join(",", model.Tags), model.Description);
+			if (model == null)
+			{
+				return View("NotFound");
+			}
 
-            return View(model);
-        }
+			await SetTitleAsync(model.Title, model.Keywords, model.Description);
 
-        private async Task<PostViewModel> GetPost(string slug)
-        {
-            var post = await _postManager.FindBySlugAsync(slug);
+			return View(model);
+		}
 
-            if (post != null)
-            {
-                var model = post.ToModel();
+		private async Task<PageViewModel> GetPage(string slug)
+		{
+			var page = await _pageManager.FindBySlugAsync(slug);
 
-                await PreparePostViewModel(model, post);
+			if (page == null)
+				return null;
 
-                return model;
-            }
+			var model = page.ToModel();
 
-            return null;
-        }
+			return model;
+		}
 
+		#endregion
 
+		#region Archive
 
-        #endregion
+		public async Task<IActionResult> Archive()
+		{
+			var categories = await Task.FromResult(_categoryManager.GetQueryable().ToList());
 
-        #region Page
+			var categoryModels = new List<CategoryViewModel>();
 
-        [Route("page/{slug?}")]
-        public async Task<IActionResult> Page(string slug)
-        {
-            if (string.IsNullOrWhiteSpace(slug))
-            {
-                return View("NotFound");
-            }
+			foreach (var category in categories)
+			{
+				var cmodel = category.ToModel();
 
-            var model = await GetPage(slug);
+				cmodel.Count = await _categoryManager.GetPostCountAsync(category.Id, false);
 
-            if (model == null)
-            {
-                return View("NotFound");
-            }
+				var posts = _postManager.GetQueryable().Where(t => !t.IsDraft && t.Categories.Any(c => c.CategoryId == category.Id)).ToList();
 
-            await SetTitleAsync(model.Title, model.Keywords, model.Description);
+				cmodel.Posts = posts.Select(t => t.ToModel()).ToList();
 
-            return View(model);
-        }
+				categoryModels.Add(cmodel);
+			}
 
-        private async Task<PageViewModel> GetPage(string slug)
-        {
-            var page = await _pageManager.FindBySlugAsync(slug);
+			var model = new ArchiveViewModel()
+			{
+				Categories = categoryModels,
+			};
 
-            if (page == null)
-                return null;
+			model.NoCategoryPosts = _postManager.GetQueryable().Where(t => !t.IsDraft && t.Categories.Count == 0).ToList().Select(t => t.ToModel()).ToList();
 
-            var model = page.ToModel();
+			return View(model);
+		}
 
-            return model;
-        }
+		#endregion
 
-        #endregion
+		#region comments
 
-        #region Archive
+		[HttpPost]
+		public async Task<IActionResult> AddComment(CommentFormViewModel model)
+		{
+			if (string.IsNullOrEmpty(Request.Form["_guid_"]))
+			{
+				return Json(new { result = false, message = "Invalid request." });
+			}
 
-        public async Task<IActionResult> Archive()
-        {
-            var categories = await Task.FromResult(_categoryManager.GetQueryable().ToList());
+			if (!_commentsSettings.EnableComments)
+				return Json(new { result = false, message = "Comment Not Allowed! " }); //ReturnCommentResult(null, new { result = false });
 
-            var categoryModels = new List<CategoryViewModel>();
+			if (string.IsNullOrEmpty(model.PostId))
+				return Json(new { result = false, message = "Error" });  //return ReturnCommentResult(null, new { result = false });
 
-            foreach (var category in categories)
-            {
-                var cmodel = category.ToModel();
+			if (_commentsSettings.EnableFormVerificationCode && !_captchaService.Validate(model.CaptchaId, model.CaptchaCode))
+			{
+				return Json(new { result = false, message = "Invalid Captcha input." });
+			}
 
-                cmodel.Count = await _categoryManager.GetPostCountAsync(category.Id, false);
+			var post = await _postManager.FindByIdAsync(model.PostId);
 
-                var posts = _postManager.GetQueryable().Where(t => !t.IsDraft && t.Categories.Any(c => c.CategoryId == category.Id)).ToList();
+			if (post == null)
+			{
+				return Json(new { result = false, message = "Error" });
+			}
 
-                cmodel.Posts = posts.Select(t => t.ToModel()).ToList();
+			if (ModelState.IsValid)
+			{
+				var comment = new Comment()
+				{
+					Author = model.Author,
+					Content = model.Content,
+					Website = model.Website,
+					Email = model.Email,
+					ParentId = model.ParentId,
+					PostId = post.Id,
 
-                categoryModels.Add(cmodel);
-            }
+				};
 
-            var model = new ArchiveViewModel()
-            {
-                Categories = categoryModels,
-            };
+				comment.IP = _httpContextAccessor.GetClientIpAddress();
+				comment.Country = GetIpLocation(comment.IP);
 
-            model.NoCategoryPosts = _postManager.GetQueryable().Where(t => !t.IsDraft && t.Categories.Count == 0).ToList().Select(t => t.ToModel()).ToList();
+				comment.IsApproved = !_commentsSettings.EnableCommentsModeration;
 
-            return View(model);
-        }
+				if (_commentsSettings.TrustAuthenticatedUsers)
+				{
+					comment.IsApproved = await _commentManager.IsTrustUserAsync(comment.Email);
+				}
 
-        #endregion
+				await _commentManager.CreateAsync(comment);
 
-        #region comments
+				if (comment.IsApproved)
+				{
+					await _postManager.IncreaseCommentsCountAsync(post.Id);
+				}
 
-        [HttpPost]
-        public async Task<IActionResult> AddComment(CommentFormViewModel model)
-        {
-            if (string.IsNullOrEmpty(Request.Form["_guid_"]))
-            {
-                return Json(new { result = false, });
-            }
+				SaveCommentFormUser(new LastCommentFormUserInfo() { Author = model.Author, Email = model.Email, Website = model.Website });
 
-            if (!_commentsSettings.EnableComments)
-                return Json(new { result = false, message = "Comment Not Allowed! " }); //ReturnCommentResult(null, new { result = false });
+				//  send email
+				if (_commentsSettings.SendEmail)
+				{
+					Passingwind.Blog.Comment parentComment = null;
+					if (!string.IsNullOrEmpty(model.ParentId))
+					{
+						parentComment = await _commentManager.FindByIdAsync(model.ParentId);
+					}
 
-            if (string.IsNullOrEmpty(model.PostId))
-                return Json(new { result = false, message = "Error" });  //return ReturnCommentResult(null, new { result = false });
+					string url = Url.PostCommentLink(post.Slug, Request.Scheme, host: Request.Host.Value, fragment: $"comment-{comment.Id}");
+					// Url.Action("post", values: new { slug }, protocol: Request.Protocol, host: Request.Host.ToString(), fragment: $"comment-{comment.Id}");
+					await _emailSender.SendCommentEmailAsync(_emailSettings, post, url, comment, parentComment);
+				}
 
+				return Json(new { result = true, commentId = comment.Id, parentId = comment.ParentId, url = Url.RouteUrl("Comment", new { commentId = comment.Id }) });
+				//return ReturnCommentResult(post, new { result = true, comment = comment.ToModel() });
+			}
 
-            if (!_captchaService.Validate(model.CaptchaCode))
-            {
-                return Json(new { result = false, message = "" });
-            }
+			return Json(new { result = false, message = string.Join(" ", ModelState.Values.SelectMany(t => t.Errors.Select(e => e.ErrorMessage))) });
+		}
 
-            var post = await _postManager.FindByIdAsync(model.PostId);
+		[Route("/comment/details/", Name = "Comment")]
+		public async Task<IActionResult> Comment(string commentId)
+		{
+			if (string.IsNullOrEmpty(commentId))
+				return NotFound();
 
-            if (post == null)
-            {
-                return Json(new { result = false, message = "Error" });
-            }
+			var comment = await _commentManager.FindByIdAsync(commentId);
 
-            if (ModelState.IsValid)
-            {
-                var comment = new Comment()
-                {
-                    Author = model.Author,
-                    Content = model.Content,
-                    Website = model.Website,
-                    Email = model.Email,
-                    ParentId = model.ParentId,
-                    PostId = post.Id,
-                    Country = GetIpLocation(),
-                };
+			if (comment == null)
+				return NotFound();
 
-                var httpFeatures = HttpContext.Features.Get<IHttpConnectionFeature>();
+			return View(comment.ToModel());
+		}
 
-                comment.IP = Request.HttpContext.Connection.RemoteIpAddress?.ToString();  //httpFeatures.LocalIpAddress?.ToString();
+		private void SaveCommentFormUser(LastCommentFormUserInfo user)
+		{
+			if (user == null)
+				return;
 
-                comment.IsApproved = !_commentsSettings.EnableCommentsModeration;
+			var jsonString = JsonConvert.SerializeObject(user);
 
-                if (_commentsSettings.TrustAuthenticatedUsers)
-                {
-                    bool isTrust = await _commentManager.IsTrustUserAsync(comment.Email);
-                    comment.IsApproved = isTrust;
-                }
+			Response.Cookies.Append(
+				"lastCommentForm",
+				jsonString,
+				new Microsoft.AspNetCore.Http.CookieOptions()
+				{
+					Expires = DateTime.Now.AddDays(7),
+					HttpOnly = true
+				});
+		}
 
-                await _commentManager.CreateAsync(comment);
+		private IActionResult ReturnCommentResult(Post post, object data)
+		{
+			if (Request.IsAjax())
+				return Json(data);
 
-                if (comment.IsApproved)
-                {
-                    await _postManager.IncreaseCommentsCountAsync(post.Id);
-                }
+			if (post == null)
+			{
+				return RedirectToAction(nameof(Index));
+			}
 
-                SaveCommentFormUser(new LastCommentFormUserInfo() { Author = model.Author, Email = model.Email, Website = model.Website });
+			return RedirectToAction(nameof(Post), new { slug = post.Slug });
+		}
 
-                //  send email
-                if (_commentsSettings.SendEmail)
-                {
-                    Passingwind.Blog.Comment parentComment = null;
-                    if (!string.IsNullOrEmpty(model.ParentId))
-                    {
-                        parentComment = await _commentManager.FindByIdAsync(model.ParentId);
-                    }
+		#endregion
 
-                    string url = Url.PostCommentLink(post.Slug, Request.Scheme, host: Request.Host.Value, fragment: $"comment-{comment.Id}");
-                    // Url.Action("post", values: new { slug }, protocol: Request.Protocol, host: Request.Host.ToString(), fragment: $"comment-{comment.Id}");
-                    await _emailSender.SendCommentEmailAsync(_emailSettings, post, url, comment, parentComment);
-                }
+		[HttpPost]
+		public IActionResult SetLanguage(string culture, string returnUrl)
+		{
+			Response.Cookies.Append(
+				CookieRequestCultureProvider.DefaultCookieName,
+				CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+				new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+			);
 
-                return Json(new { result = true, commentId = comment.Id, parentId = comment.ParentId, url = Url.RouteUrl("Comment", new { commentId = comment.Id }) });
-                //return ReturnCommentResult(post, new { result = true, comment = comment.ToModel() });
-            }
+			return LocalRedirect(returnUrl);
+		}
 
-            return Json(new { result = false, message = string.Join(" ", ModelState.Values.SelectMany(t => t.Errors.Select(e => e.ErrorMessage))) });
-        }
+		#region Helper
 
-        [Route("/comment/details/", Name = "Comment")]
-        public async Task<IActionResult> Comment(string commentId)
-        {
-            if (string.IsNullOrEmpty(commentId))
-                return NotFound();
+		private async Task SetTitleAsync(string title, string keyworlds = null, string description = null, int page = 0)
+		{
+			var titleParts = new List<string>();
 
-            var comment = await _commentManager.FindByIdAsync(commentId);
+			if (string.IsNullOrEmpty(title))
+			{
+				titleParts.Add(_basicSettings.Title);
+				titleParts.Add(_basicSettings.Description);
+			}
+			else
+			{
+				titleParts.Add(title);
+				titleParts.Add(_basicSettings.Title);
+			}
 
-            if (comment == null)
-                return NotFound();
+			if (page > 1)
+				titleParts.Add("Page:" + page);
 
-            return View(comment.ToModel());
-        }
 
-        private void SaveCommentFormUser(LastCommentFormUserInfo user)
-        {
-            if (user == null)
-                return;
 
-            var jsonString = JsonConvert.SerializeObject(user);
 
-            Response.Cookies.Append(
-                "lastCommentForm",
-                jsonString,
-                new Microsoft.AspNetCore.Http.CookieOptions()
-                {
-                    Expires = DateTime.Now.AddDays(7),
-                    HttpOnly = true
-                });
-        }
+			if (string.IsNullOrEmpty(description))
+				description = _basicSettings.Description;
 
-        private IActionResult ReturnCommentResult(Post post, object data)
-        {
-            if (Request.IsAjax())
-                return Json(data);
+			//if (string.IsNullOrEmpty(title))
+			//{
+			//    title = _basicSettings.Title + " | " + _basicSettings.Description;
+			//    description = _basicSettings.Description;
+			//}
 
-            if (post == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
+			//if (page > 1)
+			//    title = title + " | Page " + page;
 
-            return RedirectToAction(nameof(Post), new { slug = post.Slug });
-        }
+			if (string.IsNullOrEmpty(keyworlds))
+			{
+				var allCategoryName = await Task.FromResult(_categoryManager.GetQueryable().Select(t => t.Name).ToList());
+				var allTags = await Task.FromResult(_tagManager.GetQueryable().Select(t => t.Name).ToList());
 
-        #endregion
+				keyworlds = string.Join(",", allCategoryName);
+			}
 
-        [HttpPost]
-        public IActionResult SetLanguage(string culture, string returnUrl)
-        {
-            Response.Cookies.Append(
-                CookieRequestCultureProvider.DefaultCookieName,
-                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
-                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
-            );
+			ViewData["Title"] = string.Join(" | ", titleParts.ToArray());
+			ViewData["KeyWorlds"] = keyworlds;
+			ViewData["Description"] = description;
+		}
 
-            return LocalRedirect(returnUrl);
-        }
+		private async Task PreparePostViewModel(PostViewModel model, Post entity)
+		{
+			var categories = await _postManager.GetCategoriesAsync(entity.Id);
 
-        #region Helper
+			model.Categories = categories.Select(t => t.ToModel()).ToList();
 
-        private async Task SetTitleAsync(string title, string keyworlds = null, string description = null, int page = 0)
-        {
-            var titleParts = new List<string>();
+			model.Tags = await _postManager.GetTagsStringListAsync(entity.Id);
 
-            if (string.IsNullOrEmpty(title))
-            {
-                titleParts.Add(_basicSettings.Title);
-                titleParts.Add(_basicSettings.Description);
-            }
-            else
-            {
-                titleParts.Add(title);
-                titleParts.Add(_basicSettings.Title);
-            }
+		}
 
-            if (page > 1)
-                titleParts.Add("Page:" + page);
+		private string GetIpLocation(string ipAddress)
+		{
+			try
+			{
+				using (var reader = new DatabaseReader(Path.Combine(_hostingEnvironment.ContentRootPath, "GeoLite2-City.mmdb")))
+				{
+					// Get the city from the IP Address
+					var city = reader.City(ipAddress);
 
+					return city.Country?.Name + " " + city.City?.Name;
+				}
+			}
+			catch (Exception)
+			{
+				return null;
+			}
+		}
 
+		#endregion
 
 
-            if (string.IsNullOrEmpty(description))
-                description = _basicSettings.Description;
+		#region Error 
 
-            //if (string.IsNullOrEmpty(title))
-            //{
-            //    title = _basicSettings.Title + " | " + _basicSettings.Description;
-            //    description = _basicSettings.Description;
-            //}
+		[Route("error/404")]
+		public IActionResult Error404()
+		{
+			return View("NotFound");
+		}
 
-            //if (page > 1)
-            //    title = title + " | Page " + page;
+		[Route("error")]
+		public IActionResult Error()
+		{
+			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+		}
 
-            if (string.IsNullOrEmpty(keyworlds))
-            {
-                var allCategoryName = await Task.FromResult(_categoryManager.GetQueryable().Select(t => t.Name).ToList());
-                var allTags = await Task.FromResult(_tagManager.GetQueryable().Select(t => t.Name).ToList());
+		#endregion
 
-                keyworlds = string.Join(",", allCategoryName);
-            }
 
-            ViewData["Title"] = string.Join(" | ", titleParts.ToArray());
-            ViewData["KeyWorlds"] = keyworlds;
-            ViewData["Description"] = description;
-        }
-
-        private async Task PreparePostViewModel(PostViewModel model, Post entity)
-        {
-            var categories = await _postManager.GetCategoriesAsync(entity.Id);
-
-            model.Categories = categories.Select(t => t.ToModel()).ToList();
-
-            model.Tags = await _postManager.GetTagsStringListAsync(entity.Id);
-
-        }
-
-        private string GetIpLocation()
-        {
-            try
-            {
-                using (var reader = new DatabaseReader(_hostingEnvironment.ContentRootPath + "\\GeoLite2-City.mmdb"))
-                {
-                    // Determine the IP Address of the request
-                    var ipAddress = HttpContext.Connection.RemoteIpAddress;
-
-                    // Get the city from the IP Address
-                    var city = reader.City(ipAddress);
-
-                    return city.Country.Name + " " + city.City.Name;
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        #endregion
-
-
-        #region Error 
-
-        [Route("error/404")]
-        public IActionResult Error404()
-        {
-            return View("NotFound");
-        }
-
-        [Route("error")]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        #endregion
-
-
-        public IActionResult Test()
-        {
-            return View();
-        }
-    }
+		public IActionResult Test()
+		{
+			return View();
+		}
+	}
 }
