@@ -11,9 +11,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Passingwind.Blog.BlogML;
 using Passingwind.Blog.Data;
+using Passingwind.Blog.Plugins;
 using Passingwind.Blog.Web.Captcha;
 using Passingwind.Blog.Web.Services;
 using System;
+using System.Runtime.Loader;
 
 namespace Passingwind.Blog.Web
 {
@@ -109,8 +111,10 @@ namespace Passingwind.Blog.Web
 				options.Cookie.HttpOnly = true;
 			});
 
-			services.AddControllersWithViews();
 			services.AddRazorPages();
+			services.AddControllersWithViews()
+				.AddPlugins();
+
 
 			services.AddResponseCaching();
 			services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);

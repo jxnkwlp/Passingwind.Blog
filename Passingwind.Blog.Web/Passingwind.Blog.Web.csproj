@@ -39,4 +39,12 @@
 		</None>
 	</ItemGroup>
 
+
+	<ItemGroup>
+		<Compile Remove="Plugins\*\**" />
+		<Content Remove="Plugins\*\**" />
+		<EmbeddedResource Remove="Plugins\*\**" />
+		<None Remove="Plugins\*\**" />
+	</ItemGroup>
+
 </Project>
