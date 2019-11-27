@@ -14,7 +14,7 @@ namespace Passingwind.Blog.Web
 
 			var manager = services.GetRequiredService<IPluginManager>();
 
-			manager.LoadPlugins(mvcBuilder.PartManager);
+			manager.LoadPlugins(mvcBuilder.Services, mvcBuilder.PartManager);
 
 			return mvcBuilder;
 		}

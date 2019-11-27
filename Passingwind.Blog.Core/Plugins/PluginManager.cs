@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,35 +27,47 @@ namespace Passingwind.Blog.Plugins
 		//	return null;
 		//}
 
-		public void LoadPlugins(ApplicationPartManager applicationPartManager)
+		public void RegisterPlugins(IServiceCollection services, ApplicationPartManager applicationPartManager)
 		{
 			var list = _pluginLoader.Load();
 
-			VerifyPackages(list);
-
-
 			foreach (var item in list)
 			{
-				var partFactory = ApplicationPartFactory.GetApplicationPartFactory(item.Assembly);
-
-				var applicationParts = partFactory.GetApplicationParts(item.Assembly);
-
-				foreach (var part in applicationParts)
-				{
-					applicationPartManager.ApplicationParts.Add(part);
-				}
-
-				var relatedAssemblies = RelatedAssemblyAttribute.GetRelatedAssemblies(item.Assembly, true);
-
-				//foreach (var assembly in relatedAssemblies)
-				//{
-				//	partFactory = ApplicationPartFactory.GetApplicationPartFactory(assembly);
-				//	foreach (var part in partFactory.GetApplicationParts(assembly))
-				//	{
-				//		applicationPartManager.ApplicationParts.Add(part);
-				//	}
-				//}
+				AddPluginServices(item, services);
+				AddPluginToPart(item, applicationPartManager);
 			}
+		}
+
+		private void AddPluginToPart(PluginPackage pluginPackage, ApplicationPartManager applicationPartManager)
+		{
+			var partFactory = ApplicationPartFactory.GetApplicationPartFactory(pluginPackage.Assembly);
+
+			var applicationParts = partFactory.GetApplicationParts(pluginPackage.Assembly);
+
+			foreach (var part in applicationParts)
+			{
+				applicationPartManager.ApplicationParts.Add(part);
+			}
+
+			var relatedAssemblies = RelatedAssemblyAttribute.GetRelatedAssemblies(pluginPackage.Assembly, true);
+
+			//foreach (var assembly in relatedAssemblies)
+			//{
+			//	partFactory = ApplicationPartFactory.GetApplicationPartFactory(assembly);
+			//	foreach (var part in partFactory.GetApplicationParts(assembly))
+			//	{
+			//		applicationPartManager.ApplicationParts.Add(part);
+			//	}
+			//} 
+		}
+
+		private void AddPluginServices(PluginPackage pluginPackage, IServiceCollection services)
+		{
+			services.AddScoped(pluginPackage.PluginType);
+
+			var description = GetPluginDescription(pluginPackage);
+
+			_pluginDescriptions.Add(description);
 		}
 
 		public IEnumerable<PluginDescription> GetAllPluginDescription(string name)
@@ -74,27 +87,20 @@ namespace Passingwind.Blog.Plugins
 			return null;
 		}
 
-		protected void VerifyPackages(IEnumerable<PluginPackage> plugins)
+		private PluginDescription GetPluginDescription(PluginPackage pluginPackage)
 		{
-			foreach (var item in plugins)
+			var describeFile = Path.Combine(pluginPackage.ContentPath, "plugin.json");
+
+			if (File.Exists(describeFile))
 			{
-				var describeFile = Path.Combine(item.ContentPath, "plugin.json");
+				var description = JsonSerializer.Deserialize<PluginDescription>(File.ReadAllText(describeFile));
 
-				if (File.Exists(describeFile))
-				{
-					var module = JsonSerializer.Deserialize<PluginDescription>(File.ReadAllText(describeFile));
-
-					_pluginDescriptions.Add(module);
-					_plugins[module.Name] = (IPlugin)Activator.CreateInstance(item.PluginType);
-				}
-				else
-				{
-					_pluginDescriptions.Add(new PluginDescription() { Name = item.Assembly.FullName, });
-				}
-
-
+				return description;
 			}
-
+			else
+			{
+				return new PluginDescription() { Name = pluginPackage.Assembly.FullName, };
+			}
 		}
 
 	}
