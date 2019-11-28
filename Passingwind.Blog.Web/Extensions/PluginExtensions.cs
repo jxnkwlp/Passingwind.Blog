@@ -12,9 +12,12 @@ namespace Passingwind.Blog.Web
 
 			var services = mvcBuilder.Services.BuildServiceProvider();
 
-			var manager = services.GetRequiredService<IPluginManager>();
+			using (var scope = mvcBuilder.Services.BuildServiceProvider().CreateScope())
+			{
+				var manager = scope.ServiceProvider.GetRequiredService<IPluginManager>();
 
-			manager.LoadPlugins(mvcBuilder.Services, mvcBuilder.PartManager);
+				manager.RegisterPlugins(mvcBuilder.Services, mvcBuilder.PartManager);
+			}
 
 			return mvcBuilder;
 		}

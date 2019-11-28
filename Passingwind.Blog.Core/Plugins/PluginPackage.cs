@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Plugins
 {
@@ -14,5 +10,7 @@ namespace Passingwind.Blog.Plugins
 		public Assembly Assembly { get; set; }
 
 		public string ContentPath { get; set; }
+
+		public string RelativePath { get; set; }
 	}
 }

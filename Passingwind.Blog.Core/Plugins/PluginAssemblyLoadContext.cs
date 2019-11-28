@@ -8,7 +8,7 @@ namespace Passingwind.Blog.Plugins
 	{
 		// private readonly AssemblyDependencyResolver _assemblyDependencyResolver;
 
-		public PluginAssemblyLoadContext() : base(name: "PluginAssembly", isCollectible: true)
+		public PluginAssemblyLoadContext() : base(isCollectible: true)
 		{
 			// _assemblyDependencyResolver = new AssemblyDependencyResolver(path);
 		}

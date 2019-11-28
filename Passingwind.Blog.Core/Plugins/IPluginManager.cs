@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Passingwind.Blog.Plugins
 {
 	public interface IPluginManager
 	{
-		IEnumerable<PluginDescription> GetAllPluginDescription(string name);
+		IEnumerable<PluginDescriptor> GetAllPluginDescription(string name);
 		IPlugin GetPlugin(string name);
-		PluginDescription GetPluginDescription(string name);
-		void LoadPlugins(ApplicationPartManager applicationPartManager);
+		PluginDescriptor GetPluginDescription(string name);
+		void RegisterPlugins(IServiceCollection services, ApplicationPartManager applicationPartManager);
 	}
 }

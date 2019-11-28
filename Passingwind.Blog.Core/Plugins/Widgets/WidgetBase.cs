@@ -2,7 +2,7 @@
 
 namespace Passingwind.Blog.Plugins.Widgets
 {
-	public abstract class WidgetBase : IWidget
+	public abstract class WidgetBase : PluginBase, IWidget
 	{
 		private readonly IWidgetViewService _widgetViewService;
 
@@ -11,7 +11,7 @@ namespace Passingwind.Blog.Plugins.Widgets
 			_widgetViewService = widgetViewService;
 		}
 
-		public string ViewName => "Default";
+		public string ViewPath => "Views/Default.cshtml";
 
 		protected virtual Task<object> GetViewDataAsync()
 		{
@@ -21,7 +21,7 @@ namespace Passingwind.Blog.Plugins.Widgets
 		public async virtual Task<string> GetViewContentAsync()
 		{
 			var data = await GetViewDataAsync();
-			return _widgetViewService.RenderView(ViewName, data);
+			return _widgetViewService.RenderView(Description, ViewPath);
 		}
 	}
 }
