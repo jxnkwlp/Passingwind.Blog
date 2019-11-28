@@ -2,7 +2,8 @@
 {
 	public interface IWidgetViewService
 	{
-		string RenderView(string viewName);
-		string RenderView<TModel>(string viewName, TModel model);
+		string RenderView(PluginDescriptor description, string viewPath);
+
+		string RenderView<TModel>(PluginDescriptor description, string viewPath, TModel model);
 	}
 }

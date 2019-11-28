@@ -8,5 +8,6 @@ namespace Passingwind.Blog.Plugins
 {
 	public interface IPlugin
 	{
+		PluginDescriptor Description { get; set; }
 	}
 }

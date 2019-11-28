@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Plugins
 {
-	public class PluginBase : IPlugin
+	public abstract class PluginBase : IPlugin
 	{
-
+		public PluginDescriptor Description { get; set; }
 	}
 }

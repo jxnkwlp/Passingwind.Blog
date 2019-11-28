@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Passingwind.Blog.BlogML;
 using Passingwind.Blog.Data;
 using Passingwind.Blog.Plugins;
+using Passingwind.Blog.Plugins.Widgets;
 using Passingwind.Blog.Web.Captcha;
 using Passingwind.Blog.Web.Services;
 using System;
@@ -111,8 +113,16 @@ namespace Passingwind.Blog.Web
 				options.Cookie.HttpOnly = true;
 			});
 
+			services.Configure<RazorViewEngineOptions>(options =>
+			{
+				//options.ViewLocationFormats.Add("~/Plugins/{1}/{0}.cshtml");
+				//options.ViewLocationFormats.Add("~/Plugins/{2}/views/{1}/{0}.cshtml");
+				options.ViewLocationExpanders.Add(new WidgetViewLocationExpander());
+			});
+
 			services.AddRazorPages();
 			services.AddControllersWithViews()
+				//.AddViewOptions(o => o.ViewEngines.Add(new WidgetViewEngine()))
 				.AddPlugins();
 
 

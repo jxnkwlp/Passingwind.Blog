@@ -59,7 +59,8 @@ namespace Passingwind.Blog.Plugins.Widgets
 				return null;
 
 			if (plugin is IWidget widget)
-			{
+			{ 
+				widget.Description = _pluginManager.GetPluginDescription(name);
 				return await widget.GetViewContentAsync();
 			}
 
