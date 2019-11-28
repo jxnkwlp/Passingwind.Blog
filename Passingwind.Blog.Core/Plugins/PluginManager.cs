@@ -11,21 +11,15 @@ namespace Passingwind.Blog.Plugins
 	public class PluginManager : IPluginManager
 	{
 		private readonly IPluginLoader _pluginLoader;
+		private readonly IServiceProvider _serviceProvider;
 
-		private readonly Dictionary<string, IPlugin> _plugins = new Dictionary<string, IPlugin>();
-		private readonly IList<PluginDescription> _pluginDescriptions = new List<PluginDescription>();
+		private static readonly IList<PluginDescriptor> _pluginDescriptions = new List<PluginDescriptor>();
 
-		public PluginManager(IPluginLoader pluginLoader)
+		public PluginManager(IPluginLoader pluginLoader, IServiceProvider serviceProvider)
 		{
 			_pluginLoader = pluginLoader;
+			_serviceProvider = serviceProvider;
 		}
-
-		//public IEnumerable<AssemblyPart> GetAssemblyParts()
-		//{
-		//	var list = _pluginLoader.Load();
-
-		//	return null;
-		//}
 
 		public void RegisterPlugins(IServiceCollection services, ApplicationPartManager applicationPartManager)
 		{
@@ -70,37 +64,50 @@ namespace Passingwind.Blog.Plugins
 			_pluginDescriptions.Add(description);
 		}
 
-		public IEnumerable<PluginDescription> GetAllPluginDescription(string name)
+		public IEnumerable<PluginDescriptor> GetAllPluginDescription(string name)
 		{
 			return _pluginDescriptions;
 		}
 
-		public PluginDescription GetPluginDescription(string name)
+		public PluginDescriptor GetPluginDescription(string name)
 		{
 			return _pluginDescriptions.FirstOrDefault(t => t.Name == name);
 		}
 
 		public IPlugin GetPlugin(string name)
 		{
-			if (_plugins.ContainsKey(name))
-				return _plugins[name];
-			return null;
+			var plugin = GetPluginDescription(name);
+			if (plugin == null)
+				return null;
+
+			return _serviceProvider.CreateScope().ServiceProvider.GetService(plugin.PluginType) as IPlugin;
 		}
 
-		private PluginDescription GetPluginDescription(PluginPackage pluginPackage)
+		private PluginDescriptor GetPluginDescription(PluginPackage pluginPackage)
 		{
 			var describeFile = Path.Combine(pluginPackage.ContentPath, "plugin.json");
 
+			PluginDescriptor pluginDescription = new PluginDescriptor()
+			{
+				Assembly = pluginPackage.Assembly,
+				ContentPath = pluginPackage.ContentPath,
+				RelativePath = pluginPackage.RelativePath,
+				PluginType = pluginPackage.PluginType,
+				Name = pluginPackage.Assembly.FullName,
+			};
+
 			if (File.Exists(describeFile))
 			{
-				var description = JsonSerializer.Deserialize<PluginDescription>(File.ReadAllText(describeFile));
+				var description = JsonSerializer.Deserialize<PluginDescriptor>(File.ReadAllText(describeFile));
 
-				return description;
+				pluginDescription.Author = description.Author;
+				pluginDescription.Name = description.Name;
+				pluginDescription.Version = description.Version;
+				pluginDescription.Description = description.Description;
 			}
-			else
-			{
-				return new PluginDescription() { Name = pluginPackage.Assembly.FullName, };
-			}
+
+
+			return pluginDescription;
 		}
 
 	}

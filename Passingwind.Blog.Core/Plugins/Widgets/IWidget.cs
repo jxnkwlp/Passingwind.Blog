@@ -4,7 +4,7 @@ namespace Passingwind.Blog.Plugins.Widgets
 {
 	public interface IWidget : IPlugin
 	{
-		string ViewName { get; }
+		string ViewPath { get; }
 
 		Task<string> GetViewContentAsync();
 	}
