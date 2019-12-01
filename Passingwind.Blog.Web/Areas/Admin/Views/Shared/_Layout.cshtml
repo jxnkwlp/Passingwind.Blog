@@ -80,6 +80,14 @@
 					<li><a asp-controller="roles" asp-action="list">Roles</a></li>
 
 					<li>
+						<a href="#." class="dropdown-toggle" data-toggle="dropdown"> Customs <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a asp-controller="Custom" asp-action="Themes">Themes</a></li>
+							<li><a asp-controller="Custom" asp-action="Widgets">Widgets</a></li>
+						</ul>
+					</li>
+
+					<li>
 						<a href="#." class="dropdown-toggle" data-toggle="dropdown"> Setting <span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu">
 							<li><a asp-controller="Settings" asp-action="Basic">Basic</a></li>

@@ -117,15 +117,14 @@ namespace Passingwind.Blog.Web
 			{
 				//options.ViewLocationFormats.Add("~/Plugins/{1}/{0}.cshtml");
 				//options.ViewLocationFormats.Add("~/Plugins/{2}/views/{1}/{0}.cshtml");
-				options.ViewLocationExpanders.Add(new WidgetViewLocationExpander());
+				//options.ViewLocationExpanders.Add(new WidgetViewLocationExpander());
 			});
 
 			services.AddRazorPages();
 			services.AddControllersWithViews()
 				//.AddViewOptions(o => o.ViewEngines.Add(new WidgetViewEngine()))
 				.AddPlugins();
-
-
+				 
 			services.AddResponseCaching();
 			services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
 			services.AddResponseCompression(options =>

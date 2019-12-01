@@ -9,6 +9,8 @@ namespace Passingwind.Blog.Plugins
 
 		public Assembly Assembly { get; set; }
 
+		public string AssemblyName { get; set; }
+
 		public string ContentPath { get; set; }
 
 		public string RelativePath { get; set; }

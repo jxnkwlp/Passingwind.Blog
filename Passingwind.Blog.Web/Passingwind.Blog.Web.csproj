@@ -4,6 +4,8 @@
 		<TargetFramework>netcoreapp3.0</TargetFramework>
 		<UserSecretsId>aspnet-Passingwind.Blog.Web-A2CEF7EF-96E8-41A3-8016-EFD2F6C0C385</UserSecretsId>
 		<MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+		<!--<RazorCompileOnBuild>false</RazorCompileOnBuild>-->
+		<!--<GenerateDependencyFile>false</GenerateDependencyFile>-->
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -15,6 +17,7 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.0.0" />
 
 		<PackageReference Include="MailKit" Version="2.3.1.6" />
 		<PackageReference Include="MaxMind.GeoIP2" Version="3.0.0" />
