@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Widget.PageList
 {
-	public class PageListWidget : WidgetBase, IWidget, IPlugin
+	public class WidgetService : WidgetServiceBase
 	{
 		private readonly PageManager _pageManager;
 
-		public PageListWidget(IWidgetViewService widgetViewService, PageManager pageManager) : base(widgetViewService)
+		public WidgetService(IPluginViewRenderService pluginViewRenderService, PageManager pageManager) : base(pluginViewRenderService)
 		{
 			_pageManager = pageManager;
 		}
 
-		protected override Task<object> GetViewDataAsync()
+		public override Task<object> GetViewDataAsync(PluginDescriptor pluginDescriptor)
 		{
 			var list = _pageManager.GetQueryable().Select(entity => new PageViewModel()
 			{
@@ -35,6 +35,5 @@ namespace Passingwind.Blog.Widget.PageList
 
 			return Task.FromResult<object>(list);
 		}
-
 	}
 }

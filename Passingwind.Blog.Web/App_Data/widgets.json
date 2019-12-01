@@ -1,12 +1,1 @@
-{
-	"header_before": [],
-	"header_after": [],
-	"menu_before": [],
-	"menu_after": [ "Passingwind.Blog.Widget.PageList" ],
-	"content_before": [],
-	"content_after": [],
-	"slderbar_before": [],
-	"slderbar_after": [],
-	"footer_before": [],
-	"footer_after": []
-}
+{"slderbar_before":[{"Id":"1f5f2862-3b41-4e8f-8722-2724a8c0dfd9","Order":0,"Name":"Passingwind.Blog.Widget.PageList"},{"Id":"7dfa71d3-dfc6-4934-a5c5-8be5dbdefef7","Order":1,"Name":"Passingwind.Blog.Widget.CategoryList"},{"Id":"b1ae1899-30b0-4a07-8072-fe6ffb354c0f","Order":4,"Name":"Passingwind.Blog.Widget.LinkList"},{"Id":"d73dabad-7f67-48e3-b439-36f0369b5da9","Order":3,"Name":"Passingwind.Blog.Widget.MonthList"},{"Id":"a27fa1d2-11b7-477b-9ec7-e46d355b0fc1","Order":2,"Name":"Passingwind.Blog.Widget.Tags"}]}
