@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Plugins.Widgets
@@ -11,28 +7,35 @@ namespace Passingwind.Blog.Plugins.Widgets
 	public class WidgetTagHelper : TagHelper
 	{
 		private readonly IWidgetsManager _widgetsManager;
-		private readonly IWidgetViewService _widgetViewService;
 
 		[HtmlAttributeName("position")]
 		public string Position { get; set; }
 
-		public WidgetTagHelper(IWidgetsManager widgetsManager, IWidgetViewService widgetViewService)
+		public WidgetTagHelper(IWidgetsManager widgetsManager)
 		{
 			_widgetsManager = widgetsManager;
-			_widgetViewService = widgetViewService;
 		}
 
 		public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 		{
 			output.SuppressOutput();
+#if DEBUG
+			output.PreContent.AppendHtml($"<!-- widget position '{Position}' -->");
+#endif
 
 			var widgets = await _widgetsManager.GetWidgetsAsync(Position);
 
-			foreach (var item in widgets)
-			{
-				var content = await _widgetsManager.GetViewContentAsync(item);
-				output.Content.AppendHtml(content);
-			}
+			if (widgets != null)
+				foreach (var item in widgets)
+				{
+#if DEBUG
+					output.Content.AppendHtml(System.Environment.NewLine + $"<!-- widget '{item}' -->");
+#endif
+					var content = await _widgetsManager.GetViewContentAsync(item.Name);
+
+					if (!string.IsNullOrWhiteSpace(content))
+						output.Content.AppendHtml(content);
+				}
 		}
 	}
 }

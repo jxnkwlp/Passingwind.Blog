@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,10 +13,12 @@ namespace Passingwind.Blog.Plugins
 	{
 		private readonly IHostEnvironment _hostEnvironment;
 		private readonly string _pluginRootPath;
+		private readonly ILogger<PluginLoader> _logger;
 
-		public PluginLoader(IHostEnvironment hostEnvironment)
+		public PluginLoader(IHostEnvironment hostEnvironment, ILogger<PluginLoader> logger)
 		{
 			_hostEnvironment = hostEnvironment;
+			_logger = logger;
 
 			_pluginRootPath = Path.Combine(hostEnvironment.ContentRootPath, "plugins");
 		}
@@ -55,49 +58,52 @@ namespace Passingwind.Blog.Plugins
 			if (dlls == null || dlls.Length == 0)
 				return null;
 
-			PluginAssemblyLoadContext loadContext = new PluginAssemblyLoadContext();
+			PluginAssemblyLoadContext loadContext = new PluginAssemblyLoadContext(directoryInfo.FullName, directoryInfo.Name);
 
 			Assembly assembly = null;
 			Type pluginType = null;
 
-			foreach (var item in dlls)
+			foreach (var dllFile in dlls)
 			{
-				//var a2 = typeof(IPlugin).Assembly;
+				//if (_sharedDlls.Contains(dllFile.Name, StringComparer.InvariantCultureIgnoreCase))
+				//	continue;
 
-				var assembly2 = LoadAssembly(loadContext, item.FullName);
+				// var rrr = new AssemblyDependencyResolver(dllFile.FullName);
 
-				//foreach (var item2 in assembly2.ExportedTypes)
-				//{
-				//	var b1 = typeof(IPlugin).IsAssignableFrom(item2);
-				//	var b2 = typeof(IPlugin).IsAssignableFrom(item2.BaseType);
-				//}
+				var loadAssembly = LoadAssembly(loadContext, dllFile.FullName);
 
-				pluginType = assembly2.ExportedTypes.FirstOrDefault(c => typeof(IPlugin).IsAssignableFrom(c) && c.IsClass && !c.IsAbstract && !c.IsInterface);
+				if (loadAssembly == null)
+					continue;
 
-				if (pluginType != null)
+				var findPluginType = loadAssembly.ExportedTypes.FirstOrDefault(c => typeof(IPlugin).IsAssignableFrom(c) && c.IsClass && !c.IsAbstract && !c.IsInterface);
+
+				if (findPluginType != null)
 				{
-					assembly = assembly2;
-					break;
+					pluginType = findPluginType;
+					assembly = loadAssembly;
 				}
 			}
 
-			if (assembly == null)
+			if (assembly == null || pluginType == null)
 				return null;
 
-			return (new PluginPackage()
+			return new PluginPackage()
 			{
 				PluginType = pluginType,
 				Assembly = assembly,
+				AssemblyName = assembly.ManifestModule.Name.Substring(0, assembly.ManifestModule.Name.LastIndexOf('.')),
+
 				ContentPath = directoryInfo.FullName,
 				//RelativePath = "~/" + directoryInfo.FullName.Substring(_hostEnvironment.ContentRootPath.Length + 1).Replace(@"\", "/"),
-				RelativePath = directoryInfo.FullName.Substring(_hostEnvironment.ContentRootPath.Length)
-			});
+				// RelativePath = directoryInfo.FullName.Substring(_hostEnvironment.ContentRootPath.Length)
+			};
 		}
 
 		private FileInfo[] FindDlls(DirectoryInfo directoryInfo)
 		{
-			var dlls = directoryInfo.GetFiles(@"*.dll", SearchOption.TopDirectoryOnly);
+			var dlls = directoryInfo.GetFiles("*.dll", SearchOption.TopDirectoryOnly);
 
+#if DEBUG
 			if (dlls == null || dlls.Count() == 0)
 			{
 				if (directoryInfo.GetDirectories().Any(t => t.Name == "bin"))
@@ -108,25 +114,31 @@ namespace Passingwind.Blog.Plugins
 				{
 				}
 			}
-
+#endif
 			return dlls;
 		}
 
 		private Assembly LoadAssembly(PluginAssemblyLoadContext loadContext, string path)
 		{
+			var assemblyName = AssemblyName.GetAssemblyName(path);
+
+			var defaultAssembly = AssemblyLoadContext.Default.Assemblies.FirstOrDefault(t => t.FullName == assemblyName.FullName);
+
+			if (defaultAssembly != null)
+				return defaultAssembly;
+
 			try
 			{
-				using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-				{
-					//return loadContext.LoadFromStream(fs);
-					return AssemblyLoadContext.Default.LoadFromStream(fs);
-				}
-				//return Assembly.LoadFile(path);
+				// TODO  chang to PluginAssemblyLoadContext.LoadFromAssemblyPath(path)
+				// return loadContext.LoadFromAssemblyPath(path);
+
+				return AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				_logger.LogError(ex, "Load plugins assembly file '{0}' faild.", path);
+				return null;
 			}
-			return null;
 		}
 
 		public void Dispose()

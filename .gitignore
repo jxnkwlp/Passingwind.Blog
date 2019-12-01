@@ -260,4 +260,7 @@ paket-files/
 __pycache__/
 *.pyc
 *.pubxml
+
+# blog custom
 blog.db
+/Passingwind.Blog.Web/Plugins/*/**

@@ -48,11 +48,15 @@
 	<!--  customer head -->
 	@Html.Raw(advancedSettings.HeaderHtml)
 	@RenderSection("head", false)
+
+	<widget position="html_head" />
 </head>
 <body>
 
 	<div class="site-header-wrap">
 		<div class="container">
+			<widget position="header_before" />
+
 			<header class="site-header">
 				<div class="site-title">
 					<h1 class="blog-title"><a asp-route="home">@basicSettings.Title </a></h1>
@@ -66,6 +70,9 @@
 				<a id="togglemenu" href="#togglemenu" class="header-navigation-toggle">Menu</a>
 
 			</header>
+
+			<widget position="header_after" />
+			<widget position="menu_before" />
 
 			<nav id="main-navigation" class="main-navigation">
 				<ul>
@@ -94,6 +101,7 @@
 	<div class="site-content clearfix">
 		<div class="container clearfix">
 			<div class="content-area">
+				<widget position="content_before" />
 
 				<div class="site-main">
 
@@ -101,27 +109,11 @@
 
 				</div>
 
+				<widget position="content_after" />
 			</div>
 			<div class="widget-area">
-
-
-				<!--  page widget -->
-				@(await Component.InvokeAsync("PageListWidget"))
-
-				<!--  category widget -->
-				@(await Component.InvokeAsync("CategoryListWidget"))
-
-				<!--  tags widget -->
-				@(await Component.InvokeAsync("TagsWidget"))
-
-				<!--  search widget
-				@(await Component.InvokeAsync("SearchWidget"))-->
-				<!--  MonthList widget -->
-				@(await Component.InvokeAsync("MonthListWidget"))
-
-				<!--  MonthList widget -->
-				@(await Component.InvokeAsync("LinkListWidget"))
-
+				<widget position="slderbar_before" />
+				<widget position="slderbar_after" />
 			</div>
 
 		</div>
@@ -135,8 +127,8 @@
 
 	<div class="footer-wrap">
 		<div class="container">
+			<widget position="footer_before" />
 			<div class="site-info">
-
 				<div class="footer-copyright">
 					<p>
 						Copyright © @DateTime.Now.Year. Power by <a href="#">Passingwind</a>. <a href="#">@basicSettings.IcpNumber </a> <a asp-route="sitemap">sitemap</a>, build by asp.net core .
@@ -144,6 +136,7 @@
 
 				</div>
 			</div>
+			<widget position="footer_after" />
 		</div>
 	</div>
 
@@ -169,5 +162,7 @@
 
 	<!--  customer footer -->
 	@Html.Raw(advancedSettings.FooterHtml)
+
+	<widget position="html_footer" />
 </body>
 </html>

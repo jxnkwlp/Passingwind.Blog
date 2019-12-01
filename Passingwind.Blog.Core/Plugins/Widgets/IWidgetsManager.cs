@@ -5,7 +5,7 @@ namespace Passingwind.Blog.Plugins.Widgets
 {
 	public interface IWidgetsManager
 	{
-		Task<IEnumerable<string>> GetWidgetsAsync(string position);
+		Task<IEnumerable<WidgetConfigInfo>> GetWidgetsAsync(string position);
 
 		Task<string> GetViewContentAsync(string name);
 	}
