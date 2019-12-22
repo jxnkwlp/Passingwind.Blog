@@ -41,21 +41,11 @@ namespace Passingwind.Blog.Web
 			{
 				NLog.LogManager.Shutdown();
 			}
-
 		}
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
-			Host
-			.CreateDefaultBuilder(args)
-			.ConfigureWebHostDefaults(webBuilder =>
-			{
-				webBuilder.UseStartup<Startup>();
-			})
-			//.ConfigureLogging(logging =>
-			//{
-			//	logging.ClearProviders();
-			//	logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
-			//})
-			.UseNLog();
+			Host.CreateDefaultBuilder(args)
+				.ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
+				.UseNLog();
 	}
 }
