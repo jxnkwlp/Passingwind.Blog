@@ -22,7 +22,7 @@ namespace Passingwind.Blog.Plugins
 
 		protected void LoadPlugs()
 		{
-			var list = _pluginLoader.Load();
+			var list = _pluginLoader.Load() ?? Enumerable.Empty<PluginPackage>();
 
 			foreach (var item in list)
 			{

@@ -124,7 +124,7 @@ namespace Passingwind.Blog.Web
 			services.AddControllersWithViews()
 				//.AddViewOptions(o => o.ViewEngines.Add(new WidgetViewEngine()))
 				.AddPlugins();
-				 
+
 			services.AddResponseCaching();
 			services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
 			services.AddResponseCompression(options =>
@@ -144,7 +144,7 @@ namespace Passingwind.Blog.Web
 			services.AddScoped(s => s.GetService<SettingManager>().LoadSetting<FeedSettings>());
 		}
 
-		// This method gets called by the runtime. Use  this method to configure the HTTP request pipeline.
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
@@ -165,9 +165,7 @@ namespace Passingwind.Blog.Web
 			app.UseResponseCaching();
 
 			if (UseHttps)
-			{
 				app.UseHttpsRedirection();
-			}
 
 			app.UseStaticFiles(new StaticFileOptions()
 			{

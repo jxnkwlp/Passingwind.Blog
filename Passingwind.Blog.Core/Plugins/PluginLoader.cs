@@ -31,6 +31,9 @@ namespace Passingwind.Blog.Plugins
 
 			var pluginDirectoryInfo = new DirectoryInfo(_pluginRootPath);
 
+			if (!pluginDirectoryInfo.Exists)
+				return Enumerable.Empty<PluginPackage>();
+
 			var result = new List<PluginPackage>();
 
 			foreach (var directoryInfo in pluginDirectoryInfo.GetDirectories())

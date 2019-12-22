@@ -1,15 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyModel;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Passingwind.Blog.Plugins;
 using Passingwind.Blog.Plugins.Widgets;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
-using System.Linq;
 
 namespace Passingwind.Blog.Web
 {
@@ -71,28 +69,39 @@ namespace Passingwind.Blog.Web
 
 		private static void AddPluginToPart(PluginPackage pluginPackage, ApplicationPartManager applicationPartManager)
 		{
-			var partFactory = ApplicationPartFactory.GetApplicationPartFactory(pluginPackage.Assembly);
+			var assembly = pluginPackage.Assembly;
 
-			var applicationParts = partFactory.GetApplicationParts(pluginPackage.Assembly);
-
-			foreach (var part in applicationParts)
-			{
-				applicationPartManager.ApplicationParts.Add(part);
-			}
+			AddToApplicationPart(applicationPartManager, assembly);
 
 			// var dependencyContext = DependencyContext.Load(pluginPackage.Assembly);
 
-			var relatedAssemblies = RelatedAssemblyAttribute.GetRelatedAssemblies(pluginPackage.Assembly, true);
+			var relatedAssemblies = RelatedAssemblyAttribute.GetRelatedAssemblies(assembly, true);
 
-			foreach (var assembly in relatedAssemblies)
+			foreach (var relatedAssembly in relatedAssemblies)
 			{
 				// CompiledRazorAssemblyApplicationPartFactory.
+				AddToApplicationPart(applicationPartManager, relatedAssembly);
+			}
+		}
 
-				partFactory = ApplicationPartFactory.GetApplicationPartFactory(assembly);
-				foreach (var part in partFactory.GetApplicationParts(assembly))
+		private static void AddToApplicationPart(ApplicationPartManager manager, Assembly assembly)
+		{
+			var partFactory = ApplicationPartFactory.GetApplicationPartFactory(assembly);
+
+			var applicationParts = partFactory.GetApplicationParts(assembly);
+
+			foreach (var part in applicationParts)
+			{
+				if (part is AssemblyPart assemblyPart)
 				{
-					applicationPartManager.ApplicationParts.Add(part);
+					manager.ApplicationParts.Add(new PluginAssemblyPart(assembly));
 				}
+				else if (part is CompiledRazorAssemblyPart)
+				{
+					manager.ApplicationParts.Add(new PluginRazorAssemblyPart(new CompiledRazorAssemblyPart(assembly)));
+				}
+				else
+					manager.ApplicationParts.Add(part);
 			}
 		}
 

@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Passingwind.Blog.Plugins;
 using Passingwind.Blog.Plugins.Widgets;
-using Passingwind.Blog.Widget.Tags.Models;
+using Passingwind.Blog.Widget.TagsCloud.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Passingwind.Blog.Widget.Tags
+namespace Passingwind.Blog.Widget.TagsCloud
 {
 	public class WidgetService : WidgetServiceBase
 	{

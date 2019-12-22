@@ -7,9 +7,13 @@
 
 @section head{
 	<style>
+		.widgets { }
+			.widgets .highlight { background-color: #d9edf7; }
+			.widgets .handle { cursor: grab; }
 		.config-widgets-list { min-height: 200px; }
-			.config-widgets-list .highlight { background-color: #d9edf7; }
-			.config-widgets-list .handle { cursor: grab; }
+
+			.config-widgets-list:empty { background: #f1f1f1; border-radius: 4px; }
+				.config-widgets-list:empty:after { display: block; content: 'Drop to here.'; font-size: 20px; }
 		.all-widgets .pull-right { display: none; }
 	</style>
 }
@@ -28,8 +32,7 @@
 	</form>
 </div>
 <div class="row">
-	<div class="col-md-4">
-
+	<div class="col-md-4"> 
 		<ul class="config-widgets-list widgets list-group">
 			@foreach (var item in Model.PluginNames)
 			{
