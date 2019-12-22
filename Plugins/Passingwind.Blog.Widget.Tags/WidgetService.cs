@@ -1,4 +1,5 @@
-﻿using Passingwind.Blog.Plugins;
+﻿using Microsoft.EntityFrameworkCore;
+using Passingwind.Blog.Plugins;
 using Passingwind.Blog.Plugins.Widgets;
 using Passingwind.Blog.Widget.Tags.Models;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Passingwind.Blog.Widget.Tags
 
 		public override async Task<object> GetViewDataAsync(PluginDescriptor pluginDescriptor)
 		{
-			var tagsList = _tagsManager.GetQueryable().ToList();
+			var tagsList = await _tagsManager.GetQueryable().Include(t => t.Posts).ToListAsync();
 
 			var models = new List<TagsViewModel>();
 
@@ -27,7 +28,7 @@ namespace Passingwind.Blog.Widget.Tags
 				models.Add(new TagsViewModel()
 				{
 					Name = item.Name,
-					Count = await _tagsManager.GetPostsCountAsync(item.Id),
+					Count = item.Posts.Count(),
 				});
 			}
 
