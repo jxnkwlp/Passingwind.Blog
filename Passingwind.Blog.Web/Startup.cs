@@ -105,6 +105,8 @@ namespace Passingwind.Blog.Web
 			services.AddTransient<ICaptchaService, CaptchaService>();
 			services.AddTransient<IFileService, LocalFileService>();
 
+			services.AddSingleton<IApplicationRestart, ApplicationRestart>();
+
 			services.AddMemoryCache();
 			services.AddSession(options =>
 			{
