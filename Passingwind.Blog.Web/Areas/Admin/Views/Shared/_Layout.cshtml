@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+
+<!DOCTYPE html>
 <html lang="zh">
 <head>
 	<meta charset="utf-8" />
@@ -26,6 +28,8 @@
 	</environment>
 
 	@RenderSection("head", required: false)
+
+	@Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
 	<div class="navbar navbar-default navbar-fixed-top">
@@ -100,7 +104,7 @@
 
 				</ul>
 
-				<partial name="/Areas/Admin/Views/Shared/_LoginPartial.cshtml"  />
+				<partial name="/Areas/Admin/Views/Shared/_LoginPartial.cshtml" />
 			</div>
 		</div>
 	</div>

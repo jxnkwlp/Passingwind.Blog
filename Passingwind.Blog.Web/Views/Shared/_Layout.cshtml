@@ -1,4 +1,5 @@
-﻿@inject BasicSettings basicSettings
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@inject BasicSettings basicSettings
 @inject AdvancedSettings advancedSettings
 @inject UserManager userManager
 @inject SignInManager signInManager
@@ -50,6 +51,8 @@
 	@RenderSection("head", false)
 
 	<widget-zone position="html_head" />
+
+    @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
 

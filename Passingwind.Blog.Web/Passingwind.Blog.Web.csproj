@@ -4,11 +4,13 @@
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<UserSecretsId>aspnet-Passingwind.Blog.Web-A2CEF7EF-96E8-41A3-8016-EFD2F6C0C385</UserSecretsId>
 		<MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+		<ApplicationInsightsResourceId>/subscriptions/e9f8aee9-201b-4c50-ae11-5e6040e97287/resourcegroups/passingwind/providers/microsoft.insights/components/passingwind.blog</ApplicationInsightsResourceId>
 		<!--<RazorCompileOnBuild>false</RazorCompileOnBuild>-->
 		<!--<GenerateDependencyFile>false</GenerateDependencyFile>-->
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.8.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
@@ -54,8 +56,12 @@
 		<Content Remove="App_Data\*\**" />
 		<None Remove="App_Data\*\**" />
 	</ItemGroup>
+	 
+	<ItemGroup>
+	  <WCFMetadata Include="Connected Services" />
+	</ItemGroup>
 
-	<Target Name="CopyPluginFiles" AfterTargets="ComputeFilesToPublish" >
+	<Target Name="CopyPluginFiles" AfterTargets="ComputeFilesToPublish">
 		<ItemGroup>
 			<PluginsFiles Include="Plugins\**" />
 			<ResolvedFileToPublish Include="@(PluginsFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
