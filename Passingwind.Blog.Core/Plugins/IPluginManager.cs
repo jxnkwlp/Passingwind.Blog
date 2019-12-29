@@ -6,7 +6,7 @@ namespace Passingwind.Blog.Plugins
 	{
 		IEnumerable<PluginDescriptor> GetAllPlugins();
 
-		IPlugin GetPlugin(string name);
+		IPlugin GetPluginInstance(string name);
 
 		PluginDescriptor GetPluginDescription(string name);
 

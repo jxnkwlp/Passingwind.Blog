@@ -5,7 +5,7 @@ using Passingwind.Blog.Web.Areas.Admin.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Web.Areas.Admin.Controllers
@@ -30,20 +30,58 @@ namespace Passingwind.Blog.Web.Areas.Admin.Controllers
 
 		public async Task<IActionResult> Widgets(string position)
 		{
-			var widgetList = _pluginManager.GetAllPlugins().Where(t => string.Equals(t.Group, "widget", StringComparison.InvariantCultureIgnoreCase)).ToList();
+			var widgetList = _pluginManager.GetAllPlugins().Where(t => string.Equals(t.Group, "widget", StringComparison.InvariantCultureIgnoreCase)).Select(t =>
+			{
+				var m = new PluginDescriptorModel()
+				{
+					Author = t.Author,
+					Description = t.Description,
+					Group = t.Group,
+					Name = t.Name,
+					Version = t.Version,
+				};
+				if (typeof(IPluginConfigure).GetTypeInfo().IsAssignableFrom(t.PluginType))
+				{
+					var pluginInstance = Activator.CreateInstance(t.PluginType) as IPluginConfigure;
+					m.CanConfigration = true;
+
+					pluginInstance.GetConfigureRouteData(out var controller, out var action);
+
+					m.ConfigrationPath = Url.Action(action, controller);
+					//m.ConfigrationPath = Url.Action(nameof(WidgetConfig), new { name = m.Name });
+				}
+				return m;
+			}).ToList();
 
 			var positions = typeof(WidgetPositionsConsts).GetFields(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
 
-			var cp = position ?? (string)positions[0].Name;
+			var cp = position ?? positions[0].Name;
 
-			var pluginNames = await GetWidgetsPluginsByPositionAsync(cp);
+			var configPlugins = await GetWidgetsPluginsByPositionAsync(cp);
+
+			var plugins = configPlugins.Select(t =>
+			  {
+				  var widget = widgetList.FirstOrDefault(w => w.Name == t.Name);
+				  if (widget != null)
+					  return new ConfigPluginDescriptorModel(widget)
+					  {
+						  Id = t.Id,
+						  Order = t.Order,
+					  };
+				  else
+					  return new ConfigPluginDescriptorModel()
+					  {
+						  Id = t.Id,
+						  Order = t.Order,
+					  };
+			  }).ToList();
 
 			var model = new WidgetConfigViewModel()
 			{
 				Position = cp,
 				AllPlugins = widgetList,
 				Positions = positions.ToDictionary(t => t.Name, t => (string)t.GetValue(null)),
-				PluginNames = pluginNames,
+				Plugins = plugins,
 			};
 
 			return View(model);
@@ -103,14 +141,30 @@ namespace Passingwind.Blog.Web.Areas.Admin.Controllers
 			return Json(list);
 		}
 
+		//public async Task<IActionResult> WidgetConfig(string name)
+		//{
+		//	var plugin = _pluginManager.GetPluginInstance(name);
+
+		//	if (typeof(IPluginConfigration<>).IsAssignableFrom(plugin.GetType()))
+		//	{
+		//		var pluginConfigration = plugin as IPluginConfigration<PluginConfigurationModel>;
+
+		//		var model = await pluginConfigration.GetConfigDataAsync();
+
+		//		return View(new WidgetSettingViewModel() { Model = model });
+		//	}
+
+		//	return View(new WidgetSettingViewModel());
+		//}
+
 		private async Task<List<WidgetConfigInfo>> GetWidgetsPluginsByPositionAsync(string position)
 		{
-			var list = await _widgetsManager.GetWidgetsAsync(position);
+			var list = await _widgetConfigService.GetByPositionAsync(position);
 
 			if (list == null)
 				return new List<WidgetConfigInfo>();
 
 			return list.ToList();
-		}
+		} 
 	}
 }

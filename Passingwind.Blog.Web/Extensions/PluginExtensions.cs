@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Passingwind.Blog.Plugins;
 using Passingwind.Blog.Plugins.Widgets;
+using Passingwind.Blog.Plugins.Widgets.ViewComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +66,16 @@ namespace Passingwind.Blog.Web
 			pluginInstance.PostConfigureServices(services);
 
 			services.AddTransient(pluginDescriptor.PluginType, (s) => pluginInstance);
+
+			RegisterPluginsService<WidgetView>(pluginDescriptor, services);
+		}
+
+		private static void RegisterPluginsService<TType>(PluginDescriptor pluginDescriptor, IServiceCollection services)
+		{
+			var findType = pluginDescriptor.Assembly.ExportedTypes.FirstOrDefault(t => typeof(TType).GetTypeInfo().IsAssignableFrom(t) && !t.IsAbstract);
+
+			if (findType != null)
+				services.AddScoped(findType);
 		}
 
 		private static void AddPluginToPart(PluginPackage pluginPackage, ApplicationPartManager applicationPartManager)
@@ -109,9 +120,13 @@ namespace Passingwind.Blog.Web
 		{
 			services.AddSingleton<IPluginLoader, PluginLoader>();
 			services.AddSingleton<IPluginManager, PluginManager>();
-
 			services.AddSingleton<IWidgetConfigService, WidgetConfigService>();
 			services.AddSingleton<IWidgetsManager, WidgetsManager>();
+
+			services.AddScoped<IWidgetViewService, WidgetViewService>();
+			services.AddScoped<IWidgetViewInvoker, WidgetViewInvoker>();
+			services.AddScoped<IWidgetViewFactory, WidgetViewFactory>();
+			services.AddScoped<IWidgetViewActivator, WidgetViewActivator>();
 
 			services.AddTransient<IPluginViewRenderService, PluginViewRenderService>();
 		}

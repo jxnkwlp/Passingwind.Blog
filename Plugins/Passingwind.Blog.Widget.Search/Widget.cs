@@ -5,8 +5,5 @@ namespace Passingwind.Blog.Widget.Search
 {
 	public class Widget : WidgetBase
 	{
-		public override void PostConfigureServices(IServiceCollection services)
-		{ 
-		}
 	}
 }

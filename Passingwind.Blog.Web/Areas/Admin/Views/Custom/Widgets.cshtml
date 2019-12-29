@@ -10,10 +10,10 @@
 		.widgets { }
 			.widgets .highlight { background-color: #d9edf7; }
 			.widgets .handle { cursor: grab; }
-		.config-widgets-list { min-height: 200px; }
+		.config-widgets-list { min-height: 200px; position: relative; border: 1px dashed #aaa; padding: 10px; border-radius: 4px; }
 
-			.config-widgets-list:empty { background: #f1f1f1; border-radius: 4px; }
-				.config-widgets-list:empty:after { display: block; content: 'Drop to here.'; font-size: 20px; }
+			.config-widgets-list:empty, .config-widgets-list.empty { background: #f1f1f1; border-radius: 4px; }
+				.config-widgets-list.empty:after { display: block; content: 'Drop to here.'; font-size: 20px; text-align: center; line-height: 200px; color: #808080; }
 		.all-widgets .pull-right { display: none; }
 	</style>
 }
@@ -32,14 +32,14 @@
 	</form>
 </div>
 <div class="row">
-	<div class="col-md-4"> 
+	<div class="col-md-4">
 		<ul class="config-widgets-list widgets list-group">
-			@foreach (var item in Model.PluginNames)
+			@foreach (var item in Model.Plugins)
 			{
 				<li class="list-group-item clearfix" data-id="@(item.Id)" data-name="@(item.Name)">
 					<span class="fa fa-arrows handle"></span>
 					<span class="text">@item.Name</span>
-					<span class="pull-right"><a href="javascript:;" class="config"><i class="fa fa-cog"></i></a> <a href="javascript:;" class="remove"><i class="fa fa-trash"></i></a></span>
+					<span class="pull-right"><a asp-condition="item.CanConfigration" href="@(item.ConfigrationPath)?id=@(item.Id)" class="config"><i class="fa fa-cog"></i></a> <a href="javascript:;" class="remove"><i class="fa fa-trash"></i></a></span>
 				</li>
 			}
 		</ul>
@@ -64,13 +64,31 @@
 	<script src="~/lib/Sortable/Sortable.min.js"></script>
 
 	<script>
+		function checkConfigWidgetsList() {
+			if ($(".config-widgets-list li").length > 0) {
+				$(".config-widgets-list").removeClass('empty');
+			} else {
+				$(".config-widgets-list").addClass('empty');
+			}
+		}
 		$(function () {
+			checkConfigWidgetsList();
+
 			Sortable.create($(".config-widgets-list")[0], {
 				group: 'shared',
 				animation: 150,
 				swap: true,
 				swapClass: 'highlight',
 				handle: '.handle',
+				onSort: function () {
+					checkConfigWidgetsList();
+				},
+				onRemove: function () {
+					checkConfigWidgetsList();
+				},
+				onAdd: function () {
+					checkConfigWidgetsList();
+				},
 			});
 			Sortable.create($(".all-widgets")[0], {
 				group: {
@@ -85,6 +103,7 @@
 
 			$(".config-widgets-list").on('click', '.remove', function (e) {
 				$(this).closest('li').remove();
+				checkConfigWidgetsList();
 			});
 		});
 

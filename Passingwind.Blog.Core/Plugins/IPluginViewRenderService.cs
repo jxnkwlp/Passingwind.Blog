@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Plugins
 {
@@ -7,5 +8,7 @@ namespace Passingwind.Blog.Plugins
 		Task<string> RenderViewAsync(string viewPath);
 
 		Task<string> RenderViewAsync<TModel>(string viewPath, TModel model);
+
+		Task<string> RenderViewAsync(string viewPath, ViewDataDictionary viewData);
 	}
 }

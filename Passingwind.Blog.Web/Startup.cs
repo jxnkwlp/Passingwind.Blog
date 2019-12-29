@@ -104,6 +104,7 @@ namespace Passingwind.Blog.Web
 			services.AddTransient<BlogMLExporter>();
 			services.AddTransient<ICaptchaService, CaptchaService>();
 			services.AddTransient<IFileService, LocalFileService>();
+			services.AddTransient<IPluginDataStore, PluginDataStore>();
 
 			services.AddSingleton<IApplicationRestart, ApplicationRestart>();
 
@@ -285,10 +286,12 @@ namespace Passingwind.Blog.Web
 				pattern: "notfound",
 				defaults: new { controller = "home", action = "notfound" });
 
-			// default 
+			// default  
 			endpoint.MapControllerRoute(
-					name: "default",
-					pattern: "{controller=Home}/{action=Index}/{id?}");
+					name: "areas",
+					pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+			endpoint.MapDefaultControllerRoute();
 		}
 
 	}

@@ -1,55 +1,56 @@
 ﻿@{
-    ViewBag.Title = "Role List";
+	ViewBag.Title = "Role List";
 }
 @model IList<RoleViewModel>
 
 <div class="page-header">
-    <h1>Role List</h1>
+	<h1>Role List</h1>
 </div>
 
 <form asp-action="list">
 
-    <div class="table-toolbar clearfix row">
-        <div class="col-md-9">
-            <div class="btn-group btn-group-sm">
-                <a class="btn btn-info" asp-action="create"><i class="glyphicon glyphicon-plus"></i> New</a>
-                <button type="submit" class="btn btn-danger" asp-action="Deletes"><i class="glyphicon glyphicon-remove"></i> Delete</button>
-            </div>
-        </div>
-        <div class="col-md-3">
-        </div>
-    </div>
+	<div class="table-toolbar clearfix row">
+		<div class="col-md-9">
+			<div class="btn-group btn-group-sm">
+				<a class="btn btn-info" asp-action="create"><i class="glyphicon glyphicon-plus"></i> New</a>
+				<button type="submit" class="btn btn-danger" asp-action="Deletes"><i class="glyphicon glyphicon-remove"></i> Delete</button>
+			</div>
+		</div>
+		<div class="col-md-3">
+		</div>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-bordered table-striped table-item-list">
+			<thead>
+				<tr>
+					<th class="item-checkbox"><input type="checkbox" /></th>
+					<th class="item-title">Name </th>
+				</tr>
+			</thead>
 
-    <table class="table table-bordered table-striped table-item-list">
-        <thead>
-            <tr>
-                <th class="item-checkbox"><input type="checkbox" /></th>
-                <th class="item-title">Name </th>
-            </tr>
-        </thead>
+			@if (Model.Count == 0)
+			{
+				<text>
+					<tr>
+						<td colspan="10" class="text-center">Empty</td>
+					</tr>
+				</text>
+			}
+			else
+			{
+				foreach (var item in Model)
+				{
+					<text>
+						<tr>
+							<td class="item-checkbox"><input type="checkbox" name="itemId" value="@item.Id" /></td>
+							<td class="item-title">
+								<a asp-action="edit" asp-route-id="@item.Id">@item.Name </a>
+							</td>
+						</tr>
+					</text>
+				}
+			}
 
-        @if (Model.Count == 0)
-        {
-            <text>
-            <tr>
-                <td colspan="10" class="text-center">Empty</td>
-            </tr>
-            </text>
-        }
-        else
-        {
-            foreach (var item in Model)
-            {
-                <text>
-                <tr>
-                    <td class="item-checkbox"><input type="checkbox" name="itemId" value="@item.Id" /></td>
-                    <td class="item-title"> <a asp-action="edit" asp-route-id="@item.Id">@item.Name </a>
-                    </td>
-                </tr>
-                </text>
-            }
-        }
-
-    </table>
-
+		</table>
+	</div>
 </form>

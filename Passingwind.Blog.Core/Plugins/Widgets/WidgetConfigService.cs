@@ -32,7 +32,10 @@ namespace Passingwind.Blog.Plugins.Widgets
 
 		protected void LoadWidgetsConfig()
 		{
-			_widgetFilePath = Path.Combine(_hostEnvironment.ContentRootPath, "App_Data", fileName);
+			_widgetFilePath = Path.Combine(_hostEnvironment.ContentRootPath, "App_Data", "Config", fileName);
+
+			if (!Directory.Exists(Path.GetDirectoryName(_widgetFilePath)))
+				Directory.CreateDirectory(Path.GetDirectoryName(_widgetFilePath));
 
 			if (!File.Exists(_widgetFilePath))
 				return;
@@ -104,7 +107,7 @@ namespace Passingwind.Blog.Plugins.Widgets
 
 			if (_widgets.ContainsKey(position))
 			{
-				return Task.FromResult(_widgets[position].AsEnumerable());
+				return Task.FromResult(_widgets[position].OrderBy(t => t.Order).AsEnumerable());
 			}
 
 			return Task.FromResult(Enumerable.Empty<WidgetConfigInfo>());
@@ -177,5 +180,18 @@ namespace Passingwind.Blog.Plugins.Widgets
 			}
 		}
 
+		public Task<WidgetConfigInfo> GetConfigInfoAsync(Guid id)
+		{
+			foreach (var zone in _widgets)
+			{
+				foreach (var item in _widgets[zone.Key])
+				{
+					if (item.Id == id)
+						return Task.FromResult(item);
+				}
+			}
+
+			return Task.FromResult(default(WidgetConfigInfo));
+		}
 	}
 }

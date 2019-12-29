@@ -15,18 +15,23 @@
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.0" />
 
 		<PackageReference Include="MailKit" Version="2.4.1" />
 		<PackageReference Include="MaxMind.GeoIP2" Version="3.1.0" />
 		<PackageReference Include="CommonMark.NET" Version="0.15.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
 		<PackageReference Include="NLog.Web.AspNetCore" Version="4.9" />
 		<PackageReference Include="SkiaSharp" Version="1.68.1" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$('Configration') == 'Debug'"> 
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
