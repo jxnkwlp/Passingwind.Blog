@@ -156,6 +156,30 @@ namespace Passingwind.Blog.Plugins
 			}
 		}
 
+		public async Task<string> RenderViewAsync(string viewPath, ViewDataDictionary viewData)
+		{
+			var actionContext = GetActionContext();
+
+			var view = FindView(viewPath, actionContext);
+
+			using (var output = new StringWriter())
+			{
+				var viewContext = new ViewContext(
+					actionContext,
+					view,
+					viewData,
+					new TempDataDictionary(
+						actionContext.HttpContext,
+						_tempDataProvider),
+					output,
+					new HtmlHelperOptions());
+
+				await view.RenderAsync(viewContext).ConfigureAwait(false);
+
+				return output.ToString();
+			}
+		}
+
 		private ActionContext GetActionContext()
 		{
 			var httpContext = new DefaultHttpContext();

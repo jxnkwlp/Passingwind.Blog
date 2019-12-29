@@ -49,13 +49,13 @@
 	@Html.Raw(advancedSettings.HeaderHtml)
 	@RenderSection("head", false)
 
-	<widget position="html_head" />
+	<widget-zone position="html_head" />
 </head>
 <body>
 
 	<div class="site-header-wrap">
 		<div class="container">
-			<widget position="header_before" />
+			<widget-zone position="HeaderBefore" />
 
 			<header class="site-header">
 				<div class="site-title">
@@ -71,8 +71,8 @@
 
 			</header>
 
-			<widget position="header_after" />
-			<widget position="menu_before" />
+			<widget-zone position="HeaderAfter" />
+			<widget-zone position="MenuBefore" />
 
 			<nav id="main-navigation" class="main-navigation">
 				<ul>
@@ -92,7 +92,7 @@
 
 			</nav>
 
-			<widget position="menu_after" />
+			<widget-zone position="MenuAfter" />
 
 		</div>
 	</div>
@@ -101,7 +101,7 @@
 	<div class="site-content clearfix">
 		<div class="container clearfix">
 			<div class="content-area">
-				<widget position="content_before" />
+				<widget-zone position="ContentBefore" />
 
 				<div class="site-main">
 
@@ -109,11 +109,12 @@
 
 				</div>
 
-				<widget position="content_after" />
+				<widget-zone position="ContentAfter" />
 			</div>
 			<div class="widget-area">
-				<widget position="slderbar_before" />
-				<widget position="slderbar_after" />
+				<widget-zone position="SilderBarBefore" />
+				<widget-zone position="SilderBar" />
+				<widget-zone position="SilderBarAfter" />
 			</div>
 
 		</div>
@@ -127,7 +128,7 @@
 
 	<div class="footer-wrap">
 		<div class="container">
-			<widget position="footer_before" />
+			<widget-zone position="FooterBefore" />
 			<div class="site-info">
 				<div class="footer-copyright">
 					<p>
@@ -136,7 +137,7 @@
 
 				</div>
 			</div>
-			<widget position="footer_after" />
+			<widget-zone position="FooterAfter" /> 
 		</div>
 	</div>
 
@@ -163,6 +164,6 @@
 	<!--  customer footer -->
 	@Html.Raw(advancedSettings.FooterHtml)
 
-	<widget position="html_footer" />
+	<widget-zone position="html_footer" />
 </body>
 </html>

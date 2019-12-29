@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿//using System.Threading.Tasks;
 
-namespace Passingwind.Blog.Plugins.Widgets
-{
-	public interface IWidgetService
-	{
-		string ViewPath { get; }
+//namespace Passingwind.Blog.Plugins.Widgets
+//{
+//	public interface IWidgetService
+//	{
+//		string ViewPath { get; }
 
-		Task<string> GetViewContentAsync(PluginDescriptor pluginDescriptor);
-	}
-}
+//		Task<string> GetViewContentAsync(PluginDescriptor pluginDescriptor);
+//	}
+//}

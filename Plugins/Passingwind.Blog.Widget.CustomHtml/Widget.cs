@@ -1,12 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Passingwind.Blog.Plugins;
 using Passingwind.Blog.Plugins.Widgets;
 
 namespace Passingwind.Blog.Widget.CustomHtml
 {
-	public class Widget : WidgetBase
+	public class Widget : WidgetBase, IPluginConfigure
 	{
-		public override void PostConfigureServices(IServiceCollection services)
-		{ 
+		public void GetConfigureRouteData(out string controller, out string action)
+		{
+			controller = "CustomHtmlWidget";
+			action = "Configure";
 		}
 	}
 }
