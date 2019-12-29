@@ -28,12 +28,7 @@
 		<PackageReference Include="NLog.Web.AspNetCore" Version="4.9" />
 		<PackageReference Include="SkiaSharp" Version="1.68.1" />
 	</ItemGroup>
-
-	<ItemGroup Condition="$('Configration') == 'Debug'"> 
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
-	</ItemGroup>
-
+	  
 	<ItemGroup>
 		<ProjectReference Include="..\Passingwind.Blog.Core\Passingwind.Blog.Core.csproj" />
 	</ItemGroup>
@@ -49,13 +44,24 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
-
-
+	 
 	<ItemGroup>
 		<Compile Remove="Plugins\*\**" />
 		<Content Remove="Plugins\*\**" />
 		<EmbeddedResource Remove="Plugins\*\**" />
 		<None Remove="Plugins\*\**" />
+
+		<Content Remove="App_Data\*\**" />
+		<None Remove="App_Data\*\**" />
 	</ItemGroup>
 
+	<Target Name="CopyPluginFiles" AfterTargets="ComputeFilesToPublish" >
+		<ItemGroup>
+			<PluginsFiles Include="Plugins\**" />
+			<ResolvedFileToPublish Include="@(PluginsFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+				<RelativePath>%(PluginsFiles.Identity)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
+		</ItemGroup>
+	</Target>
 </Project>

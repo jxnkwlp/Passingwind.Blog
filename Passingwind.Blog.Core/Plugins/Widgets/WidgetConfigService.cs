@@ -58,6 +58,9 @@ namespace Passingwind.Blog.Plugins.Widgets
 
 		protected void LoadWidgetsConfigFromFile()
 		{
+			if (!File.Exists(_widgetFilePath))
+				return;
+
 			if (_fileChanged)
 			{
 				lock (_loadConfigFileKey)
