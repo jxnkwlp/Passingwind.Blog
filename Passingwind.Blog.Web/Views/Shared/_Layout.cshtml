@@ -48,11 +48,15 @@
 	<!--  customer head -->
 	@Html.Raw(advancedSettings.HeaderHtml)
 	@RenderSection("head", false)
+
+	<widget-zone position="html_head" />
 </head>
 <body>
 
 	<div class="site-header-wrap">
 		<div class="container">
+			<widget-zone position="HeaderBefore" />
+
 			<header class="site-header">
 				<div class="site-title">
 					<h1 class="blog-title"><a asp-route="home">@basicSettings.Title </a></h1>
@@ -66,6 +70,9 @@
 				<a id="togglemenu" href="#togglemenu" class="header-navigation-toggle">Menu</a>
 
 			</header>
+
+			<widget-zone position="HeaderAfter" />
+			<widget-zone position="MenuBefore" />
 
 			<nav id="main-navigation" class="main-navigation">
 				<ul>
@@ -85,6 +92,8 @@
 
 			</nav>
 
+			<widget-zone position="MenuAfter" />
+
 		</div>
 	</div>
 
@@ -92,6 +101,7 @@
 	<div class="site-content clearfix">
 		<div class="container clearfix">
 			<div class="content-area">
+				<widget-zone position="ContentBefore" />
 
 				<div class="site-main">
 
@@ -99,27 +109,12 @@
 
 				</div>
 
+				<widget-zone position="ContentAfter" />
 			</div>
 			<div class="widget-area">
-
-
-				<!--  page widget -->
-				@(await Component.InvokeAsync("PageListWidget"))
-
-				<!--  category widget -->
-				@(await Component.InvokeAsync("CategoryListWidget"))
-
-				<!--  tags widget -->
-				@(await Component.InvokeAsync("TagsWidget"))
-
-				<!--  search widget
-				@(await Component.InvokeAsync("SearchWidget"))-->
-				<!--  MonthList widget -->
-				@(await Component.InvokeAsync("MonthListWidget"))
-
-				<!--  MonthList widget -->
-				@(await Component.InvokeAsync("LinkListWidget"))
-
+				<widget-zone position="SilderBarBefore" />
+				<widget-zone position="SilderBar" />
+				<widget-zone position="SilderBarAfter" />
 			</div>
 
 		</div>
@@ -133,8 +128,8 @@
 
 	<div class="footer-wrap">
 		<div class="container">
+			<widget-zone position="FooterBefore" />
 			<div class="site-info">
-
 				<div class="footer-copyright">
 					<p>
 						Copyright © @DateTime.Now.Year. Power by <a href="#">Passingwind</a>. <a href="#">@basicSettings.IcpNumber </a> <a asp-route="sitemap">sitemap</a>, build by asp.net core .
@@ -142,6 +137,7 @@
 
 				</div>
 			</div>
+			<widget-zone position="FooterAfter" /> 
 		</div>
 	</div>
 
@@ -167,5 +163,7 @@
 
 	<!--  customer footer -->
 	@Html.Raw(advancedSettings.FooterHtml)
+
+	<widget-zone position="html_footer" />
 </body>
 </html>

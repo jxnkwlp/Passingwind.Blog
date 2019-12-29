@@ -1,0 +1,141 @@
+﻿
+@{
+	ViewData["Title"] = "Widgets";
+}
+
+@model WidgetConfigViewModel
+
+@section head{
+	<style>
+		.widgets { }
+			.widgets .highlight { background-color: #d9edf7; }
+			.widgets .handle { cursor: grab; }
+		.config-widgets-list { min-height: 200px; position: relative; border: 1px dashed #aaa; padding: 10px; border-radius: 4px; }
+
+			.config-widgets-list:empty, .config-widgets-list.empty { background: #f1f1f1; border-radius: 4px; }
+				.config-widgets-list.empty:after { display: block; content: 'Drop to here.'; font-size: 20px; text-align: center; line-height: 200px; color: #808080; }
+		.all-widgets .pull-right { display: none; }
+	</style>
+}
+
+<div class="page-header">
+	<h1>Widgets</h1>
+</div>
+
+<div class="clearfix" style="margin-bottom:20px;">
+
+	<form id="widgetSaveForm" class="form-inline" asp-action="widgets">
+		<div class="form-group">
+			<select class="form-control" name="position" style="width:200px;" asp-items="(Model.Positions.Select(t=> new SelectListItem(t.Value, t.Key) { Selected = Model.Position == t.Key }))" onchange="onPositionChanged()"></select>
+		</div>
+		<button class="btn btn-default" type="button" onclick="onSave();">Save</button>
+	</form>
+</div>
+<div class="row">
+	<div class="col-md-4">
+		<ul class="config-widgets-list widgets list-group">
+			@foreach (var item in Model.Plugins)
+			{
+				<li class="list-group-item clearfix" data-id="@(item.Id)" data-name="@(item.Name)">
+					<span class="fa fa-arrows handle"></span>
+					<span class="text">@item.Name</span>
+					<span class="pull-right"><a asp-condition="item.CanConfigration" href="@(item.ConfigrationPath)?id=@(item.Id)" class="config"><i class="fa fa-cog"></i></a> <a href="javascript:;" class="remove"><i class="fa fa-trash"></i></a></span>
+				</li>
+			}
+		</ul>
+	</div>
+	<div class="col-md-4  ">
+		<ul class="all-widgets widgets list-group">
+			@foreach (var item in Model.AllPlugins)
+			{
+				<li class="list-group-item clearfix" data-name="@(item.Name)">
+					<span class="fa fa-arrows handle"></span>
+					<span class="text">@item.Name</span>
+					<span class="pull-right"><a href="javascript:;" class="config"><i class="fa fa-cog"></i></a> <a href="javascript:;" class="remove"><i class="fa fa-trash"></i></a></span>
+				</li>
+			}
+
+		</ul>
+	</div>
+	<div class="col-md-4"></div>
+</div>
+
+@section scripts{
+	<script src="~/lib/Sortable/Sortable.min.js"></script>
+
+	<script>
+		function checkConfigWidgetsList() {
+			if ($(".config-widgets-list li").length > 0) {
+				$(".config-widgets-list").removeClass('empty');
+			} else {
+				$(".config-widgets-list").addClass('empty');
+			}
+		}
+		$(function () {
+			checkConfigWidgetsList();
+
+			Sortable.create($(".config-widgets-list")[0], {
+				group: 'shared',
+				animation: 150,
+				swap: true,
+				swapClass: 'highlight',
+				handle: '.handle',
+				onSort: function () {
+					checkConfigWidgetsList();
+				},
+				onRemove: function () {
+					checkConfigWidgetsList();
+				},
+				onAdd: function () {
+					checkConfigWidgetsList();
+				},
+			});
+			Sortable.create($(".all-widgets")[0], {
+				group: {
+					name: 'shared',
+					pull: 'clone',
+					put: false
+				},
+				sort: false,
+				animation: 150,
+				handle: '.handle',
+			});
+
+			$(".config-widgets-list").on('click', '.remove', function (e) {
+				$(this).closest('li').remove();
+				checkConfigWidgetsList();
+			});
+		});
+
+		function onPositionChanged() {
+			var p = $('[name=position]').val();
+			setTimeout(function () {
+				location.href = 'Widgets?position=' + p;
+			}, 100)
+		}
+
+		var saveing = false;
+		function onSave() {
+			if (saveing) return;
+			saveing = true;
+
+			$('.config-widgets-list').find('> li').each(function (i, item) {
+				console.log(item);
+
+				var id = $(item).data('id');
+				var name = $(item).data('name');
+				// list.push({ id: id, name: name });
+
+				if (id) {
+					$('#widgetSaveForm').append('<input type="hidden" name="config[' + i + '].id" value="' + id + '" />');
+				}
+				$('#widgetSaveForm').append('<input type="hidden" name="config[' + i + '].index" value="' + i + '" />');
+				$('#widgetSaveForm').append('<input type="hidden" name="config[' + i + '].name" value="' + name + '" />');
+			});
+
+			//$('#widgetSaveForm').append('<input name="config" value="' + JSON.stringify(list) + '" />');
+
+			$('#widgetSaveForm').submit();
+		}
+	</script>
+}
