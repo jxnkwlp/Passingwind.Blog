@@ -145,6 +145,8 @@ namespace Passingwind.Blog.Web
 			services.AddScoped(s => s.GetService<SettingManager>().LoadSetting<EmailSettings>());
 			services.AddScoped(s => s.GetService<SettingManager>().LoadSetting<CommentsSettings>());
 			services.AddScoped(s => s.GetService<SettingManager>().LoadSetting<FeedSettings>());
+
+			services.AddApplicationInsightsTelemetry();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
