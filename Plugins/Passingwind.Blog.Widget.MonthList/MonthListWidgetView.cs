@@ -1,5 +1,5 @@
-﻿using Passingwind.Blog.Plugins;
-using Passingwind.Blog.Plugins.Widgets;
+﻿using Microsoft.EntityFrameworkCore;
+using Passingwind.Blog.Plugins.Widgets.ViewComponents;
 using Passingwind.Blog.Widget.MonthList.Models;
 using System;
 using System.Collections.Generic;
@@ -8,24 +8,24 @@ using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Widget.MonthList
 {
-	public class WidgetService : WidgetServiceBase
+	public class MonthListWidgetView : WidgetView
 	{
 		private readonly PostManager _postManager;
 
-		public WidgetService(IPluginViewRenderService pluginViewRenderService, PostManager postManager) : base(pluginViewRenderService)
+		public MonthListWidgetView(PostManager postManager)
 		{
 			_postManager = postManager;
 		}
 
-		public override Task<object> GetViewDataAsync(PluginDescriptor pluginDescriptor)
+		public override async Task<IWidgetViewResult> InvokeAsync()
 		{
-			var query = _postManager.GetQueryable().Where(t => !t.IsDraft).Select(t => new DateTime(t.PublishedTime.Year, t.PublishedTime.Month, 1)).ToList();
+			var list = await _postManager.GetQueryable().Where(t => !t.IsDraft).Select(t => new DateTime(t.PublishedTime.Year, t.PublishedTime.Month, 1)).ToListAsync();
 
 			var months = new SortedDictionary<DateTime, int>();
 
 			var result = new List<MonthListItemViewModel>();
 
-			foreach (var item in query)
+			foreach (var item in list)
 			{
 				int count = 1;
 				months.TryGetValue(item, out count);
@@ -40,7 +40,7 @@ namespace Passingwind.Blog.Widget.MonthList
 				Count = t.Value
 			}).OrderByDescending(t => t.DateTime).ToList();
 
-			return Task.FromResult<object>(result);
+			return View(result);
 		}
 	}
 }

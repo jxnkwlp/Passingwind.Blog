@@ -1,23 +1,23 @@
-﻿using Passingwind.Blog.Plugins;
-using Passingwind.Blog.Plugins.Widgets;
+﻿using Microsoft.EntityFrameworkCore;
+using Passingwind.Blog.Plugins.Widgets.ViewComponents;
 using Passingwind.Blog.Widget.PageList.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Widget.PageList
 {
-	public class WidgetService : WidgetServiceBase
+	public class PageListWidgetView : WidgetView
 	{
 		private readonly PageManager _pageManager;
 
-		public WidgetService(IPluginViewRenderService pluginViewRenderService, PageManager pageManager) : base(pluginViewRenderService)
+		public PageListWidgetView(PageManager pageManager)
 		{
 			_pageManager = pageManager;
 		}
 
-		public override Task<object> GetViewDataAsync(PluginDescriptor pluginDescriptor)
+		public override async Task<IWidgetViewResult> InvokeAsync()
 		{
-			var list = _pageManager.GetQueryable().Select(entity => new PageViewModel()
+			var list = await _pageManager.GetQueryable().Select(entity => new PageViewModel()
 			{
 				Id = entity.Id,
 				Content = entity.Content,
@@ -31,9 +31,9 @@ namespace Passingwind.Blog.Widget.PageList
 				Title = entity.Title,
 				DisplayOrder = entity.DisplayOrder,
 			})
-			.ToList();
+			.ToListAsync();
 
-			return Task.FromResult<object>(list);
+			return View(list);
 		}
 	}
 }

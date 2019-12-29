@@ -2,15 +2,16 @@
 {
 	public class WidgetPositionsConsts
 	{
-		public const string header_before = "Header Before";
-		public const string header_after = "Header After";
-		public const string menu_before = "Menu Before";
-		public const string menu_after = "Menu After";
-		public const string content_before = "Content Before";
-		public const string content_after = "Content After";
-		public const string slderbar_before = "Slderbar Before";
-		public const string slderbar_after = "Slderbar After";
-		public const string footer_before = "Footer Before";
-		public const string footer_after = "Footer After";
+		public const string HeaderBefore = "Header Before";
+		public const string HeaderAfter = "Header After";
+		public const string MenuBefore = "Menu Before";
+		public const string MenuAfter = "Menu After";
+		public const string ContentBefore = "Content Before";
+		public const string ContentAfter = "Content After";
+		public const string SilderBarBefore = "Silder Bar Before";
+		public const string SilderBar = "Silder Bar";
+		public const string SilderBarAfter = "Silder Bar After";
+		public const string FooterBefore = "Footer Before";
+		public const string FooterAfter = "Footer After";
 	}
 }

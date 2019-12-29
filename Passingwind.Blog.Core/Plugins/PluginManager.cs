@@ -79,7 +79,7 @@ namespace Passingwind.Blog.Plugins
 			return null;
 		}
 
-		public IPlugin GetPlugin(string name)
+		public IPlugin GetPluginInstance(string name)
 		{
 			var plugin = GetPluginDescription(name);
 			if (plugin == null)

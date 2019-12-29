@@ -1,23 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Passingwind.Blog.Plugins;
-using Passingwind.Blog.Plugins.Widgets;
-using Passingwind.Blog.Widget.TagsCloud.Models;
+using Passingwind.Blog.Plugins.Widgets.ViewComponents;
+using Passingwind.Blog.Widget.Tags.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Passingwind.Blog.Widget.TagsCloud
+namespace Passingwind.Blog.Widget.Tags
 {
-	public class WidgetService : WidgetServiceBase
+	public class TagsWidgetView : WidgetView
 	{
 		private readonly TagsManager _tagsManager;
 
-		public WidgetService(IPluginViewRenderService pluginViewRenderService, TagsManager tagsManager) : base(pluginViewRenderService)
+		public TagsWidgetView(TagsManager tagsManager)
 		{
 			_tagsManager = tagsManager;
 		}
 
-		public override async Task<object> GetViewDataAsync(PluginDescriptor pluginDescriptor)
+		public override async Task<IWidgetViewResult> InvokeAsync()
 		{
 			var tagsList = await _tagsManager.GetQueryable().Include(t => t.Posts).ToListAsync();
 
@@ -32,7 +31,7 @@ namespace Passingwind.Blog.Widget.TagsCloud
 				});
 			}
 
-			return models;
+			return View(models);
 		}
 	}
 }
