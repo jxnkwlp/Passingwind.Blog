@@ -1,65 +1,65 @@
 ﻿@{
-    ViewBag.Title = "Categoty List";
+	ViewBag.Title = "Categoty List";
 }
 @model IPagedList<CategoryViewModel>
 
 <div class="page-header">
-    <h1>Categoty List</h1>
+	<h1>Categoty List</h1>
 </div>
 
 <form asp-action="list">
 
-    <div class="table-toolbar clearfix row">
-        <div class="col-md-9">
-            <div class="btn-group btn-group-sm">
-                <a class="btn btn-info" asp-action="create"><i class="glyphicon glyphicon-plus"></i> New</a>
-                <button type="submit" class="btn btn-danger" asp-action="Deletes"><i class="glyphicon glyphicon-remove"></i> Delete</button>
-            </div>
-        </div>
-        <div class="col-md-3">
-        </div>
-    </div>
+	<div class="table-toolbar clearfix row">
+		<div class="col-md-9">
+			<div class="btn-group btn-group-sm">
+				<a class="btn btn-info" asp-action="create"><i class="glyphicon glyphicon-plus"></i> New</a>
+				<button type="submit" class="btn btn-danger" asp-action="Deletes"><i class="glyphicon glyphicon-remove"></i> Delete</button>
+			</div>
+		</div>
+		<div class="col-md-3">
+		</div>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-bordered table-striped table-item-list">
+			<thead>
+				<tr>
+					<th class="item-checkbox"><input type="checkbox" /></th>
+					<th class="item-title">Name </th>
+					<th class="item-order">Display Order </th>
+					<th class="item-center">Count </th>
+				</tr>
+			</thead>
 
-    <table class="table table-bordered table-striped table-item-list">
-        <thead>
-            <tr>
-                <th class="item-checkbox"><input type="checkbox" /></th>
-                <th class="item-title">Name </th>
-                <th class="item-order">Display Order </th>
-                <th class="item-center">Count </th>
-            </tr>
-        </thead>
+			@if (Model.Count == 0)
+			{
+				<text>
+					<tr>
+						<td colspan="10" class="text-center">Empty</td>
+					</tr>
+				</text>
+			}
+			else
+			{
+				foreach (var item in Model)
+				{
+					<text>
+						<tr>
+							<td class="item-checkbox"><input type="checkbox" name="itemId" value="@item.Id" /></td>
+							<td class="item-title">
+								<a asp-action="edit" asp-route-id="@item.Id">@item.Name</a>
+								<a class="pull-right" asp-route="category" asp-route-name="@item.Slug" target="_blank"><i class="fa fa-external-link"></i></a>
+							</td>
+							<td class="item-order">@item.DisplayOrder</td>
+							<td class="item-center">@item.Count</td>
+						</tr>
+					</text>
+				}
+			}
 
-        @if (Model.Count == 0)
-    {
-            <text>
-            <tr>
-                <td colspan="10" class="text-center">Empty</td>
-            </tr>
-            </text>
-    }
-    else
-    {
-        foreach (var item in Model)
-        {
-                <text>
-                <tr>
-                    <td class="item-checkbox"><input type="checkbox" name="itemId" value="@item.Id" /></td>
-                    <td class="item-title">
-                        <a asp-action="edit" asp-route-id="@item.Id">@item.Name</a>
-                        <a class="pull-right" asp-route="category" asp-route-name="@item.Slug" target="_blank"><i class="fa fa-external-link"></i></a>
-                    </td>
-                    <td class="item-order">@item.DisplayOrder</td>
-                    <td class="item-center">@item.Count</td>
-                </tr>
-                </text>
-        }
-    }
-
-    </table>
-
+		</table>
+	</div>
 </form>
 
 <div class="clearfix">
-    @Html.Pager(Model).ItemWrap("li").PagerWrap("ul").PagerClass("pagination pull-right")
+	@Html.Pager(Model).ItemWrap("li").PagerWrap("ul").PagerClass("pagination pull-right")
 </div>

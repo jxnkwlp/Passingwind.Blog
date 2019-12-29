@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +12,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Passingwind.Blog.BlogML;
 using Passingwind.Blog.Data;
+using Passingwind.Blog.Plugins;
+using Passingwind.Blog.Plugins.Widgets;
 using Passingwind.Blog.Web.Captcha;
 using Passingwind.Blog.Web.Services;
 using System;
+using System.Runtime.Loader;
 
 namespace Passingwind.Blog.Web
 {
@@ -100,6 +104,9 @@ namespace Passingwind.Blog.Web
 			services.AddTransient<BlogMLExporter>();
 			services.AddTransient<ICaptchaService, CaptchaService>();
 			services.AddTransient<IFileService, LocalFileService>();
+			services.AddTransient<IPluginDataStore, PluginDataStore>();
+
+			services.AddSingleton<IApplicationRestart, ApplicationRestart>();
 
 			services.AddMemoryCache();
 			services.AddSession(options =>
@@ -109,8 +116,17 @@ namespace Passingwind.Blog.Web
 				options.Cookie.HttpOnly = true;
 			});
 
-			services.AddControllersWithViews();
+			services.Configure<RazorViewEngineOptions>(options =>
+			{
+				//options.ViewLocationFormats.Add("~/Plugins/{1}/{0}.cshtml");
+				//options.ViewLocationFormats.Add("~/Plugins/{2}/views/{1}/{0}.cshtml");
+				//options.ViewLocationExpanders.Add(new WidgetViewLocationExpander());
+			});
+
 			services.AddRazorPages();
+			services.AddControllersWithViews()
+				//.AddViewOptions(o => o.ViewEngines.Add(new WidgetViewEngine()))
+				.AddPlugins();
 
 			services.AddResponseCaching();
 			services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
@@ -131,7 +147,7 @@ namespace Passingwind.Blog.Web
 			services.AddScoped(s => s.GetService<SettingManager>().LoadSetting<FeedSettings>());
 		}
 
-		// This method gets called by the runtime. Use  this method to configure the HTTP request pipeline.
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
@@ -152,9 +168,7 @@ namespace Passingwind.Blog.Web
 			app.UseResponseCaching();
 
 			if (UseHttps)
-			{
 				app.UseHttpsRedirection();
-			}
 
 			app.UseStaticFiles(new StaticFileOptions()
 			{
@@ -272,10 +286,12 @@ namespace Passingwind.Blog.Web
 				pattern: "notfound",
 				defaults: new { controller = "home", action = "notfound" });
 
-			// default 
+			// default  
 			endpoint.MapControllerRoute(
-					name: "default",
-					pattern: "{controller=Home}/{action=Index}/{id?}");
+					name: "areas",
+					pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+			endpoint.MapDefaultControllerRoute();
 		}
 
 	}

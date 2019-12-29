@@ -41,6 +41,10 @@
 		{
 			"library": "sweetalert@2.1.2",
 			"destination": "wwwroot/lib/sweetalert"
+		},
+		{
+			"library": "Sortable@1.10.1",
+			"destination": "wwwroot/lib/Sortable"
 		}
 	]
 }

@@ -1,0 +1,23 @@
+﻿@using Passingwind.Blog.Widget.TagsCloud.Models;
+@{
+	var baseFontSize = 14;
+	var maxFontSize = 30;
+	var max = Model.Max(t => (int?)t.Count) ?? 0;
+	var step = (double)(maxFontSize - baseFontSize) / max;
+}
+@model IList<TagsViewModel>
+
+<aside class="widget">
+	<h2 class="widget-title">Tags</h2>
+	<div class="tagcloud">
+		@foreach (var item in Model)
+		{
+			var ft = Math.Round(baseFontSize + step * item.Count, 6);
+
+			<text>
+				<a asp-route="tags" asp-route-name="@item.Name" class="tag-link" title="@item.Count topics" style="font-size: @(ft)px;">@item.Name </a>
+			</text>
+		}
+
+	</div>
+</aside>
