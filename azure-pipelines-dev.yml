@@ -13,10 +13,25 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+
+# npm install 
+- task: UseNode@1
+  inputs:
+    checkLatest: true
+ 
+# npm install 
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: 'Passingwind.Blog.Web/ClientApp'
+    
+# .net core build.
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
+# github release / tag
 - task: GitHubRelease@1
+  displayName: 'GitHub release'
   inputs:
     gitHubConnection: 'github.com_jxnkwlp'
     repositoryName: '$(Build.Repository.Name)'
