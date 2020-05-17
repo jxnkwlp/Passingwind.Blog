@@ -14,18 +14,27 @@ variables:
 
 steps:
 
-# npm install 
+# check npm
 - task: UseNode@1
   inputs:
     checkLatest: true
- 
+
+# npm install vue-cli
+- script: npm install -g @vue/cli
+  displayName: 'Install vue-cli'
+  
+
 # npm install 
 - task: Npm@1
+  displayName: 'Install npm packages'
   inputs:
     command: 'install'
-    workingDir: 'Passingwind.Blog.Web/ClientApp'
+    workingDir: 'Passingwind.Blog.Web/ClientApp'  
+
+    
 
 - task: DotNetCoreCLI@2
+  displayName: 'Dotnet publish'
   inputs:
     command: 'publish'
     publishWebProjects: true
