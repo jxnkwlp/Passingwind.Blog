@@ -1,0 +1,22 @@
+@model RegisterConfirmationViewModel
+@{
+    ViewData["Title"] = "Register confirmation";
+}
+
+<div class="alert alert-success">
+    Please check your email to confirm your account. Click <a href="#." id="reSendEmail" data-email="@(Model.Email)">here</a> to resend the link if you have not received the email
+</div>
+
+@section scripts{
+    <script>
+        $('#reSendEmail').click(function () {
+            var email = $(this).data('email');
+            if (!email) return;
+            $.post('SendEmailConfirmationMessage', { email: email }).then(function () {
+                alert('Send.');
+                location.reload();
+            })
+        })
+
+    </script>
+}

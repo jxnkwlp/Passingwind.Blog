@@ -35,12 +35,13 @@ function asyncOnSuccess(element, data, contentType) {
 
     if (!data.result) {
         if (data.message) {
-            alert(data.message);
+            _alert({ text: data.message, icon: 'error' });
         }
         return;
     }
 
     if (data.commentId) {
+        _alert({ text: 'Submited', icon: 'success' });
         $.get(data.url, function (html) {
             var parentId = data.parentId;
             if (parentId === null) {
@@ -86,6 +87,7 @@ function asyncOnSuccess(element, data, contentType) {
 function initCommentForm() {
     $('#comment-respond').find('textarea').val('');
     $('#comment-respond').find('[name=CaptchaCode]').val('');
+    refreshCaptchaimg();
 }
 function moveCommentForm(commentId) {
 
@@ -113,6 +115,10 @@ function canelCommentForm(obj) {
 function showCommentForm() {
     $('#comment-respond').show();
     $('html,body').animate({ scrollTop: $('#comment-respond').offset().top }, 'fast');
+    refreshCaptchaimg();
+}
+function refreshCaptchaimg() {
+    $('#commentForm').find('.comment-form-captchaimg>img').click();
 }
 $(document).on("submit", "form[id=commentForm]", function (evt) {
     evt.preventDefault();

@@ -1,44 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Passingwind.Blog.Web
 {
-    public class RouteNames
-    {
-        public const string Home = "Home";
-
-        public const string NotFound = "NotFound";
-
-        public const string LogIn = "LogIn";
-        public const string Logout = "Logout";
-        public const string Register = "Register";
-        public const string ChangePassword = "ChangePassword";
-        public const string SetPassword = "SetPassword";
-        public const string ForgetPassword = "ForgetPassword";
-
-        public const string Posts = "Posts";
-        public const string Search = "Search";
-        public const string Monthlist = "Monthlist";
-        public const string Category = "Category";
-        public const string Tags = "Tags";
-        public const string Author = "Author";
-
-        public const string Post = "Post";
-        public const string Page = "page";
-        public const string Archive = "archive";
-
-
-        public const string OpenSearch = "OpenSearch";
-        public const string SiteMap = "SiteMap";
-        public const string Syndication = "Syndication";
-        public const string SyndicationCategory = "SyndicationCategory";
-        public const string SyndicationPost = "SyndicationPost";
-        public const string SyndicationComment = "SyndicationComment";
-        public const string Metaweblog = "Metaweblog";
-        public const string Rsd = "Rsd";
-
-        public const string CommentForm = "commentForm";
-    }
+	public class RouteNames
+	{
+		public const string Home = "home";
+		public const string Sigin = "sigin";
+		public const string Logout = "logout";
+		public const string ChangePassword = "changepassword";
+		public const string ForgotPassword = "forgotpassword";
+		public const string Post = "post";
+		public const string Page = "page";
+		public const string Syndication = "syndication";
+		public const string SyndicationCategory = "syndicationcategory";
+		public const string OpenSearch = "opensearch";
+		public const string Search = "search";
+		public const string SiteMap = "sitemap";
+		public const string Metaweblog = "metaweblog";
+		public const string Rsd = "rsd";
+	}
 }
