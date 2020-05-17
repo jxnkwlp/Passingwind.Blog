@@ -24,24 +24,24 @@ steps:
 #   displayName: 'Install vue-cli'
 #   workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
   
-- task: Npm@1 
-  inputs:
-    command: 'custom'
-    customCommand: install -g @vue/cli
-    workingDir: 'Passingwind.Blog.Web/ClientApp'  
+# - task: Npm@1 
+#   inputs:
+#     command: 'custom'
+#     customCommand: install -g @vue/cli
+#     workingDir: 'Passingwind.Blog.Web/ClientApp'  
 
 # npm install 
-- task: Npm@1
-  displayName: 'Install npm packages'
-  inputs:
-    command: 'install'
-    workingDir: 'Passingwind.Blog.Web/ClientApp'  
+# - task: Npm@1
+#   displayName: 'Install npm packages'
+#   inputs:
+#     command: 'install'
+#     workingDir: 'Passingwind.Blog.Web/ClientApp'  
 
-- task: Npm@1 
-  inputs:
-    command: 'custom'
-    customCommand: run build
-    workingDir: 'Passingwind.Blog.Web/ClientApp'  
+# - task: Npm@1 
+#   inputs:
+#     command: 'custom'
+#     customCommand: run build
+#     workingDir: 'Passingwind.Blog.Web/ClientApp'  
 
 # - script: npm run build
 #   displayName: 'Install vue-cli'
