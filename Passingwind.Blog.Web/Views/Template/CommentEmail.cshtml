@@ -1,0 +1,22 @@
+@model Passingwind.Blog.Web.Models.CommentEmailModel
+
+@{
+    Layout = null;
+}
+
+@if (Model.IsPostAuthorEmail)
+{
+    <div>
+        New comment on your post <a href="@Model.CommentUrl">@Model.Post.Title</a>.
+
+        <pre>@Model.Replay.Content</pre>
+    </div>
+}
+else
+{
+    <div>
+        Hi @Model.SourceComment.Author, new reply to your <a href="@Model.CommentUrl">comment</a>.
+
+        <pre>@Model.Replay.Content</pre>
+    </div>
+}

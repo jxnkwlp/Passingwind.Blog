@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /account/
+Disallow: /search
+
+#sitemap: http://example.com/sitemap

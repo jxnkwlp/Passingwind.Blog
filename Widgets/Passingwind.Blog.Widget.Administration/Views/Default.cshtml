@@ -1,0 +1,20 @@
+@{
+	Layout = null; 
+}
+@using Passingwind.Blog.Widget.Administration.Models
+@model WidgetViewModel
+
+@if (User.Identity.IsAuthenticated)
+{
+	<aside class="widget">
+		<h2 class="widget-title">@(Model.Title)</h2>
+		<div class="widget-text">
+			<ul class="widget-link-list">
+				<li><a href="~/admin/">Admin</a></li>
+				<li><a href="~/admin#/profile">My profile</a></li>
+				<li><a asp-area="" asp-route="changepassword">Change Password</a></li>
+				<li><a asp-route="Logout">Log Out</a></li>
+			</ul>
+		</div>
+	</aside>
+}

@@ -1,0 +1,108 @@
+html,
+body {
+  background: #f3f3f3;
+}
+.d-flex {
+  display: -ms-flexbox !important;
+  display: flex !important;
+}
+.d-inline-flex {
+  display: -ms-inline-flexbox !important;
+  display: inline-flex !important;
+}
+.m-auto {
+  margin: auto !important;
+}
+.mt-auto,
+.my-auto {
+  margin-top: auto !important;
+}
+.mr-auto,
+.mx-auto {
+  margin-right: auto !important;
+}
+.mb-auto,
+.my-auto {
+  margin-bottom: auto !important;
+}
+.ml-auto,
+.mx-auto {
+  margin-left: auto !important;
+}
+.container {
+  width: 100%;
+  height: 100%;
+}
+.main-content {
+  padding: 0;
+}
+.main-content .el-page-header {
+  padding: 20px;
+  background: #fff;
+}
+.main-content .content {
+  padding: 20px;
+}
+.mt-10 {
+  margin-top: 10px;
+}
+.mb-10 {
+  margin-bottom: 10px;
+}
+.el-button.block {
+  display: block;
+  width: 100%;
+}
+.el-button.block + .el-button.block {
+  margin-left: 0;
+}
+.left-nav {
+  background: #fff;
+  border-right: solid 1px #e6e6e6;
+  display: flex;
+  flex-flow: column;
+}
+.left-nav .el-menu {
+  border-right: none;
+}
+.left-nav .fa {
+  margin: 0;
+  vertical-align: middle;
+  width: 24px;
+  text-align: center;
+  font-size: 18px;
+}
+.left-nav .nav-item-top {
+  flex: 2;
+}
+.user-avator {
+  margin-bottom: 10px;
+  width: 64px;
+  height: 64px;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.user-avator a {
+  display: block;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.user-avator img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: block;
+}
+.text-align-center {
+  text-align: center;
+}
+.content-header {
+  background: #fff;
+  line-height: 24px;
+}
+.table-filter-list .el-tag + .el-tag {
+  margin-left: 10px;
+}

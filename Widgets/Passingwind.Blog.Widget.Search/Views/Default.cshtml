@@ -1,0 +1,16 @@
+@using Passingwind.Blog.Widget.Search.Models
+
+@model WidgetViewModel
+<aside class="widget">
+    @if (!string.IsNullOrEmpty(Model.Title))
+    {
+        <h2 class="widget-title">@Model.Title</h2>
+    }
+    <div class="widget-search">
+        <div class="search">
+            <form method="get" action="/">
+                <input type="search" name="q" placeholder="Search ... " class="search-field" />
+            </form>
+        </div>
+    </div>
+</aside>

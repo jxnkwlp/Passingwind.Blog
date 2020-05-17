@@ -1,0 +1,14 @@
+@{
+    Layout = null;
+}
+@using Passingwind.Blog.Widget.CustomHtml.Models
+
+@model WidgetViewModel
+
+
+<aside class="widget">
+    <h2 class="widget-title">@(Model.Title)</h2>
+    <div class="widget-text">
+        @Html.Raw(Model.Html)
+    </div>
+</aside>

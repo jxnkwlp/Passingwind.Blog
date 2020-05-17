@@ -1,0 +1,17 @@
+@{
+    Layout = "_Layout";
+}
+
+@section head{
+    <link href="~/css/account.min.css" rel="stylesheet" asp-append-version="true" />
+    @RenderSection("head", false)
+}
+
+<partial name="_StatusMessage" />
+
+@RenderBody()
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    @RenderSection("scripts", false)
+}

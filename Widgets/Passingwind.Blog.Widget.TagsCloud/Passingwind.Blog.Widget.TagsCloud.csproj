@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <OutputType>Library</OutputType>
+        <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Passingwind.Blog.Core\Passingwind.Blog.Core.csproj" />
+        <ProjectReference Include="..\..\Passingwind.Blog.Widgets\Passingwind.Blog.Widgets.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="plugin.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+</Project>

@@ -1,9 +1,18 @@
-# Passingwind.Blog
+# Blog
 
-基于asp.net core 3.1, microsoft.identity.core 和 entity framework core 。
+Build by asp.net core 3.1、microsoft.identity.core、 entity framework core 。
+
 地址：[http://blog.wuliping.cn](https://blog.wuliping.cn)
 
-## TODO
-- [ ] Plugins
+## Features
+
+- [x] Posts
+- [x] Page
+- [x] Category
+- [x] Tags
+- [x] Comment 
+- [x] Roles
+- [ ] Multi-Blog
+- [ ] Multi-Language
 - [ ] Themes
-- [ ] Multi Language
+- [x] Widgets

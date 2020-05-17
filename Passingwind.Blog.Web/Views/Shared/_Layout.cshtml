@@ -1,172 +1,160 @@
-﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+
+@inject BlogUserManager userManager
+@inject BlogSignInManager signInManager
+
 @inject BasicSettings basicSettings
 @inject AdvancedSettings advancedSettings
-@inject UserManager userManager
-@inject SignInManager signInManager
+@inject FeedSettings feedSettings
+@inject ISettingService settingService
+
+
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="shortcut icon" href="~/favicon.ico" />
-	<title>@ViewData["Title"]</title>
-	<meta name="keywords" content="@ViewData["KeyWorlds"]" />
-	<meta name="description" content="@ViewData["Description"]" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="~/favicon.ico" />
+    <title>@ViewData["Title"]</title>
+    <meta name="keywords" content="@ViewData["Keywords"]" />
+    <meta name="description" content="@ViewData["Description"]" />
 
-	<!-- archive  -->
-	<link rel="contents" title="Archive" href="~/archive" />
-	<!-- rsd  -->
-	<link type="application/rsd+xml" rel="edituri" title="RSD" href="~/rsd.xml" />
-	<!-- opensearch  -->
-	<link rel="search" type="application/opensearchdescription+xml" href="~/opensearch.xml" title="@basicSettings.Title" />
-	<!-- syndication  -->
-	<link rel="alternate" type="application/atom+xml" title="@(basicSettings.Title) (ATOM)" href="~/syndication.xml?format=atom" />
-	<link rel="alternate" type="application/rss+xml" title="@(basicSettings.Title) (RSS)" href="~/syndication.xml" />
+    <!-- archive  -->
+    <link rel="contents" title="Archive" href="~/archive" />
+    <!-- rsd  -->
+    <link type="application/rsd+xml" rel="edituri" title="RSD" href="~/rsd.xml" asp-condition="feedSettings.Enabled" />
 
-	<!--
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Kreon:400,700" rel="stylesheet" />
-	 -->
-	<environment names="Development">
-		<link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
-		<link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
-		<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-	</environment>
-	<environment names="Staging,Production">
-		<link rel="stylesheet"
-			  href="//cdn.bootcss.com/bootstrap/3.4.1/css/bootstrap.min.css"
-			  asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
-			  asp-fallback-test-class="sr-only"
-			  asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-		<link rel="stylesheet"
-			  href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"
-			  asp-fallback-href="~/lib/font-awesome/css/font-awesome.min.css"
-			  asp-fallback-test-class="sr-only"
-			  asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-		<link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-	</environment>
+    <!-- opensearch  -->
+    <link rel="search" type="application/opensearchdescription+xml" href="~/opensearch.xml" title="@basicSettings.Title" asp-condition="advancedSettings.EnableOpenSearch" />
 
-	<!--  customer head -->
-	@Html.Raw(advancedSettings.HeaderHtml)
-	@RenderSection("head", false)
+    <!-- syndication  -->
+    <link rel="alternate" type="application/atom+xml" title="@(basicSettings.Title) (ATOM)" href="~/syndication.xml?format=atom" asp-condition="feedSettings.Enabled" />
+    <link rel="alternate" type="application/rss+xml" title="@(basicSettings.Title) (RSS)" href="~/syndication.xml" asp-condition="feedSettings.Enabled" />
 
-	<widget-zone position="html_head" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Kreon:400,700" rel="stylesheet" />
 
-    @Html.Raw(JavaScriptSnippet.FullScript)
+    <environment names="Development">
+        <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+        <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/themes/default/css/site.css" asp-append-version="true" />
+    </environment>
+    <environment names="Staging,Production">
+        <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/themes/default/css/site.min.css" asp-append-version="true" />
+    </environment>
+
+    <!--  customer head -->
+    @Html.Raw(advancedSettings.HeaderHtml)
+    @RenderSection("head", false)
+
+    <widget-zone name="HtmlHeader" />
+
+    <mini-profiler />
 </head>
+
 <body>
 
-	<div class="site-header-wrap">
-		<div class="container">
-			<widget-zone position="HeaderBefore" />
+    <div class="site-header-wrap">
+        <div class="container">
+            <header class="site-header">
+                <div class="site-title">
+                    <h1 class="blog-title"><a href="~/">@basicSettings.Title </a></h1>
+                    <p class="blog-description">@basicSettings.Description </p>
+                </div>
+                <div class="social-links">
+                    @if (await settingService.HasKeyAsync("social.links.github"))
+                    {
+                        var value = await settingService.GetValueAsync("social.links.github");
+                        <text>
+                            <a href="@value" rel="external nofollow" target="_blank" title="gihub"><i class="fa fa-git"></i></a>
+                        </text>
+                    }
+                    @if (await settingService.HasKeyAsync("social.links.personalhomepage"))
+                    {
+                        var value = await settingService.GetValueAsync("social.links.personalhomepage");
+                        <text>
+                            <a href="@value" target="_blank" title="Home"><i class="fa fa-home"></i></a>
+                        </text>
+                    }
 
-			<header class="site-header">
-				<div class="site-title">
-					<h1 class="blog-title"><a asp-route="home">@basicSettings.Title </a></h1>
-					<p class="blog-description">@basicSettings.Description </p>
-				</div>
-				<div class="social-links">
-					<a href="https://github.com/jxnkwlp/" rel="external nofollow" target="_blank" title="gihub"><i class="fa fa-git"></i></a>
-					<a href="~/syndication.xml" target="_blank" title="Rss"><i class="fa fa-rss"></i></a>
-					<a href="http://www.wuliping.cn" target="_blank" title="Home"><i class="fa fa-home"></i></a>
-				</div>
-				<a id="togglemenu" href="#togglemenu" class="header-navigation-toggle">Menu</a>
+                    <a href="~/syndication.xml" target="_blank" title="Rss"><i class="fa fa-rss"></i></a>
 
-			</header>
+                </div>
+                <a id="togglemenu" href="#togglemenu" class="header-navigation-toggle">Menu</a>
 
-			<widget-zone position="HeaderAfter" />
-			<widget-zone position="MenuBefore" />
+                <widget-zone name="PageHeader" />
+            </header>
 
-			<nav id="main-navigation" class="main-navigation">
-				<ul>
-					<li><a asp-route="home">Home</a></li>
-					<li><a asp-route="archive">Archive</a></li>
+            <nav id="main-navigation" class="main-navigation">
+                <ul>
+                    <li><a asp-route="home">Home</a></li>
+                    <li><a asp-route="archive">Archive</a></li>
 
-					@if (User.Identity.IsAuthenticated)
-					{
-						<li><a href="~/admin/">Admin</a></li>
-						<li><a asp-route="@(RouteNames.Logout)">Log Out</a></li>
-					}
-					else
-					{
-						<li><a asp-route="@(RouteNames.LogIn)">Login</a></li>
-					}
-				</ul>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a href="~/admin/">Admin</a></li>
+                        <li><a asp-route="logout">Log Out</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-route="login">Login</a></li>
+                    }
+                </ul>
 
-			</nav>
+            </nav>
 
-			<widget-zone position="MenuAfter" />
-
-		</div>
-	</div>
-
-
-	<div class="site-content clearfix">
-		<div class="container clearfix">
-			<div class="content-area">
-				<widget-zone position="ContentBefore" />
-
-				<div class="site-main">
-
-					@RenderBody()
-
-				</div>
-
-				<widget-zone position="ContentAfter" />
-			</div>
-			<div class="widget-area">
-				<widget-zone position="SilderBarBefore" />
-				<widget-zone position="SilderBar" />
-				<widget-zone position="SilderBarAfter" />
-			</div>
-
-		</div>
-
-		<div class="container">
-
-			<partial name="_Pager" />
-
-		</div>
-	</div>
-
-	<div class="footer-wrap">
-		<div class="container">
-			<widget-zone position="FooterBefore" />
-			<div class="site-info">
-				<div class="footer-copyright">
-					<p>
-						Copyright © @DateTime.Now.Year. Power by <a href="#">Passingwind</a>. <a href="#">@basicSettings.IcpNumber </a> <a asp-route="sitemap">sitemap</a>, build by asp.net core .
-					</p>
-
-				</div>
-			</div>
-			<widget-zone position="FooterAfter" /> 
-		</div>
-	</div>
+        </div>
+    </div>
 
 
-	<environment names="Development">
-		<script src="~/lib/jquery/jquery.js"></script>
-		<script src="~/lib/bootstrap/js/bootstrap.js"></script>
-		<script src="~/js/site.js" asp-append-version="true"></script>
-	</environment>
-	<environment names="Staging,Production">
-		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"
-				asp-fallback-src="~/lib/jquery/jquery.min.js"
-				asp-fallback-test="window.jQuery">
-		</script>
-		<script src="//cdn.bootcss.com/bootstrap/3.4.1/js/bootstrap.min.js"
-				asp-fallback-src="~/lib/bootstrap/js/bootstrap.min.js"
-				asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal">
-		</script>
-		<script src="~/js/site.min.js" asp-append-version="true"></script>
-	</environment>
+    <div class="site-content clearfix">
+        <div class="container clearfix">
+            <div class="content-area">
+                <div class="site-main">
+                    <widget-zone name="PostListHeader" />
+                    @RenderBody()
+                    <widget-zone name="PostListFooter" />
+                </div>
+            </div>
+            <div class="widget-area">
+                <profile name="widgets-profile">
+                    <widget-zone name="SilderBar" />
+                </profile>
+            </div>
 
-	@RenderSection("Scripts", required: false)
+        </div>
 
-	<!--  customer footer -->
-	@Html.Raw(advancedSettings.FooterHtml)
+    </div>
 
-	<widget-zone position="html_footer" />
+    <div class="footer-wrap">
+        <div class="container">
+            <div class="site-info">
+                <div class="footer-copyright">
+                    <partial name="_FooterPartial" />
+                </div>
+            </div>
+        </div>
+        <widget-zone name="PageFooter" />
+    </div>
+
+
+    <environment names="Development">
+        <script src="~/lib/jquery/jquery.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+        <script src="~/themes/default/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/jquery/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+        <script src="~/themes/default/js/site.es5.min.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("Scripts", required: false)
+
+    <!--  customer footer -->
+    @Html.Raw(advancedSettings.FooterHtml)
+
+    <widget-zone name="HtmlFooter" />
 </body>
 </html>
