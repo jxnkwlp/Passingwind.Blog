@@ -1,0 +1,90 @@
+@{
+    Layout = "_WidgetConfigureLayout";
+}
+@model ConfigureViewModel
+
+<div id="app">
+    <div class="">
+        <div class="table-toolbar clearfix row" style="margin-bottom:10px">
+            <el-form :inline="true" :model="addData">
+                <el-form-item label="Title">
+                    <el-input v-model="addData.title" placeholder="Title"></el-input>
+                </el-form-item>
+                <el-form-item label="Url">
+                    <el-input v-model="addData.url" placeholder="Url"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @@click="handleAdd">Add</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+
+        <el-table :data="list" stripe border style="width: 100%">
+            <el-table-column prop="url" label="Url">
+                <template slot-scope="scope">
+                    <span :title="scope.row.title">{{scope.row.title}} ({{scope.row.url}})</span>
+                    <a class="pull-right" :href="scope.row.url" target="_blank"><i class="fa fa-external-link"></i></a>
+                </template>
+            </el-table-column>
+            <el-table-column prop="action" fixed="right" align="center" width="50px">
+                <template slot-scope="scope">
+                    <el-button @@click.native.prevent="handleRemove(scope.row.id)"
+                               type="text" icon="el-icon-delete"
+                               size="small">
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script> 
+        var widgetId = '@Model.Id';
+        var urlPath = '/admin/widgets/linklist/';
+
+        new Vue({
+            el: '#app',
+            data: {
+                list: [],
+                addData: {}
+            },
+            mounted() {
+                this.getList();
+            },
+            methods: {
+                getList() {
+                    axios.get(urlPath + 'list?id=' + widgetId).then(res => {
+                        this.list = res.data;
+                    }).catch((e) => {
+                        this.$message.error(e);
+                    })
+                },
+                handleRemove(id) {
+                    axios.post(urlPath + 'delete?id=' + id).then(res => {
+                        this.getList();
+                    }).catch((e) => {
+                        this.$message.error(e);
+                    })
+                },
+                handleAdd() {
+                    if (this.addData.title && this.addData.url) {
+
+                        axios.post(urlPath + 'add?widgetId=' + widgetId, this.addData).then(res => {
+                            this.getList();
+                            this.addData = {};
+
+                            this.$message.success('Saved successfully');
+                        }).catch((e) => {
+                            this.$message.error(e);
+                        })
+                    }
+                }
+            }
+        })
+
+    </script>
+
+}

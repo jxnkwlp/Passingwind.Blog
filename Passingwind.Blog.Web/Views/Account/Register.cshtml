@@ -1,70 +1,29 @@
-﻿@model RegisterViewModel
 @{
-    Layout = "_Layout.Account";
     ViewData["Title"] = "Register";
 }
+@model RegisterViewModel
 
-@inject AdvancedSettings advancedSettings
+<div class="row">
+    <div class="col-md-4 mb-5">
+        <form asp-route-returnUrl="@(Context.Request.Query["ReturnUrl"])" method="post">
 
-
-
-
-<div class="login-box">
-
-    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-
-
-    <form asp-route-returnurl="@ViewData["ReturnUrl"]">
-
-        <div class="login-box-body">
-
-            <p class="login-box-msg">Register a new membership</p>
-
-            @if (advancedSettings.EnableRegister)
-            {
-                <div class="form-group has-feedback">
-                    <input type="email" class="form-control" placeholder="Email" asp-for="Email" />
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="form-group has-feedback">
-                    <input type="password" class="form-control" placeholder="Password" asp-for="Password" />
-                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-                <div class="form-group has-feedback">
-                    <input type="password" class="form-control" placeholder="Retype password" asp-for="ConfirmPassword" />
-                    <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                </div>
-                    <div class="row">
-                        <div class="col-xs-8">
-                            <div class="checkbox icheck">
-                                <label>
-                                    <input type="checkbox"> I agree to the <a href="#">terms</a>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-xs-4">
-                            <button type="submit" class="btn btn-primary btn-block">Register</button>
-                        </div>
-                    </div>
-            }
-            else
-            {
-                <div class="alert alert-danger">禁止注册</div>
-            }
-
-            <hr />
-
-            <a asp-action="login" class="text-center">I already have a membership</a>
-        </div>
-
-    </form>
-
-
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <small><span asp-validation-for="Email" class="text-danger"></span></small>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" class="form-control" /> 
+                <small><span asp-validation-for="Password" class="text-danger"></span></small>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword"></label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <small><span asp-validation-for="ConfirmPassword" class="text-danger"></span></small>
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+    </div>
 </div>
-
-@section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}

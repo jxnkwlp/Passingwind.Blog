@@ -1,77 +1,64 @@
-﻿using System.Threading.Tasks;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Logging;
 using MimeKit;
-using MimeKit.Text;
+using Passingwind.Blog.Data.Settings;
+using System;
+using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Web.Services
 {
-    // This class is used by the application to send email for account confirmation and password reset.
-    // For more details see https://go.microsoft.com/fwlink/?LinkID=532713
-    public class EmailSender : IEmailSender
-    {
-        private readonly ILogger _logger;
-        private readonly EmailSettings _emailSettings;
+	public class EmailSender : IEmailSender
+	{
+		private readonly EmailSettings _emailSettings;
+		private readonly BasicSettings _basicSettings;
+		private readonly ILogger<EmailSender> _logger;
 
-        public EmailSender(EmailSettings emailSettings, ILogger<EmailSender> logger)
-        {
-            _emailSettings = emailSettings;
-            _logger = logger;
-        }
+		public EmailSender(EmailSettings emailSettings, BasicSettings basicSettings, ILogger<EmailSender> logger)
+		{
+			_emailSettings = emailSettings;
+			_basicSettings = basicSettings;
+			_logger = logger;
+		}
 
-        public async Task SendEmailAsync(string email, string subject, string message)
-        {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(subject))
-                return;
+		public Task SendEmailAsync(string email, string subject, string htmlMessage)
+		{
+			if (!_emailSettings.Validate())
+			{
+				_logger.LogWarning("Email settings is empty.");
+				return Task.CompletedTask;
+			}
 
-            if (string.IsNullOrEmpty(_emailSettings.Email) || string.IsNullOrEmpty(_emailSettings.SmtpHost))
-                return;
+			var message = new MimeMessage();
+			message.From.Add(new MailboxAddress(_basicSettings.Title, _emailSettings.Email));
+			message.To.Add(new MailboxAddress(email));
 
-            var mimeMessage = new MimeMessage();
-            mimeMessage.From.Add(new MailboxAddress(_emailSettings.Email, _emailSettings.DisplayName));
-            mimeMessage.To.Add(new MailboxAddress(email));
-            mimeMessage.Subject = subject;
+			message.Subject = subject;
 
-            mimeMessage.Body = new TextPart(TextFormat.Html)
-            {
-                Text = message, 
-            };
+			message.Body = new TextPart(MimeKit.Text.TextFormat.Html)
+			{
+				Text = htmlMessage,
+			};
 
-            using (var client = new SmtpClient())
-            {
-                client.Connected += (sender, e) =>
-                {
-                    _logger.LogInformation("Smtp client connected.");
-                };
+			using (var client = new SmtpClient())
+			{
+				client.Connect(_emailSettings.SmtpHost, _emailSettings.SmtpPort, _emailSettings.EnableSsl);
 
-                client.Disconnected += (sender, e) =>
-                {
-                    _logger.LogInformation("Smtp client disconnected.");
-                };
+				client.Authenticate(_emailSettings.UserName, _emailSettings.Password);
 
-                client.MessageSent += (sender, e) =>
-                {
-                    _logger.LogInformation("Smtp client send message.");
-                    _logger.LogInformation("Smtp server response: " + e.Response);
-                };
+				try
+				{
+					client.Send(message);
+				}
+				catch (Exception ex)
+				{
+					_logger.LogError(ex, "Send email faild.");
+				}
 
-                // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
-                client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+				client.Disconnect(true);
+			}
 
-                client.Connect(_emailSettings.SmtpHost, _emailSettings.SmtpPort, _emailSettings.EnableSsl);
-
-                // Note: since we don't have an OAuth2 token, disable
-                // the XOAUTH2 authentication mechanism.
-                client.AuthenticationMechanisms.Remove("XOAUTH2");
-
-                // Note: only needed if the SMTP server requires authentication
-                await client.AuthenticateAsync(_emailSettings.UserName, _emailSettings.Password);
-
-                await client.SendAsync(mimeMessage);
-
-                await client.DisconnectAsync(true);
-            }
-        }
-
-    }
+			return Task.CompletedTask;
+		}
+	}
 }

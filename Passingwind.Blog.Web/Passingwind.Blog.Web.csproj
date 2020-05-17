@@ -2,70 +2,113 @@
 
 	<PropertyGroup>
 		<TargetFramework>netcoreapp3.1</TargetFramework>
-		<UserSecretsId>aspnet-Passingwind.Blog.Web-A2CEF7EF-96E8-41A3-8016-EFD2F6C0C385</UserSecretsId>
-		<MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
-		<ApplicationInsightsResourceId>/subscriptions/e9f8aee9-201b-4c50-ae11-5e6040e97287/resourcegroups/passingwind/providers/microsoft.insights/components/passingwind.blog</ApplicationInsightsResourceId>
-		<!--<RazorCompileOnBuild>false</RazorCompileOnBuild>-->
-		<!--<GenerateDependencyFile>false</GenerateDependencyFile>-->
+		<UserSecretsId>Passingwind.Blog-90BAEF06-E994-43CB-9215-50530F89ECD0</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<SpaRoot>ClientApp\</SpaRoot>
+		<DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.8.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0">
+		<Content Remove="$(SpaRoot)**" />
+		<None Remove="$(SpaRoot)**" />
+		<EmbeddedResource Remove="$(SpaRoot)**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.4" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.4" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.4" />
+
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.3" />
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
 
-		<PackageReference Include="MailKit" Version="2.4.1" />
-		<PackageReference Include="MaxMind.GeoIP2" Version="3.1.0" />
-		<PackageReference Include="CommonMark.NET" Version="0.15.1" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
-		<PackageReference Include="NLog.Web.AspNetCore" Version="4.9" />
-		<PackageReference Include="SkiaSharp" Version="1.68.1" />
+		<PackageReference Include="MailKit" Version="2.6.0" />
+		<PackageReference Include="MaxMind.GeoIP2" Version="3.2.0" />
+
+		<PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
+		<PackageReference Include="VueCliMiddleware" Version="3.1.1" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+		<PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.1.0" />
+		<PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.1.0" />
+
+		<PackageReference Include="EasyCaching.InMemory" Version="0.8.8" />
+		<PackageReference Include="EasyCaching.Redis" Version="0.8.8" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="3.1.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="3.1.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.4" />
+		<PackageReference Include="AspNet.Security.OAuth.GitHub" Version="3.1.1" />
+		<!--<PackageReference Include="Passingwind.AspNetCore.Authentication.QQ" Version="3.1.0" />
+        <PackageReference Include="Passingwind.AspNetCore.Authentication.Weixin" Version="3.1.0" />-->
 	</ItemGroup>
-	  
+
 	<ItemGroup>
 		<ProjectReference Include="..\Passingwind.Blog.Core\Passingwind.Blog.Core.csproj" />
+		<ProjectReference Include="..\Passingwind.Blog.EntityFramework.MySql\Passingwind.Blog.EntityFramework.MySql.csproj" />
+		<ProjectReference Include="..\Passingwind.Blog.EntityFramework.PostgreSQL\Passingwind.Blog.EntityFramework.PostgreSQL.csproj" />
+		<ProjectReference Include="..\Passingwind.Blog.EntityFramework.Sqlite\Passingwind.Blog.EntityFramework.Sqlite.csproj" />
+		<ProjectReference Include="..\Passingwind.Blog.EntityFramework.SqlServer\Passingwind.Blog.EntityFramework.SqlServer.csproj" />
+		<ProjectReference Include="..\Passingwind.Blog.Web.Core\Passingwind.Blog.Web.Core.csproj" />
+		<ProjectReference Include="..\Passingwind.Blog.Widgets\Passingwind.Blog.Widgets.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Update="nlog.config">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		<Content Update="NLog.config">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 
-	<ItemGroup>
-		<None Update="GeoLite2-City.mmdb">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-	 
-	<ItemGroup>
-		<Compile Remove="Plugins\*\**" />
-		<Content Remove="Plugins\*\**" />
-		<EmbeddedResource Remove="Plugins\*\**" />
-		<None Remove="Plugins\*\**" />
+	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' ">
+		<Message Importance="high" Text="Check node version ..." />
+		<!-- Build Target:  Ensure Node.js is installed -->
+		<Exec Command="node --version" ContinueOnError="true">
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+		</Exec>
+		<Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+	</Target>
+	
+	<Target Name="EnsureNodeModulesInstalled" BeforeTargets="Build" Inputs="package.json" Outputs="packages-lock.json"  Condition=" '$(Configuration)' == 'Release' ">
+		<!-- Build Target: Restore NPM packages using npm -->
+		<Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
 
-		<Content Remove="App_Data\*\**" />
-		<None Remove="App_Data\*\**" />
-	</ItemGroup>
-	 
-	<ItemGroup>
-	  <WCFMetadata Include="Connected Services" />
-	</ItemGroup>
+		<Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+	</Target>
 
-	<Target Name="CopyPluginFiles" AfterTargets="ComputeFilesToPublish">
+	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+		<!-- Build Target: Run webpack dist build -->
+		<Message Importance="high" Text="Running npm build..." />
+		<Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
+
+		<!-- Include the newly-built files in the publish output -->
 		<ItemGroup>
-			<PluginsFiles Include="Plugins\**" />
-			<ResolvedFileToPublish Include="@(PluginsFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-				<RelativePath>%(PluginsFiles.Identity)</RelativePath>
+			<DistFiles Include="$(SpaRoot)dist\**" />
+			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+				<RelativePath>%(DistFiles.Identity)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			</ResolvedFileToPublish>
+		</ItemGroup>
+	</Target>
+
+	<Target Name="CopyWidgets" AfterTargets="ComputeFilesToPublish"> 
+		<ItemGroup>
+			<DistFiles Include="Widgets\**" />
+			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+				<RelativePath>%(DistFiles.Identity)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>

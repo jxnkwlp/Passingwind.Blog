@@ -1,22 +1,18 @@
 ﻿[
   {
-    "outputFile": "wwwroot/css/site.css",
-    "inputFile": "wwwroot/css/site.less"
+    "outputFile": "wwwroot/themes/default/css/site.css",
+    "inputFile": "wwwroot/themes/default/css/site.less"
   },
   {
-    "outputFile": "wwwroot/css/account.css",
-    "inputFile": "wwwroot/css/account.less"
-  },
-  {
-    "outputFile": "wwwroot/css/admin/site.css",
-    "inputFile": "wwwroot/css/admin/site.less"
-  },
-  {
-    "outputFile": "wwwroot/css/admin/editor.css",
-    "inputFile": "wwwroot/css/admin/editor.less"
+    "outputFile": "wwwroot/themes/default/js/site.es5.js",
+    "inputFile": "wwwroot/themes/default/js/site.js"
   },
   {
     "outputFile": "wwwroot/js/comments.es5.js",
     "inputFile": "wwwroot/js/comments.js"
+  },
+  {
+    "outputFile": "wwwroot/themes/default/js/account.es5.js",
+    "inputFile": "wwwroot/themes/default/js/account.js"
   }
 ]

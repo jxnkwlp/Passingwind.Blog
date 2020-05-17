@@ -1,0 +1,27 @@
+<Project >
+    <PropertyGroup Label="BasePath">
+        <SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)../</SolutionDir>
+    </PropertyGroup>
+
+    <!--fix razor file build namespace -->
+    <Target Name="UpdateTargetPath" BeforeTargets="AssignRazorGenerateTargetPaths">
+        <ItemGroup>
+            <RazorGenerate Include="@(RazorGenerate)" Link="$(TargetName)\%(RazorGenerate.RelativeDir)%(RazorGenerate.FileName)%(RazorGenerate.Extension)" />
+        </ItemGroup>
+    </Target>
+
+    <!--copy build output to widgets directory-->
+    <Target Name="CopyArtifacts" AfterTargets="Build">
+        <PropertyGroup>
+            <CopyToDestinationDir>$(SolutionDir)Passingwind.Blog.Web\Widgets\$(ProjectName)\</CopyToDestinationDir>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <FilesToCopy Include="$(OutputPath)\*.*" />
+        </ItemGroup>
+
+        <RemoveDir Directories="$(CopyToDestinationDir)" Condition="!Exists('$(CopyToDestinationDir)')" RemovedDirectories="$(CopyToDestinationDir)\**\*" />
+        <MakeDir Directories="$(CopyToDestinationDir)" Condition="!Exists('$(CopyToDestinationDir)')" />
+        <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="$(CopyToDestinationDir)%(RecursiveDir)%(FileName)%(Extension)" />
+    </Target>
+</Project>

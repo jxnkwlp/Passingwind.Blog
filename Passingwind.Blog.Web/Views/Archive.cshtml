@@ -1,0 +1,76 @@
+@model ArchiveViewModel
+@{
+     
+}
+
+
+<div class="archives">
+
+    <header class="page-header">
+        <h1 class="page-title">Archive</h1>
+    </header>
+
+    <ul class="archive-page-menu">
+        @foreach (var item in Model.CategoryPosts)
+        {
+            <li><a href="#@item.Key.Slug" rel="directory">@item.Key.Name</a></li>
+        }
+
+        <li asp-condition="@(Model.NoCategoryPosts.Count() > 0)"><a href="#no-category" rel="directory">None</a></li>
+    </ul>
+
+    <div class="archive-page-content">
+        @foreach (var item in Model.CategoryPosts)
+        {
+            <h2 id="@item.Key.Slug">
+                <a asp-route="syndicationcategory" asp-route-slug="@item.Key.Slug"><img src="~/themes/default/images/rss.png" /></a> @item.Key.Name (@item.Key.PostCount)
+            </h2>
+            <table summary=".net">
+                <tr>
+                    <th class="date">Date</th>
+                    <th>Title</th>
+                    <th class="comments">Comments</th>
+                </tr>
+
+                @if (item.Value.Count() == 0)
+                {
+                    <tr>
+                        <td colspan="10">Empty </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var post in item.Value)
+                    {
+                        <tr>
+                            <td class="date">@post.PublishedTime.ToString("yyyy-MM-dd")</td>
+                            <td class="title"><a asp-route="post" asp-route-slug="@(post.Slug)">@post.Title</a></td>
+                            <td class="comments">@post.CommentsCount</td>
+                        </tr>
+                    }
+                }
+            </table>
+        }
+
+        <h2 id="no-category" asp-condition="@(Model.NoCategoryPosts.Any())">
+            None
+        </h2>
+
+        <table summary="none" asp-condition="@(Model.NoCategoryPosts.Any())">
+            <tr>
+                <th class="date">Date</th>
+                <th>Title</th>
+                <th class="comments">Comments</th>
+            </tr>
+            @foreach (var post in Model.NoCategoryPosts)
+            {
+                <tr>
+                    <td class="date">@post.PublishedTime.ToString("yyyy-MM-dd")</td>
+                    <td class="title"><a asp-route="post" asp-route-slug="@(post.Slug)">@post.Title</a></td>
+                    <td class="comments">@post.CommentsCount</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+</div>

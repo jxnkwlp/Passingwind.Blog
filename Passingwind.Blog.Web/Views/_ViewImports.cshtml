@@ -1,12 +1,18 @@
 @using Microsoft.AspNetCore.Identity
-@using Passingwind.Blog
-@using Passingwind.Blog.Pager
+@using Passingwind.Blog.Services;
 @using Passingwind.Blog.Web
-@using Passingwind.Blog.Web.Models
-@using Passingwind.Blog.Web.Models.AccountViewModels
-@using Passingwind.Blog.Web.Models.ManageViewModels
-@using Passingwind.Blog.Web.Pager
+@using Passingwind.Blog.Web.Services;
+@using Passingwind.Blog.Data.Settings;
+@using Passingwind.Blog.Web.Models;
+@using Passingwind.Blog.Web.Models.Blog;
+@using Passingwind.Blog.Web.Models.Account;
+
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@addTagHelper "Passingwind.Blog.Web.TagHelpers.*, Passingwind.Blog.Web"
-@addTagHelper "Passingwind.Blog.Plugins.Widgets.*, Passingwind.Blog.Core"
+@addTagHelper Passingwind.Blog.Web.TagHelpers.*, Passingwind.Blog.Web.Core
+@addTagHelper Passingwind.Blog.Widgets.TagHelpers.*, Passingwind.Blog.Widgets
+
+@using StackExchange.Profiling
+@addTagHelper *, MiniProfiler.AspNetCore.Mvc
+
+
