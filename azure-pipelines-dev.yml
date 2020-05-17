@@ -27,7 +27,7 @@ steps:
 - task: Npm@1 
   inputs:
     command: 'custom'
-    customCommand: npm install -g @vue/cli
+    customCommand: install -g @vue/cli
     workingDir: 'Passingwind.Blog.Web/ClientApp'  
 
 # npm install 
@@ -40,7 +40,7 @@ steps:
 - task: Npm@1 
   inputs:
     command: 'custom'
-    customCommand: npm run build
+    customCommand: run build
     workingDir: 'Passingwind.Blog.Web/ClientApp'  
 
 # - script: npm run build
