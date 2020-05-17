@@ -1,4 +1,7 @@
 <Project >
+    <PropertyGroup Label="BasePath">
+        <SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)../</SolutionDir>
+    </PropertyGroup>
 
     <!--fix razor file build namespace -->
     <Target Name="UpdateTargetPath" BeforeTargets="AssignRazorGenerateTargetPaths">
@@ -10,15 +13,15 @@
     <!--copy build output to widgets directory-->
     <Target Name="CopyArtifacts" AfterTargets="Build">
         <PropertyGroup>
-            <PluginCopyDir>$(SolutionDir)Passingwind.Blog.Web\Widgets\$(ProjectName)\</PluginCopyDir>
+            <CopyToDestinationDir>$(SolutionDir)Passingwind.Blog.Web\Widgets\$(ProjectName)\</CopyToDestinationDir>
         </PropertyGroup>
 
         <ItemGroup>
             <FilesToCopy Include="$(OutputPath)\*.*" />
         </ItemGroup>
 
-        <RemoveDir Directories="$(PluginCopyDir)" Condition="!Exists('$(PluginCopyDir)')" RemovedDirectories="$(PluginCopyDir)\**\*" />
-        <MakeDir Directories="$(PluginCopyDir)" Condition="!Exists('$(PluginCopyDir)')" />
-        <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="$(PluginCopyDir)%(RecursiveDir)%(FileName)%(Extension)" />
+        <RemoveDir Directories="$(CopyToDestinationDir)" Condition="!Exists('$(CopyToDestinationDir)')" RemovedDirectories="$(CopyToDestinationDir)\**\*" />
+        <MakeDir Directories="$(CopyToDestinationDir)" Condition="!Exists('$(CopyToDestinationDir)')" />
+        <Copy SourceFiles="@(FilesToCopy)" DestinationFiles="$(CopyToDestinationDir)%(RecursiveDir)%(FileName)%(Extension)" />
     </Target>
 </Project>
