@@ -10,9 +10,14 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  buildConfiguration: 'Release'
+  buildConfiguration: 'Release' 
 
 steps:
+
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '3.1.x'
 
 # check npm
 - task: UseNode@1
@@ -24,41 +29,56 @@ steps:
 #   displayName: 'Install vue-cli'
 #   workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
   
-- task: Npm@1 
-  inputs:
-    command: 'custom'
-    customCommand: install -g @vue/cli
-    workingDir: 'Passingwind.Blog.Web/ClientApp'  
+# - task: Npm@1 
+#   inputs:
+#     command: 'custom'
+#     customCommand: install -g @vue/cli
+#     workingDir: 'Passingwind.Blog.Web/ClientApp'  
 
 # npm install 
-- task: Npm@1
-  displayName: 'Install npm packages'
-  inputs:
-    command: 'install'
-    workingDir: 'Passingwind.Blog.Web/ClientApp'  
+# - task: Npm@1
+#   displayName: 'Install npm packages'
+#   inputs:
+#     command: 'install'
+#     workingDir: 'Passingwind.Blog.Web/ClientApp'  
 
-- task: Npm@1 
-  inputs:
-    command: 'custom'
-    customCommand: run build
-    workingDir: 'Passingwind.Blog.Web/ClientApp'  
+# - task: Npm@1 
+#   inputs:
+#     command: 'custom'
+#     customCommand: run build
+#     workingDir: 'Passingwind.Blog.Web/ClientApp'  
 
 # - script: npm run build
 #   displayName: 'Install vue-cli'
 #   workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
 
-
+- task: DotNetCoreCLI@2
+  displayName: 'Dotnet restore'
+  inputs:
+    command: 'restore'
+    feedsToUse: 'select'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Dotnet publish'
+  displayName: 'Dotnet build widgets'
+  inputs:
+    command: 'build'
+    projects: 'Widgets/**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Dotnet publish web project'
   inputs:
     command: 'publish'
     publishWebProjects: true
-    modifyOutputPath: false
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) ' 
+    zipAfterPublish: true
     
-# .net core build.
-#- script: dotnet build --configuration $(buildConfiguration)
-#  displayName: 'dotnet build $(buildConfiguration)'
+# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
+- task: PublishBuildArtifacts@1 
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    ArtifactName: 'drop'
+
 
 # github release / tag
 - task: GitHubRelease@1
@@ -72,5 +92,6 @@ steps:
     tag: 'v$(Build.BuildNumber)'
     title: 'v$(Build.BuildNumber)'
     isDraft: true
+    isPreRelease: true
     changeLogCompareToRelease: 'lastFullRelease'
     changeLogType: 'commitBased'
