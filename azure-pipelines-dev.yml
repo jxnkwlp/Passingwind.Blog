@@ -54,6 +54,7 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: true
+    arguments: '-c Release'
     modifyOutputPath: false
     
 # .net core build.
