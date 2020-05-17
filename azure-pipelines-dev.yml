@@ -53,9 +53,18 @@ steps:
 #   workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
 
 
+- task: DotNetCoreCLI@2
+  displayName: 'Dotnet build widgets'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'Widgets/**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+    zipAfterPublish: false
+    modifyOutputPath: false
 
 - task: DotNetCoreCLI@2
-  displayName: 'Dotnet publish'
+  displayName: 'Dotnet publish web project'
   inputs:
     command: 'publish'
     publishWebProjects: true
