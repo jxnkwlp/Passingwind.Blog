@@ -20,10 +20,15 @@ steps:
     checkLatest: true
 
 # npm install vue-cli
-- script: npm install -g @vue/cli
-  displayName: 'Install vue-cli'
-  workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
+# - script: npm install -g @vue/cli
+#   displayName: 'Install vue-cli'
+#   workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
   
+- task: Npm@1 
+  inputs:
+    command: 'custom'
+    customCommand: npm install -g @vue/cli
+    workingDir: 'Passingwind.Blog.Web/ClientApp'  
 
 # npm install 
 - task: Npm@1
@@ -32,9 +37,15 @@ steps:
     command: 'install'
     workingDir: 'Passingwind.Blog.Web/ClientApp'  
 
-- script: npm run build
-  displayName: 'Install vue-cli'
-  workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
+- task: Npm@1 
+  inputs:
+    command: 'custom'
+    customCommand: npm run build
+    workingDir: 'Passingwind.Blog.Web/ClientApp'  
+
+# - script: npm run build
+#   displayName: 'Install vue-cli'
+#   workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
 
 
 
