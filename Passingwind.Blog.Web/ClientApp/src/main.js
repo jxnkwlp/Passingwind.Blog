@@ -29,10 +29,6 @@ httpClient.when({
     }
 })
 
-import vueModuleLoader from 'vue-module-loader'
-
-Vue.use(vueModuleLoader)
-
 Vue.config.productionTip = false;
 
 new Vue({

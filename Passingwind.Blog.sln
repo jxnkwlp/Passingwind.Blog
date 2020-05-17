@@ -43,13 +43,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passingwind.Blog.Widget.Tag
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passingwind.Blog.Widget.UserProfile", "Widgets\Passingwind.Blog.Widget.UserProfile\Passingwind.Blog.Widget.UserProfile.csproj", "{9150A40C-0EA3-46DE-863C-00D5B57982C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passingwind.Blog.EntityFramework.SqlServer", "Passingwind.Blog.EntityFramework.SqlServer\Passingwind.Blog.EntityFramework.SqlServer.csproj", "{6DE5F6AD-9E21-4BF9-AEEA-0DC860D00951}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passingwind.Blog.EntityFramework.SqlServer", "Passingwind.Blog.EntityFramework.SqlServer\Passingwind.Blog.EntityFramework.SqlServer.csproj", "{6DE5F6AD-9E21-4BF9-AEEA-0DC860D00951}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passingwind.Blog.EntityFramework.Sqlite", "Passingwind.Blog.EntityFramework.Sqlite\Passingwind.Blog.EntityFramework.Sqlite.csproj", "{BE3595B7-79A0-44CA-80C8-2AB9D68B0BEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passingwind.Blog.EntityFramework.Sqlite", "Passingwind.Blog.EntityFramework.Sqlite\Passingwind.Blog.EntityFramework.Sqlite.csproj", "{BE3595B7-79A0-44CA-80C8-2AB9D68B0BEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passingwind.Blog.EntityFramework.MySql", "Passingwind.Blog.EntityFramework.MySql\Passingwind.Blog.EntityFramework.MySql.csproj", "{EF91CB99-6362-4208-8CE5-7EF85E8A73D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passingwind.Blog.EntityFramework.MySql", "Passingwind.Blog.EntityFramework.MySql\Passingwind.Blog.EntityFramework.MySql.csproj", "{EF91CB99-6362-4208-8CE5-7EF85E8A73D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passingwind.Blog.EntityFramework.PostgreSQL", "Passingwind.Blog.EntityFramework.PostgreSQL\Passingwind.Blog.EntityFramework.PostgreSQL.csproj", "{3BFC780F-29D9-4B80-A03B-A6C497ECE2DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passingwind.Blog.EntityFramework.PostgreSQL", "Passingwind.Blog.EntityFramework.PostgreSQL\Passingwind.Blog.EntityFramework.PostgreSQL.csproj", "{3BFC780F-29D9-4B80-A03B-A6C497ECE2DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
