@@ -24,10 +24,16 @@ steps:
   inputs:
     command: 'install'
     workingDir: 'Passingwind.Blog.Web/ClientApp'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    modifyOutputPath: false
     
 # .net core build.
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+#- script: dotnet build --configuration $(buildConfiguration)
+#  displayName: 'dotnet build $(buildConfiguration)'
 
 # github release / tag
 - task: GitHubRelease@1
