@@ -89,8 +89,8 @@ steps:
     action: 'create'
     target: '$(Build.SourceVersion)'
     tagSource: 'userSpecifiedTag'
-    tag: 'v$(Build.BuildNumber)'
-    title: 'v$(Build.BuildNumber)'
+    tag: 'v$(Build.BuildNumber)-pre'
+    title: 'v$(Build.BuildNumber)-pre'
     isDraft: false
     isPreRelease: true
     changeLogCompareToRelease: 'lastFullRelease'
