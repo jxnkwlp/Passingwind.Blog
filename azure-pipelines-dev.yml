@@ -91,7 +91,7 @@ steps:
     tagSource: 'userSpecifiedTag'
     tag: 'v$(Build.BuildNumber)'
     title: 'v$(Build.BuildNumber)'
-    isDraft: true
+    isDraft: false
     isPreRelease: true
     changeLogCompareToRelease: 'lastFullRelease'
     changeLogType: 'commitBased'
