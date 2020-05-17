@@ -22,6 +22,7 @@ steps:
 # npm install vue-cli
 - script: npm install -g @vue/cli
   displayName: 'Install vue-cli'
+  workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
   
 
 # npm install 
@@ -31,7 +32,11 @@ steps:
     command: 'install'
     workingDir: 'Passingwind.Blog.Web/ClientApp'  
 
-    
+- script: npm run build
+  displayName: 'Install vue-cli'
+  workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
+
+
 
 - task: DotNetCoreCLI@2
   displayName: 'Dotnet publish'
