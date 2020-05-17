@@ -10,13 +10,51 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  buildConfiguration: 'Release'
+  buildConfiguration: 'Release' 
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
-  
+
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '3.1.x'
+
+# check npm
+- task: UseNode@1
+  inputs:
+    checkLatest: true
+
+- task: DotNetCoreCLI@2
+  displayName: 'Dotnet restore'
+  inputs:
+    command: 'restore'
+    feedsToUse: 'select'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Dotnet build widgets'
+  inputs:
+    command: 'build'
+    projects: 'Widgets/**/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Dotnet publish web project'
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) ' 
+    zipAfterPublish: true
+    
+# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
+- task: PublishBuildArtifacts@1 
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    ArtifactName: 'drop'
+
+
+# github release / tag
 - task: GitHubRelease@1
+  displayName: 'GitHub release'
   inputs:
     gitHubConnection: 'github.com_jxnkwlp'
     repositoryName: '$(Build.Repository.Name)'
@@ -25,6 +63,7 @@ steps:
     tagSource: 'userSpecifiedTag'
     tag: 'v$(Build.BuildNumber)'
     title: 'v$(Build.BuildNumber)'
-    isDraft: true
+    isDraft: false
+    isPreRelease: false
     changeLogCompareToRelease: 'lastFullRelease'
     changeLogType: 'commitBased'
