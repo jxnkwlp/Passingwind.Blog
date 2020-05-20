@@ -6,7 +6,7 @@ module.exports = {
     productionSourceMap: false,
     runtimeCompiler: true,
     devServer: {
-        // proxy: "https://localhost:44327/"
+        proxy: "https://localhost:44327/"
     },
     css: {
         loaderOptions: {

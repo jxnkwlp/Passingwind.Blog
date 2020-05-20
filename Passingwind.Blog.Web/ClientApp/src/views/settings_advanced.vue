@@ -6,8 +6,7 @@
                     <el-input
                         v-model="formData.headerHtml"
                         type="textarea"
-                        placeholder
-                        :maxlength="32"
+                        placeholder 
                     ></el-input>
                 </el-form-item>
                 <el-form-item label="Footer html" prop="footerHtml">
@@ -15,7 +14,6 @@
                         v-model="formData.footerHtml"
                         type="textarea"
                         placeholder
-                        :maxlength="128"
                     ></el-input>
                 </el-form-item>
 
