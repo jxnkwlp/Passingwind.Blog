@@ -71,7 +71,7 @@
                         }
                     ]"
                 >
-                    <el-input v-model="formModelData.key" placeholder :maxlength="32"></el-input>
+                    <el-input v-model="formModelData.key" placeholder :maxlength="128"></el-input>
                 </el-form-item>
                 <el-form-item
                     label="Value"
@@ -84,7 +84,7 @@
                         }
                     ]"
                 >
-                    <el-input v-model="formModelData.value" placeholder :maxlength="128"></el-input>
+                    <el-input v-model="formModelData.value" placeholder></el-input>
                 </el-form-item>
                 <el-form-item v-permission="['category.edit']">
                     <el-button type="primary" @click="handleFormDataSubmit">Save</el-button>
