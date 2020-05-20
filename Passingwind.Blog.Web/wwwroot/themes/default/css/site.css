@@ -367,6 +367,9 @@ body {
     margin-top: 0;
   }
 }
+.footer-wrap p {
+  margin-bottom: 5px;
+}
 .site-info {
   overflow: hidden;
   max-width: 1220px;
@@ -376,7 +379,6 @@ body {
   border-top: 1px solid #ccc;
 }
 .site-info p {
-  margin: 0;
   color: #333;
 }
 .site-info a {
