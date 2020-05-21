@@ -5,11 +5,11 @@ using Passingwind.Blog.Extensions;
 using Passingwind.Blog.Services.Models;
 using Passingwind.PagedList;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq.Dynamic.Core;
-using System.Collections.Generic;
 
 namespace Passingwind.Blog.Services.Impl
 {
@@ -187,6 +187,16 @@ namespace Passingwind.Blog.Services.Impl
 			return result;
 		}
 
+		public async Task UpdateCategoriesAsync(Post post, IEnumerable<PostCategory> postCategories, bool saveChanges = true)
+		{
+			await _repository.UpdateCollectionAsync(post, t => t.Categories, postCategories, x => x.CategoryId, saveChanges);
+		}
+
+		public async Task UpdateTagsAsync(Post post, IEnumerable<PostTags> postTags, bool saveChanges = true)
+		{
+			await _repository.UpdateCollectionAsync(post, t => t.Tags, postTags, x => x.TagsId, saveChanges);
+		}
+
 
 
 		//#region Category
@@ -276,5 +286,4 @@ namespace Passingwind.Blog.Services.Impl
 		//#endregion Comments
 
 	}
-
 }

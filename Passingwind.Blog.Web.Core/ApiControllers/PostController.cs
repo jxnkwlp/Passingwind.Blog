@@ -37,24 +37,14 @@ namespace Passingwind.Blog.Web.ApiControllers
 			if (model.Categories?.Any() == true)
 			{
 				var categoryIds = model.Categories;
-				if (post.Categories?.Any() == true)
+				var newList = categoryIds.Select(t => new PostCategory()
 				{
-					var needRemove = post.Categories.Select(t => t.CategoryId).Except(categoryIds).ToArray();
-					var needAdd = categoryIds.Except(post.Categories.Select(t => t.CategoryId)).ToArray();
+					CategoryId = t,
+					PostId = post.Id,
+				}).ToList();
 
-					needRemove.ForEach((_) =>
-					{
-						post.Categories.Remove(post.Categories.First(t => t.CategoryId == _));
-					});
-					needAdd.ForEach((_) => post.Categories.Add(new PostCategory()
-					{
-						CategoryId = _,
-					}));
-				}
-				else
-				{
-					post.Categories = categoryIds.Select(t => new PostCategory() { CategoryId = t }).ToList();
-				}
+				await _postService.UpdateCategoriesAsync(post, newList, false);
+
 			}
 			else
 			{
@@ -63,13 +53,20 @@ namespace Passingwind.Blog.Web.ApiControllers
 
 			if (model.Tags?.Any() == true)
 			{
-				var tagsList = new List<PostTags>();
+				var tags = new List<Tags>();
 				foreach (var item in model.Tags)
 				{
 					var tag = await _tagsService.GetOrCreateAsync(item);
-					tagsList.Add(new PostTags() { TagsId = tag.Id });
+					tags.Add(tag);
 				}
-				post.Tags = tagsList;
+
+				var newList = tags.Select(t => new PostTags()
+				{
+					TagsId = t.Id,
+					PostId = post.Id,
+				});
+
+				await _postService.UpdateTagsAsync(post, newList, false); 
 			}
 			else
 			{
@@ -125,12 +122,14 @@ namespace Passingwind.Blog.Web.ApiControllers
 		{
 			if (model.Id > 0)
 			{
-				var entity = await _postService.GetByIdAsync(model.Id, new PostIncludeOptions() { IncludeTags = true, IncludeCategory = true, });
+				var entity = await _postService.GetByIdAsync(model.Id, new PostIncludeOptions()
+				{
+					IncludeTags = true,
+					IncludeCategory = true,
+				});
 
 				if (entity == null)
 					return null;
-
-				//Inject(model, entity);
 
 				entity = _postFactory.ToEntity(model, entity);
 

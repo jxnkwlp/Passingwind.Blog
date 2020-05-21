@@ -2,9 +2,9 @@ using Passingwind.Blog.Data.Domains;
 using Passingwind.Blog.Services.Models;
 using Passingwind.PagedList;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace Passingwind.Blog.Services
 {
@@ -25,5 +25,9 @@ namespace Passingwind.Blog.Services
 		Task<IEnumerable<Post>> GetPostListAsync(PostListInputModel input, CancellationToken cancellationToken = default);
 
 		Task<SortedDictionary<DateTime, int>> GetCountsByPublishYearAndMonthAsync();
+
+		Task UpdateCategoriesAsync(Post post, IEnumerable<PostCategory> postCategories, bool saveChanges = true);
+
+		Task UpdateTagsAsync(Post post, IEnumerable<PostTags> postTags, bool saveChanges = true);
 	}
 }
