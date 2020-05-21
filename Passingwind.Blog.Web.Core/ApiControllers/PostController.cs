@@ -67,7 +67,7 @@ namespace Passingwind.Blog.Web.ApiControllers
 				foreach (var item in model.Tags)
 				{
 					var tag = await _tagsService.GetOrCreateAsync(item);
-					tagsList.Add(new PostTags() { Tags = tag });
+					tagsList.Add(new PostTags() { TagsId = tag.Id });
 				}
 				post.Tags = tagsList;
 			}

@@ -4,9 +4,9 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Passingwind.Blog.Widgets
 {
@@ -50,6 +50,14 @@ namespace Passingwind.Blog.Widgets
 			var hostEnvironment = app.ApplicationServices.GetRequiredService<IHostEnvironment>();
 			var logger = app.ApplicationServices.GetRequiredService<ILogger<WidgetsManager>>();
 
+			StringBuilder sb = new StringBuilder();
+			sb.AppendLine("Load Widgets:");
+			foreach (var item in widgets)
+			{
+				sb.AppendLine($"{item.Name}({item.Id}) v{item.Version}");
+			}
+
+			logger.LogInformation(sb.ToString());
 
 			var services = _widgetApplication.Services;
 
@@ -72,7 +80,7 @@ namespace Passingwind.Blog.Widgets
 					app.UseStaticFiles(new StaticFileOptions()
 					{
 						RequestPath = new Microsoft.AspNetCore.Http.PathString($"/{item.Id.ToLower()}"),
-						FileProvider = new PhysicalFileProvider(wwwrootFolder), 
+						FileProvider = new PhysicalFileProvider(wwwrootFolder),
 					});
 				}
 			}

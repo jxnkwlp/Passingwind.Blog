@@ -48,6 +48,7 @@ namespace Passingwind.Blog.Services.Impl
 		public int PostCount { get; set; }
 		public int PageCount { get; set; }
 		public int CategoryCount { get; set; }
+		public int CommentCount { get; set; }
 
 
 		public BlogMLImporter(ILogger<BlogMLImporter> logger, IPostService postService, IPageService pageService, ICategoryService categoryService, ITagsService tagsService, ICommentService commentService, IIPAddressService iPAddressService, ISlugService slugService)
@@ -99,7 +100,7 @@ namespace Passingwind.Blog.Services.Impl
 
 				await ImportPostsAsync(blog);
 
-				_logger.LogInformation("Import completed.");
+				_logger.LogInformation($"Import completed. \n Category count: {CategoryCount}, Post count: {PostCount}, Page count: {PageCount} . ");
 
 				return new BlogMLImporterResult()
 				{
@@ -472,7 +473,7 @@ namespace Passingwind.Blog.Services.Impl
 			if (extPost.Categories != null && extPost.Categories.Count > 0)
 				foreach (var item in extPost.Categories)
 				{
-					p.Categories.Add(new PostCategory() { CategoryId = item.Id, PostId = item.Id });
+					p.Categories.Add(new PostCategory() { CategoryId = item.Id, });
 				}
 
 
@@ -481,7 +482,7 @@ namespace Passingwind.Blog.Services.Impl
 				foreach (var tagName in extPost.Tags)
 				{
 					var tag = await _tagsService.GetOrCreateAsync(tagName);
-					p.Tags.Add(new PostTags() { PostId = p.Id, TagsId = tag.Id });
+					p.Tags.Add(new PostTags() { TagsId = tag.Id });
 				}
 			}
 
@@ -569,6 +570,8 @@ namespace Passingwind.Blog.Services.Impl
 				}
 
 				post.CommentsCount = extPost.Comments.Count;
+
+				CommentCount += post.CommentsCount;
 
 				await _postService.UpdateAsync(post);
 			}

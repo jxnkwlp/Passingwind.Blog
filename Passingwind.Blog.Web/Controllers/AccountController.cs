@@ -95,9 +95,14 @@ namespace Passingwind.Blog.Web.Controllers
 
 			if (ModelState.IsValid)
 			{
-				// This doesn't count login failures towards account lockout
-				// To enable password failures to trigger account lockout, set lockoutOnFailure: true
-				var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: _blogOptions.Account.LockoutOnFailure);
+				var user = await _userManager.FindByEmailAsync(model.Email);
+				if (user == null)
+				{
+					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+					return View(model);
+				}
+
+				var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: _blogOptions.Account.LockoutOnFailure);
 				if (result.Succeeded)
 				{
 					_logger.LogInformation("User logged in.");

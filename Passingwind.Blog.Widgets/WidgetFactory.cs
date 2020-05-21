@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Passingwind.Blog.Widgets.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,9 @@ namespace Passingwind.Blog.Widgets
 		{
 			Services = services;
 			WidgetOptions = widgetOptions;
+
+			Logger = services.BuildServiceProvider().GetRequiredService<ILogger<WidgetFactory>>();
+
 			Widgets = LoadWidgets(services, widgetOptions);
 
 			services.AddSingleton<IWidgetFactory>(this);
@@ -23,7 +27,12 @@ namespace Passingwind.Blog.Widgets
 			services.AddSingleton<IApplicationWidgetPartManager, ApplicationWidgetPartManager>();
 
 			var manager = new WidgetsManager(this, widgetOptions);
-			services.AddSingleton<IWidgetsManager>((_) => manager);
+			services.AddSingleton<IWidgetsManager>((_) =>
+			{
+				var logger = _.GetRequiredService<ILogger<WidgetFactory>>();
+				logger.LogInformation("Init WidgetsManager");
+				return manager;
+			});
 
 			services.AddScoped<IWidgetViewInvoker, WidgetViewInvoker>();
 			services.AddScoped<IWidgetComponentFactory, WidgetComponentFactory>();
@@ -33,6 +42,8 @@ namespace Passingwind.Blog.Widgets
 			RegisterWidgets(services, manager);
 		}
 
+
+		public ILogger Logger { get; }
 
 		public IServiceCollection Services { get; }
 
@@ -46,13 +57,15 @@ namespace Passingwind.Blog.Widgets
 		public void Initialize(IApplicationBuilder applicationBuilder)
 		{
 			ServiceProvider = applicationBuilder.ApplicationServices;
+
 			InitialWidgets(applicationBuilder);
 		}
 
 		private IReadOnlyList<WidgetDescriptor> LoadWidgets(IServiceCollection services, WidgetOptions options)
 		{
 			var hostEnvironment = services.GetSingletonInstance<IHostEnvironment>();
-			return WidgetPackageFinder.Find(hostEnvironment, options.Directory ?? "widgets").ToList();
+			var finder = new WidgetPackageFinder(hostEnvironment, Logger);
+			return finder.Find(options.Directory ?? "widgets").ToList();
 		}
 
 		private void RegisterWidgets(IServiceCollection services, IWidgetsManager manager)

@@ -263,10 +263,9 @@ __pycache__/
 
 # blog custom
 blog.db
-/Passingwind.Blog.Web/wwwroot/Uploads/*/**
-/Passingwind.Blog.Web/wwwroot/Upload/*/**
-/Passingwind.Blog.Web/Plugins/*/**
-/Passingwind.Blog.Web/Widgets/*/**
-/Passingwind.Blog.Web/App_Data/Store/*
+/Passingwind.Blog.Web/wwwroot/[Uu]ploads/
+/Passingwind.Blog.Web/[Pp]lugins/
+/Passingwind.Blog.Web/[Ww]idgets/
+/Passingwind.Blog.Web/App_Data/[Ss]tore/
 /Passingwind.Blog.Web/App_Data/widgets.json
-/Passingwind.Blog.Web/App_Data/Config/*
+/Passingwind.Blog.Web/App_Data/[Cc]onfig/
