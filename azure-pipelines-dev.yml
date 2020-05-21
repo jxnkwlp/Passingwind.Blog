@@ -81,17 +81,17 @@ steps:
 
 
 # github release / tag
-- task: GitHubRelease@1
-  displayName: 'GitHub release'
-  inputs:
-    gitHubConnection: 'github.com_jxnkwlp'
-    repositoryName: '$(Build.Repository.Name)'
-    action: 'create'
-    target: '$(Build.SourceVersion)'
-    tagSource: 'userSpecifiedTag'
-    tag: 'v$(Build.BuildNumber)-pre'
-    title: 'v$(Build.BuildNumber)-pre'
-    isDraft: false
-    isPreRelease: true
-    changeLogCompareToRelease: 'lastFullRelease'
-    changeLogType: 'commitBased'
+# - task: GitHubRelease@1
+#   displayName: 'GitHub release'
+#   inputs:
+#     gitHubConnection: 'github.com_jxnkwlp'
+#     repositoryName: '$(Build.Repository.Name)'
+#     action: 'create'
+#     target: '$(Build.SourceVersion)'
+#     tagSource: 'userSpecifiedTag'
+#     tag: 'v$(Build.BuildNumber)-pre'
+#     title: 'v$(Build.BuildNumber)-pre'
+#     isDraft: false
+#     isPreRelease: true
+#     changeLogCompareToRelease: 'lastFullRelease'
+#     changeLogType: 'commitBased'
