@@ -185,6 +185,14 @@ namespace Passingwind.Blog.Data
 						  .Query();
 		}
 
+		public virtual async Task UpdateCollectionAsync<TProperty, TPropertyKey>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, IEnumerable<TProperty> newCollections, Func<TProperty, TPropertyKey> idResolve, bool save = true, CancellationToken cancellationToken = default) where TProperty : class
+		{
+			var currentList = propertyExpression.Compile().Invoke(entity);
+			await DbContext.TryUpdateManyToManyAsync(currentList, newCollections, idResolve);
+
+			if (save)
+				await SaveChangesAsync(cancellationToken);
+		}
 
 		protected virtual async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 		{
