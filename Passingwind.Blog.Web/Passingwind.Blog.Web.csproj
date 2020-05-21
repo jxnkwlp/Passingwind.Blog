@@ -82,7 +82,7 @@
 		<Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
 	</Target>
 	
-	<Target Name="EnsureNodeModulesInstalled" BeforeTargets="Build" Inputs="package.json" Outputs="packages-lock.json"  Condition=" '$(Configuration)' == 'Release' ">
+	<Target Name="EnsureNodeModulesInstalled" BeforeTargets="Build" Inputs="package.json" Outputs="packages-lock.json" Condition=" '$(Configuration)' == 'Release' ">
 		<!-- Build Target: Restore NPM packages using npm -->
 		<Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
 
@@ -106,7 +106,7 @@
 
 	<Target Name="CopyWidgets" AfterTargets="ComputeFilesToPublish"> 
 		<ItemGroup>
-			<DistFiles Include="Widgets\**" />
+			<DistFiles Include="widgets\**" />
 			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
 				<RelativePath>%(DistFiles.Identity)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

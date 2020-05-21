@@ -5,7 +5,7 @@ using Passingwind.Blog.Widgets;
 namespace Microsoft.AspNetCore.Builder
 #pragma warning restore ET002 // Namespace does not match file path or default namespace
 {
-	public static class AbpApplicationBuilderExtensions
+	public static class ApplicationBuilderExtensions
 	{
 		public static void UseWidgets(this IApplicationBuilder app)
 		{
