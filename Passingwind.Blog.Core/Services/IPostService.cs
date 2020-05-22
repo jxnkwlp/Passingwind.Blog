@@ -10,6 +10,8 @@ namespace Passingwind.Blog.Services
 {
 	public interface IPostService : IService<Post>
 	{
+		Task UpdateAsync(Post entity, IEnumerable<PostCategory> categories, IEnumerable<PostTags> tags, CancellationToken cancellationToken = default);
+
 		Task<Post> FindBySlugAsync(string slug, PostIncludeOptions includeOptions = null, CancellationToken cancellationToken = default);
 
 		Task<Post> GetByIdAsync(int id, PostIncludeOptions includeOptions = null, CancellationToken cancellationToken = default);
@@ -26,8 +28,8 @@ namespace Passingwind.Blog.Services
 
 		Task<SortedDictionary<DateTime, int>> GetCountsByPublishYearAndMonthAsync();
 
-		Task UpdateCategoriesAsync(Post post, IEnumerable<PostCategory> postCategories, bool saveChanges = true);
+		Task UpdateCategoriesAsync(Post post, IEnumerable<PostCategory> postCategories);
 
-		Task UpdateTagsAsync(Post post, IEnumerable<PostTags> postTags, bool saveChanges = true);
+		Task UpdateTagsAsync(Post post, IEnumerable<PostTags> postTags);
 	}
 }
