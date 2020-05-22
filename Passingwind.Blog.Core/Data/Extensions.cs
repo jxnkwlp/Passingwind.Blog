@@ -8,12 +8,12 @@ namespace Passingwind.Blog.Data
 {
 	internal static class Extensions
 	{
-		public static async Task TryUpdateManyToManyAsync<T, TKey>(this DbContext db, IEnumerable<T> currentItems, IEnumerable<T> newItems, Func<T, TKey> getKeyFunc) where T : class
+		public static void TryUpdateManyToMany<T, TKey>(this DbContext db, IEnumerable<T> currentItems, IEnumerable<T> newItems, Func<T, TKey> getKeyFunc) where T : class
 		{
-			var removeList = currentItems.Except(newItems, getKeyFunc).ToArray();
-			var addList = newItems.Except(currentItems, getKeyFunc).ToArray();
+			var removeList = currentItems.Except(newItems, getKeyFunc);
+			var addList = newItems.Except(currentItems, getKeyFunc);
 			db.Set<T>().RemoveRange(removeList);
-			await db.Set<T>().AddRangeAsync(addList);
+			db.Set<T>().AddRange(addList);
 		}
 
 		public static IEnumerable<T> Except<T, TKey>(this IEnumerable<T> items, IEnumerable<T> other, Func<T, TKey> getKeyFunc)
