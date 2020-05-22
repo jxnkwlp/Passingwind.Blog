@@ -74,13 +74,17 @@ namespace Passingwind.Blog.Services
 
 		public async Task UpdatePermissionsAsync(string roleId, IEnumerable<string> keys)
 		{
-			var role = await _repository.GetByIdAsync(roleId);
+			var role = await _repository.Includes(t => t.Permissions).FirstOrDefaultAsync(t => t.Id == roleId);
 
 			if (role == null)
 				throw new Exception("The role not found.");
 
 
-			var rolePermissionList = keys?.Select(t => new RolePermission() { Key = t.Trim(), RoleId = role.Id }) ?? Enumerable.Empty<RolePermission>();
+			var rolePermissionList = keys?.Select(t => new RolePermission()
+			{
+				Key = t.Trim(),
+				RoleId = role.Id
+			}) ?? Enumerable.Empty<RolePermission>();
 
 			await _repository.UpdateCollectionAsync(role, t => t.Permissions, rolePermissionList, t => t.Key);
 		}
