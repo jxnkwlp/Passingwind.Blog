@@ -453,43 +453,46 @@ namespace Passingwind.Blog.Web.Controllers
 
 		#endregion
 
+		#region Utils
+
 		protected async Task SetPageTitleAndMetadataAsync(GetPostListRequestModel model)
 		{
-			string title = $"{_basicSettings.Title} | {_basicSettings.Description}";
-			string description = _basicSettings.Description;
-			string keywords = "";
+			AppendPageTitle(_basicSettings.Title);
 
 			if (model.Category != null)
 			{
-				title = ($"{model.Category.Name} | { _basicSettings.Title}");
-				description = ($"{model.Category.Description} | {_basicSettings.Description}");
+				InsertPageTitle(model.Category.Name);
+				SetPageDescription($"{model.Category.Description} | {_basicSettings.Description}");
 			}
 			else if (model.Tags != null)
 			{
-				title = ($"{model.Tags.Name} | { _basicSettings.Title}");
-				description = ($"{_basicSettings.Description}");
+				InsertPageTitle(model.Tags.Name);
+				SetPageDescription($"{_basicSettings.Description}");
 			}
 			else if (model.Author != null)
 			{
-				title = ($"{model.Author.DisplayName} | {model.Author.Bio} | {_basicSettings.Title}");
-				description = ($"{model.Author.DisplayName} | {model.Author.Bio}{_basicSettings.Description}");
+				InsertPageTitle(model.Author.DisplayName);
+
+				SetPageDescription($"{model.Author.DisplayName} | {model.Author.Bio}{_basicSettings.Description}");
 			}
-
-			keywords = (string.Join(",", (await _categoryService.GetListAsync()).Select(t => t.Name)));
-
-			if (model.Page > 2)
+			else
 			{
-				title = $"Page {model.Page} | " + title;
+				AppendPageTitle(_basicSettings.Description);
+				SetPageDescription(_basicSettings.Description);
 			}
 
-			SetPageTitle(title);
-			SetPageDescription(description);
+			if (model.Page >= 2)
+			{
+				InsertPageTitle($"Page {model.Page}");
+			}
+
+			var keywords = (string.Join(",", (await _categoryService.GetListAsync()).Select(t => t.Name)));
 			SetPageKeywords(keywords);
 		}
 
 		protected void SetPageTitleAndMetadata(PostModel model)
 		{
-			SetPageTitle($"{model.Title} | {_basicSettings.Title}");
+			AppendPageTitle($"{model.Title} | {_basicSettings.Title}");
 			SetPageDescription(model.Description);
 			if (model.Tags != null)
 				SetPageKeywords(string.Join(",", model.Tags));
@@ -497,7 +500,7 @@ namespace Passingwind.Blog.Web.Controllers
 
 		protected async Task SetPageTitleAndMetadataAsync(PageModel model)
 		{
-			SetPageTitle($"{model.Title} | {_basicSettings.Title}");
+			AppendPageTitle($"{model.Title} | {_basicSettings.Title}");
 			SetPageDescription(model.Description);
 
 			var keywords = (string.Join(",", (await _categoryService.GetListAsync()).Select(t => t.Name)));
@@ -506,11 +509,13 @@ namespace Passingwind.Blog.Web.Controllers
 
 		protected async Task SetPageTitleAndMetadataAsync()
 		{
-			SetPageTitle($"Archive | {_basicSettings.Title}");
+			AppendPageTitle($"Archive | {_basicSettings.Title}");
 			SetPageDescription(_basicSettings.Description);
 
 			var keywords = (string.Join(",", (await _categoryService.GetListAsync()).Select(t => t.Name)));
 			SetPageKeywords(keywords);
 		}
+
+		#endregion
 	}
 }
