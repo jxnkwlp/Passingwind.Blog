@@ -74,6 +74,13 @@ namespace Passingwind.Blog.Services.Impl
 			await base.UpdateAsync(entity, cancellationToken);
 		}
 
+		public virtual async Task UpdateAsync(Post entity, IEnumerable<PostCategory> categories, IEnumerable<PostTags> tags, CancellationToken cancellationToken = default)
+		{
+			await UpdateAsync(entity);
+			await UpdateCategoriesAsync(entity, categories);
+			await UpdateTagsAsync(entity, tags);
+		}
+
 		public async Task<Post> GetByIdAsync(int id, PostIncludeOptions includeOptions = null, CancellationToken cancellationToken = default)
 		{
 			var query = Repository.GetQueryable();
@@ -187,14 +194,14 @@ namespace Passingwind.Blog.Services.Impl
 			return result;
 		}
 
-		public async Task UpdateCategoriesAsync(Post post, IEnumerable<PostCategory> postCategories, bool saveChanges = true)
+		public async Task UpdateCategoriesAsync(Post post, IEnumerable<PostCategory> postCategories)
 		{
-			await _repository.UpdateCollectionAsync(post, t => t.Categories, postCategories, x => x.CategoryId, saveChanges);
+			await _repository.UpdateCollectionAsync(post, t => t.Categories, postCategories, x => x.CategoryId);
 		}
 
-		public async Task UpdateTagsAsync(Post post, IEnumerable<PostTags> postTags, bool saveChanges = true)
+		public async Task UpdateTagsAsync(Post post, IEnumerable<PostTags> postTags)
 		{
-			await _repository.UpdateCollectionAsync(post, t => t.Tags, postTags, x => x.TagsId, saveChanges);
+			await _repository.UpdateCollectionAsync(post, t => t.Tags, postTags, x => x.TagsId);
 		}
 
 

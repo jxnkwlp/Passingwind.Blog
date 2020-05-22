@@ -79,24 +79,10 @@ namespace Passingwind.Blog.Services
 			if (role == null)
 				throw new Exception("The role not found.");
 
-			await _repository.LoadCollectionAsync(role, t => t.Permissions);
 
-			if (keys?.Any() == true)
-			{
-				var needRemove = role.Permissions.Select(t => t.Key).Except(keys);
-				var needAdd = keys.Except(role.Permissions.Select(t => t.Key));
+			var rolePermissionList = keys?.Select(t => new RolePermission() { Key = t.Trim(), RoleId = role.Id }) ?? Enumerable.Empty<RolePermission>();
 
-				needRemove.ForEach((_) => role.Permissions.Remove(role.Permissions.First(t => t.Key == _)));
-
-				needAdd.ForEach((_) => role.Permissions.Add(new RolePermission() { Key = _ }));
-			}
-			else
-			{
-				role.Permissions.Clear();
-			}
-
-			await _repository.UpdateAsync(role);
+			await _repository.UpdateCollectionAsync(role, t => t.Permissions, rolePermissionList, t => t.Key);
 		}
-
 	}
 }

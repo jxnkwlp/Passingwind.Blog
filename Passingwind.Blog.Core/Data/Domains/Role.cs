@@ -10,11 +10,13 @@ namespace Passingwind.Blog.Data.Domains
 		public const string EditorName = "Editor";
 		public const string Anonymous = "Anonymous";
 
-		public IList<RolePermission> Permissions { get; set; } = new List<RolePermission>();
 		public DateTime CreationTime { get; set; } = DateTime.Now;
 		public DateTime? LastModificationTime { get; set; }
 
 		public IList<UserRole> UserRoles { get; set; }
+
+		public virtual ICollection<RolePermission> Permissions { get; set; } = new List<RolePermission>();
+
 
 		public Role()
 		{

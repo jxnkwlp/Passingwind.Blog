@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Passingwind.Blog.Data.Domains;
-using Passingwind.Blog.Extensions;
 using Passingwind.Blog.Services;
 using Passingwind.Blog.Services.Models;
 using Passingwind.Blog.Web.Authorization;
@@ -32,7 +31,7 @@ namespace Passingwind.Blog.Web.ApiControllers
 			_tagsService = tagsService;
 		}
 
-		protected async Task PreparePostAsync(Post post, PostEditModel model)
+		protected Task<IEnumerable<PostCategory>> GetPostCategoriesAsync(Post post, PostEditModel model)
 		{
 			if (model.Categories?.Any() == true)
 			{
@@ -41,16 +40,16 @@ namespace Passingwind.Blog.Web.ApiControllers
 				{
 					CategoryId = t,
 					PostId = post.Id,
-				}).ToList();
+				});
 
-				await _postService.UpdateCategoriesAsync(post, newList, false);
-
-			}
-			else
-			{
-				post.Categories?.Clear();
+				return Task.FromResult(newList);
 			}
 
+			return Task.FromResult(Enumerable.Empty<PostCategory>());
+		}
+
+		protected async Task<IEnumerable<PostTags>> GetPostTagsAsync(Post post, PostEditModel model)
+		{
 			if (model.Tags?.Any() == true)
 			{
 				var tags = new List<Tags>();
@@ -66,12 +65,10 @@ namespace Passingwind.Blog.Web.ApiControllers
 					PostId = post.Id,
 				});
 
-				await _postService.UpdateTagsAsync(post, newList, false); 
+				return newList;
 			}
-			else
-			{
-				post.Tags?.Clear();
-			}
+
+			return Enumerable.Empty<PostTags>();
 		}
 
 		[HttpGet("{id}")]
@@ -133,15 +130,19 @@ namespace Passingwind.Blog.Web.ApiControllers
 
 				entity = _postFactory.ToEntity(model, entity);
 
-				await PreparePostAsync(entity, model);
+				var categories = await GetPostCategoriesAsync(entity, model);
+				var tags = await GetPostTagsAsync(entity, model);
 
-				await _postService.UpdateAsync(entity);
+				await _postService.UpdateAsync(entity, categories, tags);
 			}
 			else
 			{
 				var entity = _postFactory.ToEntity(model);
 
-				await PreparePostAsync(entity, model);
+				var categories = await GetPostCategoriesAsync(entity, model);
+				var tags = await GetPostTagsAsync(entity, model);
+				entity.Categories = categories.ToList();
+				entity.Tags = tags.ToList();
 
 				await _postService.InsertAsync(entity);
 
