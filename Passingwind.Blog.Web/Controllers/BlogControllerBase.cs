@@ -7,28 +7,29 @@ namespace Passingwind.Blog.Web.Controllers
 	/// The basic 
 	/// </summary>
 	[ApiExplorerSettings(IgnoreApi = true)]
-	[Route("[controller]/[action]")] 
+	[Route("[controller]/[action]")]
 	public abstract class BlogControllerBase : Controller
-	{
-		protected void SetPageTitle(string title)
+	{ 
+		protected void AppendPageTitle(string value)
 		{
-			ViewData["Title"] = title;
+			if (string.IsNullOrWhiteSpace(value))
+				return;
+
+			if (ViewData["Title"] == null)
+				ViewData["Title"] = value;
+			else
+				ViewData["Title"] = ViewData["Title"] + " | " + value;
 		}
 
-		protected void AppendPageTitle(string title)
+		protected void InsertPageTitle(string value)
 		{
-			if (ViewData["Title"] == null)
-				ViewData["Title"] = title;
-			else
-				ViewData["Title"] = ViewData["Title"] + " | " + title;
-		}
+			if (string.IsNullOrWhiteSpace(value))
+				return;
 
-		protected void InsertPageTitle(string title)
-		{
 			if (ViewData["Title"] == null)
-				ViewData["Title"] = title;
+				ViewData["Title"] = value;
 			else
-				ViewData["Title"] = title + " | " + ViewData["Title"];
+				ViewData["Title"] = value + " | " + ViewData["Title"];
 		}
 
 		protected void SetPageDescription(string text)
