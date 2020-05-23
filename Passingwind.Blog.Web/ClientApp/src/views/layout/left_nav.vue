@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import * as userService from "@/services/userservice";
+import * as identity from "@/services/identity";
 
 export default {
     data() {
@@ -193,9 +193,9 @@ export default {
         checkMentPermission(keys) {
             if (keys) {
                 if (keys.length == 1) {
-                    return userService.hasPermission(keys[0]);
+                    return identity.hasPermission(keys[0]);
                 } else {
-                    return userService.hasAnyPermissions(keys);
+                    return identity.hasAnyPermissions(keys);
                 }
             } else return true;
         }

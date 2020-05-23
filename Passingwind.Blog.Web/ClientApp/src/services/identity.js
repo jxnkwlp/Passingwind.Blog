@@ -7,15 +7,7 @@ export const identity = () => {
         method: "get",
     });
 };
-
-export const updateProfile = (payload) => {
-    return http.request({
-        url: "api/identity",
-        method: "post",
-        data: payload
-    });
-};
-
+ 
 export const hasPermission = (key) => {
     var allKeys = store.state.permissionKeys;
     var roles = store.state.roles;

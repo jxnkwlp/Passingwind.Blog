@@ -175,7 +175,7 @@
 
 <script>
 import * as post from "@/services/post";
-import * as userService from "@/services/userservice";
+import * as identity from "@/services/identity";
 
 export default {
     data() {
@@ -196,7 +196,7 @@ export default {
     },
     computed: {
         canEdit() {
-            return userService.hasPermission("page.update");
+            return identity.hasPermission("page.update");
         }
     },
     mounted() {

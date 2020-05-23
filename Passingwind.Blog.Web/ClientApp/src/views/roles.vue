@@ -143,7 +143,7 @@
 
 <script>
 import * as role from "@/services/role";
-import * as userService from "@/services/userservice";
+import * as identity from "@/services/identity";
 
 export default {
     data() {
@@ -175,8 +175,8 @@ export default {
     },
     methods: {
         loadData() {
-            //console.log(userService.hasPermission("role.list"));
-            if (!userService.hasPermission("role.list")) {
+            //console.log(identity.hasPermission("role.list"));
+            if (!identity.hasPermission("role.list")) {
                 return;
             }
 

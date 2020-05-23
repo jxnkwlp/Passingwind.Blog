@@ -190,7 +190,7 @@
 <script>
 import * as user from "@/services/user";
 import * as role from "@/services/role";
-import * as userService from "@/services/userservice";
+import * as identity from "@/services/identity";
 
 export default {
     props: ["actived"],
@@ -223,7 +223,7 @@ export default {
     },
     methods: {
         load() {
-            if (userService.hasPermission("user.list")) {
+            if (identity.hasPermission("user.list")) {
                 this.loadBasicData();
                 this.loadData();
             }

@@ -55,16 +55,6 @@ namespace Passingwind.Blog.Web.ApiControllers
 			return model;
 		}
 
-		[HttpPost]
-		public async Task UpdateProfileAsync([FromBody] UserProfileUpdateModel model)
-		{
-			var cp = _httpContextAccessor.HttpContext.User;
 
-			var user = await _userManager.FindByNameAsync(cp.Identity.Name);
-
-			_userFactory.ToEntity(model, user);
-
-			await _userManager.UpdateAsync(user);
-		} 
 	}
 }
