@@ -12,6 +12,7 @@ using Passingwind.Blog.Data.Settings;
 using Passingwind.Blog.Services;
 using Passingwind.Blog.Web.Models.Account;
 using Passingwind.Blog.Web.Services;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -586,6 +587,50 @@ namespace Passingwind.Blog.Web.Controllers
 			}
 
 			return View(model);
+		}
+
+		[HttpGet]
+		public async Task<ActionResult> LinkLoginAsync(string provider)
+		{
+			if (string.IsNullOrWhiteSpace(provider))
+				return NotFound();
+
+			// Clear the existing external cookie to ensure a clean login process
+			await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+			// Request a redirect to the external login provider to link a login for the current user
+			var redirectUrl = Url.Action("LinkLoginCallback");
+			var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
+
+			return new ChallengeResult(provider, properties);
+		}
+
+		public async Task<ActionResult> LinkLoginCallbackAsync()
+		{
+			var user = await _userManager.GetUserAsync(User);
+			if (user == null)
+			{
+				return NotFound($"Unable to load user with ID 'user.Id'.");
+			}
+
+			var info = await _signInManager.GetExternalLoginInfoAsync(user.Id);
+			if (info == null)
+			{
+				throw new InvalidOperationException($"Unexpected error occurred loading external login info for user with ID '{user.Id}'.");
+			}
+
+			var result = await _userManager.AddLoginAsync(user, info);
+			if (!result.Succeeded)
+			{
+				StatusMessage = StatusMessageViewModel.Error("The external login was not added. External logins can only be associated with one account.");
+				return View("LinkLoginCallbackConfirmation");
+			}
+
+			// Clear the existing external cookie to ensure a clean login process
+			await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+			//StatusMessage = "The external login was added.";
+			return Redirect("~/admin#/profile");
 		}
 
 		#endregion

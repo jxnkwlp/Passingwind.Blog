@@ -14,7 +14,7 @@
 <script>
 import User from "./users";
 import Role from "./roles";
-import * as userService from "@/services/userservice";
+import * as identity from "@/services/identity";
 
 export default {
     components: { User, Role },
@@ -31,8 +31,8 @@ export default {
         }
     },
     mounted() {
-        this.showUserPane = userService.hasPermission("user.list");
-        this.showRolePane = userService.hasPermission("role.list");
+        this.showUserPane = identity.hasPermission("user.list");
+        this.showRolePane = identity.hasPermission("role.list");
     },
     methods: {
         handleTabsChanges(pane) {

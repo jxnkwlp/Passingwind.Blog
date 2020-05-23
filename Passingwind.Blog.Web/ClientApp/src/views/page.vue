@@ -69,7 +69,7 @@
 
 <script>
 import * as page from "@/services/page";
-import * as userService from "@/services/userservice";
+import * as identity from "@/services/identity";
 
 export default {
     mounted() {
@@ -89,7 +89,7 @@ export default {
     },
     computed: {
         canEdit() {
-            return userService.hasPermission("page.update");
+            return identity.hasPermission("page.update");
         }
     },
     methods: {

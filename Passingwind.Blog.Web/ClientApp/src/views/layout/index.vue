@@ -13,7 +13,7 @@
 <script>
 import LeftNav from "./left_nav";
 import config from "@/config";
-import * as userService from "@/services/userservice";
+import * as identity from "@/services/identity";
 
 import { mapActions } from "vuex";
 

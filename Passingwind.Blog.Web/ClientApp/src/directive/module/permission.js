@@ -1,11 +1,11 @@
 import store from '@/store'
-import * as userService from "@/services/userservice";
+import * as identity from "@/services/identity";
 
 export default {
     bind(el, binding, vnode) {
         // var keys = binding.value;
         // const unwatch = store.watch(state => state.permissionKeys, role => {
-        //     if (keys.filter(item => userService.hasPermission(item)).length == 0) {
+        //     if (keys.filter(item => identity.hasPermission(item)).length == 0) {
         //         el.style.display = 'none';
         //     }
         // });
@@ -16,7 +16,7 @@ export default {
         // console.log('inserted');
         // var keys = binding.value;
         // const unwatch = store.watch(state => state.permissionKeys, role => {
-        //     if (keys.filter(item => userService.hasPermission(item)).length == 0) {
+        //     if (keys.filter(item => identity.hasPermission(item)).length == 0) {
         //         el.style.display = 'none';
         //     }
         // });
@@ -24,7 +24,7 @@ export default {
         // const roles = store.getters && store.getters.roles;
 
         const { value } = binding;
-        if (value.filter(item => userService.hasPermission(item)).length == 0) {
+        if (value.filter(item => identity.hasPermission(item)).length == 0) {
             el.parentNode && el.parentNode.removeChild(el);
         }
     },
