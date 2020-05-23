@@ -1,10 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { identity } from "@/services/identity";
 
 Vue.use(Vuex);
-
-import * as UserService from '@/services/userservice'
-
+  
 export default new Vuex.Store({
     state: {
         email: '',
@@ -34,7 +33,7 @@ export default new Vuex.Store({
         handleLoadIdentity({ state,
             commit }) {
             return new Promise((resolve, reject) => {
-                UserService.identity().then(res => {
+                identity().then(res => {
                     if (res.status == 401) {
                         reject(res);
                     } else {
