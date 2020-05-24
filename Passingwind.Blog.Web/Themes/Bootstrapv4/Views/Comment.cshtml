@@ -1,0 +1,34 @@
+@{
+	Layout = null;
+}
+@using Passingwind.Blog;
+@model CommentViewModel
+
+
+@if (Model != null)
+{
+	<div id="comment-@(Model.Id)" class="media comment mb-2" data-id="@(Model.Id)">
+		<img alt="@Model.Author" src="@(AvatarHelper.GetSrc(Model.Email))" class="avatar mr-3" />
+
+		<div class="media-body comment-body">
+			<p class="d-flex d-flex justify-content-between">
+				<span>
+					<a href="@Model.Website" target="_blank" rel="external nofollow" class="url">@Model.Author</a> <i> <span class="fa fa-clock-o"></span> <time class="comment-time" datetime="@Model.CreationTime"> @Model.CreationTime</time></i>
+				</span>
+
+				@if (Model.CommentNestingEnabled)
+				{
+					<a class="flexrig" href="javascript:void(0);" onclick="moveCommentForm('@Model.Id')">回复</a>
+				}
+			</p>
+
+			<div class="comment-content">
+				<p>@(Model.Content?.Replace("\n", "<br/>"))</p>
+			</div>
+
+			<hr />
+			<!-- nest comment-->
+			<partial name="comments" model="Model.Replays" />
+		</div>
+	</div>
+}

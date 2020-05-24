@@ -1,0 +1,15 @@
+@{
+}
+
+@model PageModel
+
+
+<div class="post-entry page-single">
+	<p class="post-title"><h2>@Model.Title</h2></p>
+	<hr />
+
+	<div class="post-content text-wrap" asp-html="true" asp-markdown="true">
+		@Model.Content
+	</div>
+
+</div>

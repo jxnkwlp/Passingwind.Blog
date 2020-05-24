@@ -1,0 +1,10 @@
+@{
+	Layout = null;
+}
+
+@model IList<CommentViewModel>
+
+@foreach (var comment in Model)
+{
+	<partial name="comment" model="comment" /> 
+}

@@ -6,6 +6,33 @@ input {
     // cursor: default;
 }
 
+*,
+*::after,
+*::before {
+    box-sizing: inherit;
+}
+
+.clearfix {
+    &:before {
+        display: table;
+        content: "";
+    }
+
+    &:after {
+        display: table;
+        content: "";
+        clear: both;
+    }
+}
+
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
+}
+
 .d-flex {
     display: -ms-flexbox !important;
     display: flex !important;

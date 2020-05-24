@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/lib/element-ui/theme-chalk/index.css" rel="stylesheet" />
+    <style>
+        body { margin: 0; padding: 0; }
+        .container { max-width: 1140px; margin-left: auto; margin-right: auto; }
+        @@media (max-width: 1200px) {
+            .container { max-width: 1140px; }
+        }
+        @@media (max-width: 992px) {
+            .container { max-width: 960px; }
+        }
+        @@media (max-width: 768px) {
+            .container { max-width: 720px; }
+        }
+        @@media (max-width: 576px) {
+            .container { max-width: 540px; }
+        }
+        .el-page-header { padding: 15px 0; background: #fff; border-bottom: 1px solid #ebebeb; margin-bottom: 15px; }
+    </style>
+
+    @RenderSection("head", false)
+</head>
+
+<body>
+    @RenderBody()
+
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+    <script src="~/lib/axios/axios.min.js"></script>
+    <script src="~/lib/vue/vue.min.js"></script>
+    <script src="~/lib/element-ui/index.js"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+
+    @RenderSection("scripts", false)
+</body>
+</html>

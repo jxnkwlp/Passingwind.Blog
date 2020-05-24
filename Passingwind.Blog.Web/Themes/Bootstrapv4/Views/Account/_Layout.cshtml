@@ -1,0 +1,16 @@
+@{
+	Layout = "_Layout";
+}
+
+@section head{
+	@RenderSection("head", false)
+}
+
+<partial name="_StatusMessage" />
+
+@RenderBody()
+
+@section scripts{
+	<partial name="_ValidationScriptsPartial" />
+	@RenderSection("scripts", false)
+}

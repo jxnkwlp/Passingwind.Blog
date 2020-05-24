@@ -103,7 +103,7 @@ function moveCommentForm(commentId) {
     $('#comment-respond').hide(); // remove all 
 
     var container = $('#comment-' + commentId); //li#comment
-    if (container.find($('#comment-respond')).size() > 0) {
+    if (container.find($('#comment-respond')) && container.find($('#comment-respond')).length > 0) {
         container.find($('#comment-respond')).remove();
     }
 
