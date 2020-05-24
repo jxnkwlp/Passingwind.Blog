@@ -28,6 +28,8 @@ using Passingwind.Blog.Web.Json;
 using Passingwind.Blog.Web.Mvc.Json;
 using Passingwind.Blog.Web.Razor;
 using Passingwind.Blog.Web.Services;
+using Passingwind.Blog.Web.Themes;
+using Passingwind.Blog.Web.UI.Theme;
 using Passingwind.Blog.Web.WebApi;
 using System;
 using System.Collections.Generic;
@@ -132,7 +134,6 @@ namespace Passingwind.Blog.Web
 
 			services.AddScoped<ICaptchaService, CaptchaService>();
 
-			services.AddSingleton<IThemeAccessor, ThemeAccessor>();
 			services.AddSingleton<IMarkdownService, DefaultMarkdownService>();
 
 			services.AddTransient<ISpamService, NullSpamService>();
@@ -156,6 +157,7 @@ namespace Passingwind.Blog.Web
 			services.AddScoped<IFileService, LocalFileService>();
 
 			services.AddScoped<IWidgetDynamicContentService, WidgetDynamicContentService>();
+			 
 
 			return services;
 		}
@@ -210,6 +212,7 @@ namespace Passingwind.Blog.Web
 
 			services.AddHttpContextAccessor();
 
+			services.AddMemoryCache();
 			services.AddDistributedMemoryCache();
 
 			services.AddSession(options =>
@@ -221,7 +224,7 @@ namespace Passingwind.Blog.Web
 			services.Configure<RazorViewEngineOptions>(options =>
 			{
 				options.ViewLocationExpanders.Add(new BlogViewLocationExpander());
-				//options.ViewLocationExpanders.Add(new ThemeViewLocationExpander());
+				options.ViewLocationExpanders.Add(new ThemeViewLocationExpander());
 			});
 
 			//services.Configure<RequestLocalizationOptions>(options =>

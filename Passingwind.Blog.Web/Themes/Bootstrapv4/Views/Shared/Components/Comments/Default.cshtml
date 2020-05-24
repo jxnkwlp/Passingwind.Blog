@@ -1,0 +1,41 @@
+@model Tuple<PostModel, IList<CommentViewModel>, CommentFormViewModel>
+@inject CommentsSettings commentsSettings
+
+@{
+	var post = Model.Item1;
+	var comments = Model.Item2;
+
+	var form = Model.Item3;
+}
+
+<div class="comments-area">
+	@if (commentsSettings.EnableComments && post.EnableComment)
+	{
+		<div class="comments-head">
+			<a href="javascript:void(0);" class="btn btn-primary" onclick="showCommentForm();">Add Comment</a>
+		</div>
+		<hr />
+	}
+	else
+	{
+		<div class="comments-disabled alert alert-secondary"><span class="fa fa-info-circle"></span> 已禁用评论。</div>
+	}
+
+	@if (commentsSettings.ShowComments)
+	{
+		<div class="comment-list" id="comments">
+			<partial name="comments" model="comments" />
+		</div>
+	}
+	else
+	{
+<div class="comments-disabled alert alert-secondary"><span class="fa fa-info-circle"></span> 已设置不显示评论</div>
+	}
+
+	@if (post.EnableComment)
+	{
+		<partial name="CommentForm" model="form" />
+	}
+</div>
+
+

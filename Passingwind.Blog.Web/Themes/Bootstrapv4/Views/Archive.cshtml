@@ -1,0 +1,68 @@
+@model ArchiveViewModel
+@{
+
+}
+
+
+<div class="archives">
+
+	<h2>Archive</h2>
+	<hr />
+
+	<ul class="archive-page-menu">
+		@foreach (var item in Model.CategoryPosts)
+		{
+			<li><a href="#@item.Key.Slug" rel="directory">@item.Key.Name</a></li>
+		}
+
+		<li asp-condition="@(Model.NoCategoryPosts.Count() > 0)"><a href="#no-category" rel="directory">None</a></li>
+	</ul>
+
+	<div class="archive-item-list">
+		@foreach (var item in Model.CategoryPosts)
+		{
+			<div id="@item.Key.Slug" class="archive-item-list-title">
+				<a asp-route="syndicationcategory" asp-route-slug="@item.Key.Slug"><span class="fa fa-rss"></span> </a> @item.Key.Name (@item.Key.PostCount)
+			</div>
+			<hr />
+
+			<div class="mb-4">
+				@if (item.Value.Count() == 0)
+				{
+					<p class="text-secondary">Empty.</p>
+				}
+				else
+				{
+					foreach (var post in item.Value)
+					{
+						<p class="archive-item">
+							<span class="date mr-2 fa fa-clock-o"><i> @post.PublishedTime.ToString("yyyy-MM-dd")</i></span>
+							<a class="title" asp-route="post" asp-route-slug="@(post.Slug)">@post.Title</a>
+							<span class="comment-count fa fa-comment-o text-muted"> @post.CommentsCount</span>
+						</p>
+
+					}
+				}
+			</div>
+
+		}
+
+		<div id="no-category" asp-condition="@(Model.NoCategoryPosts.Any())" class="archive-item-list-title">
+			None
+		</div>
+		<hr />
+
+		<div class="mb-4" asp-condition="@(Model.NoCategoryPosts.Any())">
+
+			@foreach (var post in Model.NoCategoryPosts)
+			{
+				<p class="archive-item">
+					<span class="date mr-2 fa fa-clock-o"><i> @post.PublishedTime.ToString("yyyy-MM-dd")</i></span>
+					<a class="title" asp-route="post" asp-route-slug="@(post.Slug)">@post.Title</a>
+					<span class="comment-count fa fa-comment-o text-muted"> @post.CommentsCount</span>
+				</p>
+			}
+		</div>
+	</div>
+
+</div>

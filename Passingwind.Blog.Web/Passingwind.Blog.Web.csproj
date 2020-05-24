@@ -73,7 +73,7 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
-
+	 
 	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' ">
 		<Message Importance="high" Text="Check node version ..." />
 		<!-- Build Target:  Ensure Node.js is installed -->

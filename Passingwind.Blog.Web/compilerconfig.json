@@ -14,5 +14,9 @@
   {
     "outputFile": "wwwroot/themes/default/js/account.es5.js",
     "inputFile": "wwwroot/themes/default/js/account.js"
+  },
+  {
+    "outputFile": "Themes/Bootstrapv4/wwwroot/css/site.css",
+    "inputFile": "Themes/Bootstrapv4/wwwroot/css/site.less"
   }
 ]

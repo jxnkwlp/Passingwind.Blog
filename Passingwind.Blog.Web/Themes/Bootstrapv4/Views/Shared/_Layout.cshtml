@@ -1,0 +1,160 @@
+﻿
+@inject BlogUserManager userManager
+@inject BlogSignInManager signInManager
+
+@inject BasicSettings basicSettings
+@inject AdvancedSettings advancedSettings
+@inject FeedSettings feedSettings
+@inject ISettingService settingService
+
+@inject IPageService pageService;
+
+@{
+	var pageList = await pageService.GetListAsync();
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="shortcut icon" href="~/favicon.ico" />
+	<title>@ViewData["Title"]</title>
+	<meta name="keywords" content="@ViewData["Keywords"]" />
+	<meta name="description" content="@ViewData["Description"]" />
+
+	<!-- archive  -->
+	<link rel="contents" title="Archive" href="~/archive" />
+	<!-- rsd  -->
+	<link type="application/rsd+xml" rel="edituri" title="RSD" href="~/rsd.xml" asp-condition="feedSettings.Enabled" />
+
+	<!-- opensearch  -->
+	<link rel="search" type="application/opensearchdescription+xml" href="~/opensearch.xml" title="@basicSettings.Title" asp-condition="advancedSettings.EnableOpenSearch" />
+
+	<!-- syndication  -->
+	<link rel="alternate" type="application/atom+xml" title="@(basicSettings.Title) (ATOM)" href="~/syndication.xml?format=atom" asp-condition="feedSettings.Enabled" />
+	<link rel="alternate" type="application/rss+xml" title="@(basicSettings.Title) (RSS)" href="~/syndication.xml" asp-condition="feedSettings.Enabled" />
+
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Kreon:400,700" rel="stylesheet" />
+
+	<environment names="Development">
+		<link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+		<link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+		<link rel="stylesheet" href="~/themes/bootstrapv4/css/site.css" asp-append-version="true" />
+	</environment>
+	<environment names="Staging,Production">
+		<link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="~/themes/bootstrapv4/css/site.min.css" asp-append-version="true" />
+	</environment>
+
+	<!--  customer head -->
+	@Html.Raw(advancedSettings.HeaderHtml)
+	@RenderSection("head", false)
+
+	<widget-zone name="HtmlHeader" />
+
+	<mini-profiler />
+</head>
+
+<body>
+	<div class="site-header-wrap">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<div class="container">
+				<a class="navbar-brand" href="~/">@basicSettings.Title</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+
+						@foreach (var item in pageList)
+						{
+							<li class="nav-item">
+								<a class="nav-link" asp-route="page" asp-route-slug="@item.Slug">@item.Title</a>
+							</li>
+						}
+
+						<li class="nav-item"><a class="nav-link" asp-route="archive">Archive</a></li>
+					</ul>
+
+					<ul class="navbar-nav mr-auto">
+
+						@if (User.Identity.IsAuthenticated)
+						{
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									Hi, @User.Identity.Name
+								</a>
+								<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+									<a class="dropdown-item" href="~/admin/">Admin</a>
+									<a class="dropdown-item" asp-route="changepassword">Change password</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" asp-route="logout">Log Out</a>
+								</div>
+							</li>
+
+						}
+						else
+						{
+							<li class="nav-item"><a class="nav-item" asp-route="login">Login</a></li>
+						}
+
+					</ul>
+
+				</div>
+			</div>
+		</nav>
+	</div>
+
+	<div class="site-content">
+		<div class="container  clearfix">
+			<div class="row">
+				<div class="col-9">
+					<widget-zone name="PostListHeader" />
+					@RenderBody()
+					<widget-zone name="PostListFooter" />
+				</div>
+				<div class="col-3">
+					<profile name="widgets-profile">
+						<widget-zone name="SilderBar" />
+					</profile>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="footer-wrap">
+		<hr />
+		<div class="container">
+			<div class="site-info text-center">
+				<div class="footer-copyright">
+					<partial name="_FooterPartial" />
+				</div>
+			</div>
+		</div>
+		<widget-zone name="PageFooter" />
+	</div>
+
+
+	<environment names="Development">
+		<script src="~/lib/jquery/jquery.js"></script>
+		<script src="~/lib/bootstrap/js/bootstrap.js"></script>
+		<script src="~/themes/bootstrapv4/js/site.js" asp-append-version="true"></script>
+	</environment>
+	<environment names="Staging,Production">
+		<script src="~/lib/jquery/jquery.min.js"></script>
+		<script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+		<script src="~/themes/bootstrapv4/js/site.es5.min.js" asp-append-version="true"></script>
+	</environment>
+
+	@RenderSection("Scripts", required: false)
+
+	<!--  customer footer -->
+	@Html.Raw(advancedSettings.FooterHtml)
+
+	<widget-zone name="HtmlFooter" />
+</body>
+</html>

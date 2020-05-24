@@ -1,0 +1,35 @@
+@inject BasicSettings basicSettings
+
+@{ 
+}
+@model PostsViewModel
+
+
+@foreach (var post in Model.Posts)
+{
+	<div class="post-entry">
+		<p class="post-title"><a asp-route="post" asp-route-slug="@post.Slug">@post.Title</a></p>
+
+		<div class="post-meta clearfix text-secondary">
+			<span>
+				<time class="entry-date published" datetime="@post.PublishedTime.ToUniversalTime().ToString()"><span class="fa fa-clock-o"></span> @post.PublishedTime</time>
+			</span>
+			<span>
+				<i class="fa fa-user-o"></i>
+				<i class="post-by"><a asp-route="author" asp-route-author="@(post.User?.UserName)">@(post.User == null ? null : post.User.DisplayName)</a></i>
+			</span>
+			<span>
+				<i class="fa fa-comment-o"></i>
+				<a asp-route="post" asp-route-slug="@post.Slug" asp-fragment="comments">@post.CommentsCount Comments</a>
+			</span>
+
+			<partial name="_PostCategoriesPartial" model="post.Categories" />
+			<partial name="_PostTagsPartial" model="post.Tags" />
+		</div>
+	</div>
+}
+
+<hr />
+<div class="pagebar">
+	<pager data="Model.Posts" />
+</div>

@@ -37,18 +37,19 @@ namespace Passingwind.Blog.Widgets
 					ViewName
 					);
 
-			ViewEngineResult result = viewEngine.GetView(null, viewName + ".cshtml", false);
-			IEnumerable<string> originalLocations = result.SearchedLocations;
+			ViewEngineResult result = viewEngine.FindView(context.ViewContext, viewName + ".cshtml", false);
 
 			if (!result.Success)
 			{
-				result = viewEngine.FindView(context.ViewContext, viewName + ".cshtml", false);
+				result = viewEngine.GetView(null, viewName + ".cshtml", false);
 			}
 
 			if (!result.Success)
 			{
 				throw new Exception($"The widget component '{context.ConfigurationInfo.WidgetName }' view not found.");
 			}
+
+			IEnumerable<string> originalLocations = result.SearchedLocations;
 
 			var view = result.EnsureSuccessful(originalLocations).View;
 

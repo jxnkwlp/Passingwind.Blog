@@ -45,6 +45,9 @@ namespace Passingwind.Blog.Web.TagHelpers
 		public bool ShowFirstPage { get; set; }
 		public bool ShowLastPage { get; set; }
 
+		public string PageItemClass { get; set; }
+		public string PageItemLinkClass { get; set; }
+
 		public override int Order => 1;
 
 		[HtmlAttributeNotBound]
@@ -130,19 +133,21 @@ namespace Passingwind.Blog.Web.TagHelpers
 		{
 			TagBuilder tagBuilder = new TagBuilder("li");
 
-			tagBuilder.AddCssClass("pager-item");
+			tagBuilder.AddCssClass($"page-item {PageItemClass}");
 
 			if (hasLink)
 			{
 				var link = new TagBuilder("a");
 				link.Attributes["href"] = BuilderLink(page);
 				link.InnerHtml.SetContent(text);
+				link.AddCssClass($"page-link {PageItemLinkClass}");
 				tagBuilder.InnerHtml.AppendHtml(link);
 			}
 			else
 			{
 				var link = new TagBuilder("span");
-				link.InnerHtml.SetContent(text);
+				link.InnerHtml.SetContent(text); 
+				link.AddCssClass($"page-link {PageItemLinkClass}");
 				tagBuilder.InnerHtml.AppendHtml(link);
 			}
 
