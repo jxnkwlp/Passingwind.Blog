@@ -47,6 +47,7 @@ namespace Passingwind.Blog.Web.Controllers
 			foreach (var item in all)
 			{
 				RouteFormatInfomation info = new RouteFormatInfomation();
+				info.ActionDescriptorType = item.GetType().FullName;
 
 				if (item.RouteValues.TryGetValue("area", out var area))
 					info.Area = area;
@@ -96,5 +97,7 @@ namespace Passingwind.Blog.Web.Controllers
 		public string DisplayName { get; set; }
 
 		public AttributeRouteInfo RouteInfo { get; set; }
+
+		public string ActionDescriptorType { get; set; }
 	}
 }

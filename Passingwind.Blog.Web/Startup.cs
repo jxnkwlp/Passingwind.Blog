@@ -13,7 +13,9 @@ using Passingwind.Blog.EntityFramework.MySql;
 using Passingwind.Blog.EntityFramework.PostgreSQL;
 using Passingwind.Blog.EntityFramework.Sqlite;
 using Passingwind.Blog.EntityFramework.SqlServer;
+using Passingwind.Blog.Web.Middlewares;
 using Passingwind.Blog.Web.Services;
+using Passingwind.Blog.Web.Themes;
 using Passingwind.Blog.Widgets;
 using System;
 
@@ -115,6 +117,8 @@ namespace Passingwind.Blog.Web
 			{
 			});
 
+			services.AddThemes(HostEnvironment);
+
 
 			services.AddSpaStaticFiles(options =>
 			{
@@ -148,11 +152,7 @@ namespace Passingwind.Blog.Web
 				app.UseMiniProfiler();
 
 			app.UseImageAxdMiddleware();
-
-			app.UseWidgets();
-
-			app.UseThemeMiddleware();
-
+			 
 			if (Configuration.GetValue("HttpsRedirection", false))
 				app.UseHttpsRedirection();
 
@@ -161,6 +161,9 @@ namespace Passingwind.Blog.Web
 
 			app.UseStaticFiles();
 			app.UseSpaStaticFiles(new StaticFileOptions() { RequestPath = new PathString("/admin"), });
+
+			app.UseWidgets();
+			app.UseThemeMiddleware();
 
 			//app.UseRequestLocalization();
 

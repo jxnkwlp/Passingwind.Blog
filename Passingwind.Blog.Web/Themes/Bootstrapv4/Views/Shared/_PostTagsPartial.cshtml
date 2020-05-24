@@ -1,0 +1,17 @@
+@model IList<string>
+
+@if (Model != null && Model.Any())
+{
+    <span class="entry-tags">
+		<span class="fa fa-tags"></span>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <a asp-route="tags" asp-route-tags="@Model[i]">@Model[i]</a>
+
+            @if (i != Model.Count - 1)
+            {
+                <text>,</text>
+            }
+        }
+    </span>
+}
