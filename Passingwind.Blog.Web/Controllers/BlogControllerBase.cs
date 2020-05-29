@@ -18,7 +18,7 @@ namespace Passingwind.Blog.Web.Controllers
 			if (ViewData["Title"] == null)
 				ViewData["Title"] = value;
 			else
-				ViewData["Title"] = ViewData["Title"] + " | " + value;
+				ViewData["Title"] = ViewData["Title"] + " - " + value;
 		}
 
 		protected void InsertPageTitle(string value)
@@ -29,7 +29,7 @@ namespace Passingwind.Blog.Web.Controllers
 			if (ViewData["Title"] == null)
 				ViewData["Title"] = value;
 			else
-				ViewData["Title"] = value + " | " + ViewData["Title"];
+				ViewData["Title"] = value + " - " + ViewData["Title"];
 		}
 
 		protected void SetPageDescription(string text)
