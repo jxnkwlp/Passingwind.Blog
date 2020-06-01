@@ -104,10 +104,15 @@ namespace Passingwind.Blog.Web.Controllers
 		{
 			var vm = new PostsViewModel();
 
+			var limit = _basicSettings.PageShowCount;
+
+			if (limit <= 0) limit = 1;
+			if (limit > 100) limit = 100;
+
 			var listInputModel = new PostListInputModel()
 			{
 				Skip = 0,
-				Limit = 10,
+				Limit = limit,
 				IsDraft = false,
 				IncludeOptions = new PostIncludeOptions()
 				{
@@ -293,14 +298,15 @@ namespace Passingwind.Blog.Web.Controllers
 
 			foreach (var item in categories)
 			{
-				var posts = (await _postService.GetListAsync(t => t.Categories.Any(c => c.CategoryId == item.Id))).OrderByDescending(t => t.PublishedTime);
+				var posts = (await _postService.GetListAsync(t => t.IsDraft == false && t.Categories.Any(c => c.CategoryId == item.Id))).OrderByDescending(t => t.PublishedTime);
 
 				var category = _categoryFactory.ToModel(item, new CategoryListItemModel());
 
 				vm.CategoryPosts[category] = posts.Select(p => _postFactory.ToModel(p, new Models.PostModel())).ToArray();
 			}
 
-			var noCategoryPosts = (await _postService.GetListAsync(t => t.Categories.Any() == false)).OrderByDescending(t => t.PublishedTime);
+			var noCategoryPosts = (await _postService.GetListAsync(t => t.IsDraft == false && t.Categories.Any() == false)).OrderByDescending(t => t.PublishedTime);
+
 			vm.NoCategoryPosts = noCategoryPosts.Select(p => _postFactory.ToModel(p, new Models.PostModel())).ToArray();
 
 			await SetPageTitleAndMetadataAsync();
