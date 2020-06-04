@@ -1,28 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>Passingwind.Blog.Web</RootNamespace>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<RootNamespace>Passingwind.Blog.Web</RootNamespace>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.4" />
-        <PackageReference Include="AutoMapper" Version="9.0.0" /> 
-        <PackageReference Include="Passingwind.PagedList" Version="0.1.0" />
-        <PackageReference Include="SkiaSharp" Version="1.68.2.1" />
-        <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="1.7.0" />
-        <PackageReference Include="CSRedisCore" Version="3.6.3" />
-    </ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.4" />
+		<PackageReference Include="AutoMapper" Version="9.0.0" />
+		<PackageReference Include="Passingwind.PagedList" Version="0.1.0" />
+		<PackageReference Include="SkiaSharp" Version="1.68.3" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="1.68.3" />
+		<PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="1.7.0" />
+		<PackageReference Include="CSRedisCore" Version="3.6.3" />
+	</ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Passingwind.Blog.Core\Passingwind.Blog.Core.csproj" />
-        <ProjectReference Include="..\Passingwind.Blog.Widgets\Passingwind.Blog.Widgets.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="BlogML\" />
-        <Folder Include="Profiles\" />
-    </ItemGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="..\Passingwind.Blog.Core\Passingwind.Blog.Core.csproj" />
+		<ProjectReference Include="..\Passingwind.Blog.Widgets\Passingwind.Blog.Widgets.csproj" />
+	</ItemGroup>
+	 
 </Project>
