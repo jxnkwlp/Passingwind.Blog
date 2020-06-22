@@ -1,4 +1,5 @@
 using Passingwind.Blog.Data.Domains;
+using Passingwind.Blog.DependencyInjection;
 using Passingwind.Blog.Services.Models;
 using Passingwind.PagedList;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Services
 {
-	public interface ISettingService : IService<Setting>
+	public interface ISettingService : IService<Setting>, IScopedDependency
 	{
 		Task<Setting> AddOrUpdateAsync(string key, string value);
 		Task<Setting> AddOrUpdateAsync(string key, string value, string userId);

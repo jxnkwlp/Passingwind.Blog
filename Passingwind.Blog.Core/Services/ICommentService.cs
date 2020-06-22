@@ -1,4 +1,5 @@
 using Passingwind.Blog.Data.Domains;
+using Passingwind.Blog.DependencyInjection;
 using Passingwind.Blog.Services.Models;
 using Passingwind.PagedList;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Services
 {
-	public interface ICommentService : IService<Comment>
+	public interface ICommentService : IService<Comment>, IScopedDependency
 	{
 		public Task<Comment> GetByGuidAsync(Guid id);
 		IQueryable<Comment> GetQueryable();
