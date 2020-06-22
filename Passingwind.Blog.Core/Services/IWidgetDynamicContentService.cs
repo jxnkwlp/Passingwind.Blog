@@ -1,12 +1,13 @@
 using Passingwind.Blog.Data.Domains;
 using Passingwind.Blog.Data.Widgets;
+using Passingwind.Blog.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Services
 {
-	public interface IWidgetDynamicContentService : IService<WidgetDynamicContent>
+	public interface IWidgetDynamicContentService : IService<WidgetDynamicContent>, IScopedDependency
 	{
 		Task<T> GetAsync<T>(Guid widgetId, string userId) where T : IWidgetDynamicContent;
 
