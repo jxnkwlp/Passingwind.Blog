@@ -1,4 +1,5 @@
 using Passingwind.Blog.Data.Domains;
+using Passingwind.Blog.DependencyInjection;
 using Passingwind.Blog.Services.Models;
 using Passingwind.PagedList;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Services
 {
-	public interface IPostService : IService<Post>
+	public interface IPostService : IService<Post>, IScopedDependency
 	{
 		Task UpdateAsync(Post entity, IEnumerable<PostCategory> categories, IEnumerable<PostTags> tags, CancellationToken cancellationToken = default);
 

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Passingwind.Blog.Data;
 using Passingwind.Blog.Data.Domains;
+using Passingwind.Blog.DependencyInjection;
 using Passingwind.Blog.Extensions;
 using Passingwind.Blog.Services.Models;
 using Passingwind.PagedList;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Services
 {
-	public class BlogRoleManager : RoleManager<Role>
+	public class BlogRoleManager : RoleManager<Role>, IScopedDependency
 	{
 		private readonly IRepository<Role, string> _repository;
 

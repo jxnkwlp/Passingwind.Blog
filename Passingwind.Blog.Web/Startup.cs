@@ -152,7 +152,7 @@ namespace Passingwind.Blog.Web
 				app.UseMiniProfiler();
 
 			app.UseImageAxdMiddleware();
-			 
+
 			if (Configuration.GetValue("HttpsRedirection", false))
 				app.UseHttpsRedirection();
 

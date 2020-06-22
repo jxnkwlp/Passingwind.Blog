@@ -1,13 +1,10 @@
 using Passingwind.Blog.Data.Domains;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Passingwind.Blog.DependencyInjection;
 using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Services
 {
-	public interface IBlogMLExporter
+	public interface IBlogMLExporter : IScopedDependency
 	{
 		Task<byte[]> ExportAsync(User user, BlogMLExportOptions options);
 	}

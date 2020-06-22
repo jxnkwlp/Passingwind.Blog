@@ -1,13 +1,13 @@
 using Passingwind.Blog.Data.Domains;
+using Passingwind.Blog.DependencyInjection;
 using Passingwind.Blog.Services.DTO;
-using Passingwind.Blog.Services.Models;
 using Passingwind.PagedList;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Services
 {
-	public interface ITagsService : IService<Tags>
+	public interface ITagsService : IService<Tags>, IScopedDependency
 	{
 		Task<Tags> GetByNameAsync(string name);
 		Task DeleteByNameAsync(string name);

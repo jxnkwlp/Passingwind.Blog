@@ -1,10 +1,11 @@
-﻿using Passingwind.Blog.Data.Domains;
+using Passingwind.Blog.Data.Domains;
+using Passingwind.Blog.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Services
 {
-	public interface ICategoryService : IService<Category>
+	public interface ICategoryService : IService<Category>, IScopedDependency
 	{
 		IQueryable<Category> GetQueryable();
 		Task<Category> GetBySlugAsync(string slug);
