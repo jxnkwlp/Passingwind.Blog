@@ -7,7 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Passingwind.Blog.Core\Passingwind.Blog.Core.csproj" />
+        <ProjectReference Include="..\..\Passingwind.Blog.Core\Passingwind.Blog.Core.csproj" >
+            <IncludeAssets>none</IncludeAssets>
+        </ProjectReference>
         <ProjectReference Include="..\..\Passingwind.Blog.Widgets\Passingwind.Blog.Widgets.csproj" />
     </ItemGroup>
 

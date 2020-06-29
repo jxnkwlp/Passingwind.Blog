@@ -1,0 +1,22 @@
+@using Passingwind.Blog.Widget.CategoryList.Models
+@{
+    Layout = null;
+}
+
+@model WidgetViewModel
+
+<aside class="widget">
+    <h4 class="widget-title">@(Model.Title)</h4>
+    <div class="widget-body">
+        <ul class="widget-link-list">
+            @foreach (var item in Model.List)
+            {
+                <li>
+                    <a class="rsswidget" asp-route="syndicationcategory" asp-route-slug="@item.Slug"><span class="fa fa-rss"></span></a>
+                    <a asp-route="category" asp-route-category="@item.Slug">@item.Name </a>
+                </li>
+            }
+
+        </ul>
+    </div>
+</aside>

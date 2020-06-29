@@ -6,8 +6,8 @@
 @model WidgetViewModel
 
 <aside class="widget">
-    <h2 class="widget-title">@(Model.Title)</h2>
-    <div class="widget-text">
+    <h4 class="widget-title">@(Model.Title)</h4>
+    <div class="widget-body">
         <ul class="widget-link-list">
             @foreach (var item in Model.List)
             {
