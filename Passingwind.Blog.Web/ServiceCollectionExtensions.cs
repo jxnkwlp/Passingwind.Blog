@@ -157,7 +157,7 @@ namespace Passingwind.Blog.Web
 			services.AddScoped<IFileService, LocalFileService>();
 
 			services.AddScoped<IWidgetDynamicContentService, WidgetDynamicContentService>();
-			 
+
 
 			return services;
 		}
@@ -244,6 +244,9 @@ namespace Passingwind.Blog.Web
 				options.AddDefaultPolicy(b => b.AllowAnyMethod().AllowAnyHeader().AllowCredentials().SetIsOriginAllowed(_ => true));
 			});
 #endif
+
+			services.AddResponseCaching();
+			services.AddResponseCompression();
 
 			return services;
 		}
