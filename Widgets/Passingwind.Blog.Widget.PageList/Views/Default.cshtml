@@ -8,12 +8,14 @@
 
 <aside class="widget">
 	<h2 class="widget-title">@Model.Title</h2>
-	<ul class="widget-link-list">
-		@foreach (var item in Model.List)
-		{
-			<text>
-				<li><a asp-route="page" asp-route-slug="@item.Slug">@item.Title</a></li>
-			</text>
-		}
-	</ul>
+    <div class="widget-body">
+        <ul class="widget-link-list">
+            @foreach (var item in Model.List)
+            {
+                <text>
+                    <li><a asp-route="page" asp-route-slug="@item.Slug">@item.Title</a></li>
+                </text>
+            }
+        </ul>
+    </div>
 </aside>

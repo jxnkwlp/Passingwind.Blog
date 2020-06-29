@@ -12,7 +12,7 @@
             @foreach (var item in Model.List)
             {
                 <li>
-                    <a class="rsswidget" asp-route="syndicationcategory" asp-route-slug="@item.Slug"><img class="rss-widget-icon" src="@Url.Content("~/themes/default/images/rss.png")" alt="RSS" /></a>
+                    <a class="rsswidget" asp-route="syndicationcategory" asp-route-slug="@item.Slug"><span class="fa fa-rss"></span></a>
                     <a asp-route="category" asp-route-category="@item.Slug">@item.Name </a>
                 </li>
             }

@@ -9,15 +9,17 @@
 
 <aside class="widget">
     <h2 class="widget-title">@Model.Title</h2>
-    <div class="tagcloud">
-        @foreach (var item in Model.List)
-        {
-            var ft = Math.Round(baseFontSize + step * item.Count, 6);
+    <div class="widget-body">
+        <div class="tagcloud">
+            @foreach (var item in Model.List)
+            {
+                var ft = Math.Round(baseFontSize + step * item.Count, 6);
 
-            <text>
-                <a asp-route="tags" asp-route-tags="@item.Name" class="tag-link" title="@item.Count topics" style="font-size: @(ft)px;">@item.Name </a>
-            </text>
-        }
+                <text>
+                    <a asp-route="tags" asp-route-tags="@item.Name" class="tag-link" title="@item.Count topics" style="font-size: @(ft)px;">@item.Name </a>
+                </text>
+            }
 
+        </div>
     </div>
 </aside>

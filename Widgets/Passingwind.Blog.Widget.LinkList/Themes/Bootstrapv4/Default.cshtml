@@ -1,0 +1,16 @@
+@{
+    Layout = null;
+}
+@model WidgetViewModel
+
+<aside class="widget">
+    <h4 class="widget-title">@(Model.Title)</h4>
+    <div class="widget-body">
+        <ul class="widget-link-list">
+            @foreach (var item in Model.List)
+            {
+                <li><i class="fa fa-external-link" aria-hidden="true"></i> <a href="@item.Url" title="@item.Title" target="_blank">@item.Title</a></li>
+            }
+        </ul>
+    </div>
+</aside>

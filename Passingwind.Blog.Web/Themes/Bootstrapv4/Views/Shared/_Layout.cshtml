@@ -1,4 +1,4 @@
-﻿
+
 @inject BlogUserManager userManager
 @inject BlogSignInManager signInManager
 
@@ -10,8 +10,7 @@
 @inject IPageService pageService;
 
 @{
-	var pageList = await pageService.GetListAsync();
-
+	var pageList = await pageService.GetListAsync(t=> t.Published); 
 }
 
 <!DOCTYPE html>
@@ -80,7 +79,7 @@
 						<li class="nav-item"><a class="nav-link" asp-route="archive">Archive</a></li>
 					</ul>
 
-					<ul class="navbar-nav mr-auto">
+					<ul class="navbar-nav ml-auto">
 
 						@if (User.Identity.IsAuthenticated)
 						{
@@ -110,14 +109,14 @@
 	</div>
 
 	<div class="site-content">
-		<div class="container  clearfix">
+		<div class="container container-sm clearfix">
 			<div class="row">
-				<div class="col-9">
+				<div class="col-sm-9">
 					<widget-zone name="PostListHeader" />
 					@RenderBody()
 					<widget-zone name="PostListFooter" />
 				</div>
-				<div class="col-3">
+				<div class="col-sm-3">
 					<profile name="widgets-profile">
 						<widget-zone name="SilderBar" />
 					</profile>

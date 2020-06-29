@@ -5,8 +5,8 @@
 @model WidgetViewModel
 
 <aside class="widget">
-    <h2 class="widget-title">@(Model.Title)</h2>
-    <div class="widget-userprofile">
+    <h4 class="widget-title">@(Model.Title)</h4>
+    <div class="widget-body widget-userprofile">
         <ul class="">
             <li><i class="fa fa-envelope-o" aria-hidden="true"></i> @Model.Email</li>
             @if (!string.IsNullOrWhiteSpace(Model.Bio))
