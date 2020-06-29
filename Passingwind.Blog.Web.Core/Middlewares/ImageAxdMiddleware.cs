@@ -27,6 +27,9 @@ namespace Passingwind.Blog.Web
 
 		public Task Invoke(HttpContext httpContext)
 		{
+			if (httpContext == null)
+				throw new System.ArgumentNullException(nameof(httpContext));
+
 			if (httpContext.Request.Path.Value.StartsWith("/image.axd"))
 			{
 				StringValues file = new StringValues();
