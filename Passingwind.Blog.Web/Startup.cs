@@ -16,8 +16,11 @@ using Passingwind.Blog.EntityFramework.SqlServer;
 using Passingwind.Blog.Web.Middlewares;
 using Passingwind.Blog.Web.Services;
 using Passingwind.Blog.Web.Themes;
+using Passingwind.Blog.Web.UI.Widgets;
 using Passingwind.Blog.Widgets;
+using Passingwind.Blog.Widgets.WidgetComponents;
 using System;
+using System.Text.Unicode;
 
 namespace Passingwind.Blog.Web
 {
@@ -115,18 +118,17 @@ namespace Passingwind.Blog.Web
 			services.AddSingleton<IWidgetManager, WidgetManager>();
 			services.AddWidgets(options =>
 			{
+				options.ShardTypes = new[] { typeof(Startup), typeof(BlogOptions), typeof(IWidget) };
 			});
+			services.Replace<IWidgetViewLocationExpander, WidgetViewLocationExpander>(ServiceLifetime.Scoped);
 
 			services.AddThemes(HostEnvironment);
-
 
 			services.AddSpaStaticFiles(options =>
 			{
 				options.RootPath = "ClientApp/dist";
 			});
 
-			services.AddResponseCaching();
-			services.AddResponseCompression();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -152,7 +154,7 @@ namespace Passingwind.Blog.Web
 				app.UseMiniProfiler();
 
 			app.UseImageAxdMiddleware();
-			 
+
 			if (Configuration.GetValue("HttpsRedirection", false))
 				app.UseHttpsRedirection();
 
