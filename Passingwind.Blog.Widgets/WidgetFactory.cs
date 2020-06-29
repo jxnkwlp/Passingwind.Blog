@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Passingwind.Blog.Widgets.Infrastructure;
+using Passingwind.Blog.Widgets.WidgetComponents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,8 @@ namespace Passingwind.Blog.Widgets
 			services.AddScoped<IWidgetViewInvoker, WidgetViewInvoker>();
 			services.AddScoped<IWidgetComponentFactory, WidgetComponentFactory>();
 			services.AddScoped<IWidgetComponentActivator, WidgetComponentActivator>();
+			services.AddScoped<IWidgetViewLocationExpander, DefaultWidgetViewLocationExpander>();
+			services.AddScoped<IWidgetViewLocationResolveService, WidgetViewLocationResolveService>();
 
 			ConfigServices(services);
 			RegisterWidgets(services, manager);
@@ -64,8 +67,8 @@ namespace Passingwind.Blog.Widgets
 		private IReadOnlyList<WidgetDescriptor> LoadWidgets(IServiceCollection services, WidgetOptions options)
 		{
 			var hostEnvironment = services.GetSingletonInstance<IHostEnvironment>();
-			var finder = new WidgetPackageFinder(hostEnvironment, Logger);
-			return finder.Find(options.Directory ?? "widgets").ToList();
+			var finder = new WidgetPackageFinder(Logger, options);
+			return finder.Load(options.Directory ?? "widgets").ToList();
 		}
 
 		private void RegisterWidgets(IServiceCollection services, IWidgetsManager manager)
