@@ -5,6 +5,7 @@ using Passingwind.Blog.Data.Widgets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Services.Impl
@@ -13,6 +14,11 @@ namespace Passingwind.Blog.Services.Impl
 	{
 		public WidgetDynamicContentService(IRepository<WidgetDynamicContent, int> repository) : base(repository)
 		{
+		}
+
+		public override async Task<WidgetDynamicContent> GetByIdAsync(int key, CancellationToken cancellationToken = default)
+		{
+			return await Repository.Includes(t => t.Properties).FirstOrDefaultAsync(t => t.Id == key);
 		}
 
 		public async Task DeleteAsync(Guid widgetId, string userId)
@@ -33,6 +39,7 @@ namespace Passingwind.Blog.Services.Impl
 			var query = Repository.Includes(t => t.Properties);
 
 			WidgetDynamicContent entity;
+
 			if (!string.IsNullOrWhiteSpace(userId))
 				entity = await query.FirstOrDefaultAsync(t => t.WidgetId == widgetId & t.UserId == userId);
 			else
@@ -67,11 +74,51 @@ namespace Passingwind.Blog.Services.Impl
 
 		public async Task<WidgetDynamicContent> UpdateAsync(IWidgetDynamicContent content)
 		{
-			var entity = content.ToContent();
+			var dyContent = content.ToContent();
+
+			if (dyContent.Id <= 0)
+				throw new Exception("Can't update.");
+
+			var entity = await GetByIdAsync(dyContent.Id);
+
+			entity.WidgetId = dyContent.WidgetId;
+			entity.UserId = dyContent.UserId;
+
+			// TODO  update it once
+
+
+			var originalProperties = entity.Properties;
+
+			if (originalProperties.Any())
+			{
+				var addPropertyNames = originalProperties.Select(t => t.Name).Except(dyContent.Properties.Select(t => t.Name));
+
+				foreach (var item in addPropertyNames)
+				{
+					originalProperties.Add(dyContent.Properties.First(t => t.Name == item));
+				}
+
+				foreach (var item in originalProperties)
+				{
+					if (item.Id != 0)
+					{
+						var update = dyContent.Properties.FirstOrDefault(t => t.Name == item.Name);
+
+						if (update != null)
+						{
+							item.Value = update.Value;
+						}
+					}
+				}
+			}
+			else
+			{
+				entity.Properties = dyContent.Properties;
+			}
 
 			await Repository.UpdateAsync(entity);
 
-			return entity;
+			return dyContent;
 		}
 	}
 }
