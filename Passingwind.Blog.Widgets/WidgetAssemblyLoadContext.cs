@@ -4,11 +4,11 @@ using System.Runtime.Loader;
 
 namespace Passingwind.Blog.Widgets
 {
-	public class PluginAssemblyLoadContext : AssemblyLoadContext
+	public class WidgetAssemblyLoadContext : AssemblyLoadContext
 	{
 		private readonly AssemblyDependencyResolver _assemblyDependencyResolver;
 
-		public PluginAssemblyLoadContext(string path, string name = null) : base(name: name, isCollectible: true)
+		public WidgetAssemblyLoadContext(string path, string name = null) : base(name: name, isCollectible: true)
 		{
 			_assemblyDependencyResolver = new AssemblyDependencyResolver(path);
 		}

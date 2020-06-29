@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Passingwind.Blog.Widgets.WidgetComponents;
 using System;
 using System.Security.Claims;
 using System.Security.Principal;

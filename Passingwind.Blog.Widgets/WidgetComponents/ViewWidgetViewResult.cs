@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 
-namespace Passingwind.Blog.Widgets
+namespace Passingwind.Blog.Widgets.WidgetComponents
 {
 	public class ViewWidgetViewResult : IWidgetComponentViewResult
 	{
@@ -26,32 +26,40 @@ namespace Passingwind.Blog.Widgets
 		{
 			var viewEngine = ViewEngine ?? ResolveViewEngine(context);
 			var viewContext = context.ViewContext;
+			var viewLocationService = ResolveViewLocationService(context);
 
 			if (string.IsNullOrEmpty(ViewName))
 				ViewName = DefaultViewName;
 
-			string viewName = string.Format(
-					CultureInfo.InvariantCulture,
-					ViewPathFormat,
-					context.ComponentDescriptor.RootName,
-					ViewName
-					);
+			var locations = viewLocationService.Search(context.ComponentDescriptor);
 
-			ViewEngineResult result = viewEngine.FindView(context.ViewContext, viewName + ".cshtml", false);
+			ViewEngineResult result = null;
 
-			if (!result.Success)
+			foreach (var viewFormat in locations)
 			{
-				result = viewEngine.GetView(null, viewName + ".cshtml", false);
+				string viewFullName = string.Format(
+						CultureInfo.InvariantCulture,
+						viewFormat,
+						context.ComponentDescriptor.RootName,
+						ViewName
+						);
+
+				result = viewEngine.FindView(context.ViewContext, viewFullName + ".cshtml", false);
+
+				if (!result.Success)
+				{
+					result = viewEngine.GetView(null, viewFullName + ".cshtml", false);
+				}
+
+				if (result.Success)
+				{
+					break;
+				}
 			}
 
-			if (!result.Success)
-			{
-				throw new Exception($"The widget component '{context.ConfigurationInfo.WidgetName }' view not found.");
-			}
+			IEnumerable<string> searchedLocations = result.SearchedLocations;
 
-			IEnumerable<string> originalLocations = result.SearchedLocations;
-
-			var view = result.EnsureSuccessful(originalLocations).View;
+			var view = result.EnsureSuccessful(searchedLocations).View;
 
 			using (view as IDisposable)
 			{
@@ -69,5 +77,11 @@ namespace Passingwind.Blog.Widgets
 		{
 			return context.ViewContext.HttpContext.RequestServices.GetRequiredService<ICompositeViewEngine>();
 		}
+
+		private static IWidgetViewLocationResolveService ResolveViewLocationService(WidgetViewContext context)
+		{
+			return context.ViewContext.HttpContext.RequestServices.GetRequiredService<IWidgetViewLocationResolveService>();
+		}
+
 	}
 }

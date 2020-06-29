@@ -13,31 +13,34 @@ namespace Passingwind.Blog.Widgets
 {
 	public class WidgetPackageFinder
 	{
-		public WidgetPackageFinder(IHostEnvironment hostEnvironment, ILogger logger)
+		public WidgetPackageFinder(ILogger logger, WidgetOptions options)
 		{
-			HostEnvironment = hostEnvironment;
 			Logger = logger;
+			Options = options;
 		}
 
-		public IHostEnvironment HostEnvironment { get; }
 		public ILogger Logger { get; }
+		public WidgetOptions Options { get; }
 
-		public IEnumerable<WidgetDescriptor> Find(string directory)
+
+		public IEnumerable<WidgetDescriptor> Load(string rootDirectory)
 		{
-			string rootDirectory = Path.Combine(HostEnvironment.ContentRootPath, directory);
-
 			Logger.LogInformation($"Widgets root path: {rootDirectory} ");
 
 			if (!Directory.Exists(rootDirectory))
 				return Enumerable.Empty<WidgetDescriptor>();
 
-			var pluginDirectoryInfo = new DirectoryInfo(rootDirectory);
-
 			var result = new List<WidgetDescriptor>();
 
-			foreach (var directoryInfo in pluginDirectoryInfo.GetDirectories())
+			var loader = new WidgetAssemblyLoader(Logger);
+
+			var searchResult = loader.Search(rootDirectory, Options.ShardTypes ?? new Type[0]);
+
+			foreach (var item in searchResult)
 			{
-				Logger.LogDebug("Search in directory: {0}", directoryInfo.FullName);
+				Logger.LogDebug("Load in directory: {0}", item.Key);
+
+				var directoryInfo = new DirectoryInfo(item.Key);
 
 				try
 				{
@@ -48,7 +51,7 @@ namespace Passingwind.Blog.Widgets
 
 					Logger.LogDebug("Loaded description json file. Widget Id : '{0}' ", description.Id);
 
-					var widgetDescriptor = CreateWidgetDescriptor(description, directoryInfo);
+					var widgetDescriptor = CreateWidgetDescriptor(description, item.Value);
 					if (widgetDescriptor != null)
 						result.Add(widgetDescriptor);
 				}
@@ -56,12 +59,14 @@ namespace Passingwind.Blog.Widgets
 				{
 					Logger.LogError(ex, $"Try load widget failed in directory '{directoryInfo.FullName}' ");
 				}
+
 			}
+
 
 			return result;
 		}
 
-		private WidgetDescriptor CreateWidgetDescriptor(WidgetConfigDescritpion descritpion, DirectoryInfo directory)
+		private WidgetDescriptor CreateWidgetDescriptor(WidgetConfigDescritpion descritpion, IEnumerable<Assembly> assemblies)
 		{
 			var descriptior = new WidgetDescriptor()
 			{
@@ -72,19 +77,12 @@ namespace Passingwind.Blog.Widgets
 				Version = descritpion.Version,
 			};
 
-			PluginAssemblyLoadContext loadContext = new PluginAssemblyLoadContext(directory.FullName);
 
-			foreach (var item in directory.GetFiles("*.dll"))
+			foreach (var assembly in assemblies)
 			{
-				//var assembly = loadContext.LoadFromAssemblyPath(item.FullName);
-				var assembly = LoadAssembly(item.FullName);
+				Logger.LogDebug("Load assembly '{0}' ", assembly.FullName);
 
-				if (assembly == null)
-					continue;
-
-				Logger.LogDebug("Load assembly file '{0}' ", item.FullName);
-
-				var mainType = assembly.ExportedTypes.FirstOrDefault(t => !t.IsAbstract && t.BaseType != null && (t.BaseType.Name == "WidgetBase" || t.BaseType.Name == "IWidget" || typeof(IWidget).IsAssignableFrom(t)));
+				var mainType = assembly.ExportedTypes.FirstOrDefault(t => !t.IsAbstract && t.BaseType != null && typeof(IWidget).IsAssignableFrom(t));
 
 				if (mainType == null)
 				{
@@ -96,44 +94,49 @@ namespace Passingwind.Blog.Widgets
 
 				Logger.LogDebug("Find widget assembly '{0}' ", assembly.FullName);
 
-				var viewComponentType = assembly.ExportedTypes.FirstOrDefault(t => !t.IsAbstract && t.BaseType != null && t.BaseType.Name == "WidgetComponent");
-
-				descriptior.ComponentType = viewComponentType;
+				descriptior.ComponentType = assembly.ExportedTypes.FirstOrDefault(t => !t.IsAbstract && t.BaseType != null && typeof(WidgetComponent).IsAssignableFrom(t)); ;
 			}
 
 			if (descriptior.Assembly == null)
 				return null;
 
 			return descriptior;
-		}
 
-		private static Assembly LoadAssembly(string path)
-		{
-			var assemblyName = AssemblyName.GetAssemblyName(path);
 
-			var defaultAssembly = AssemblyLoadContext.Default.Assemblies.FirstOrDefault(t => t.FullName == assemblyName.FullName);
 
-			if (defaultAssembly != null)
-				return defaultAssembly;
+			//WidgetAssemblyLoadContext loadContext = new WidgetAssemblyLoadContext(directory.FullName);
 
-			try
-			{
-				// TODO  chang to PluginAssemblyLoadContext.LoadFromAssemblyPath(path)
-				// return loadContext.LoadFromAssemblyPath(path);
+			//foreach (var item in directory.GetFiles("*.dll"))
+			//{
+			//	//var assembly = loadContext.LoadFromAssemblyPath(item.FullName);
+			//	var assembly = LoadAssembly(item.FullName);
 
-				if (path.EndsWith(".Views.dll"))
-				{
-					var mainDllPath = path.Replace(".Views.dll", ".dll");
+			//	if (assembly == null)
+			//		continue;
 
-					LoadAssembly(mainDllPath);
-				}
+			//	Logger.LogDebug("Load assembly file '{0}' ", item.FullName);
 
-				return AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
-			}
-			catch (Exception)
-			{
-				return null;
-			}
+			//	var mainType = assembly.ExportedTypes.FirstOrDefault(t => !t.IsAbstract && t.BaseType != null && (t.BaseType.Name == "WidgetBase" || t.BaseType.Name == "IWidget" || typeof(IWidget).IsAssignableFrom(t)));
+
+			//	if (mainType == null)
+			//	{
+			//		continue;
+			//	}
+
+			//	descriptior.Instance = (IWidget)Activator.CreateInstance(mainType);
+			//	descriptior.Assembly = assembly;
+
+			//	Logger.LogDebug("Find widget assembly '{0}' ", assembly.FullName);
+
+			//	var viewComponentType = assembly.ExportedTypes.FirstOrDefault(t => !t.IsAbstract && t.BaseType != null && t.BaseType.Name == "WidgetComponent");
+
+			//	descriptior.ComponentType = viewComponentType;
+			//}
+
+			//if (descriptior.Assembly == null)
+			//	return null;
+
+			//return descriptior;
 		}
 
 		private static WidgetConfigDescritpion LoadDescriptionFromJsonFile(DirectoryInfo directory)
