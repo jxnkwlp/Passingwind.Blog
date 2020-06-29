@@ -1,8 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Data
 {
@@ -13,7 +12,7 @@ namespace Passingwind.Blog.Data
 			var removeList = currentItems.Except(newItems, getKeyFunc);
 			var addList = newItems.Except(currentItems, getKeyFunc);
 			db.Set<T>().RemoveRange(removeList);
-			db.Set<T>().AddRange(addList);
+			db.Set<T>().AddRange(addList); 
 		}
 
 		public static IEnumerable<T> Except<T, TKey>(this IEnumerable<T> items, IEnumerable<T> other, Func<T, TKey> getKeyFunc)

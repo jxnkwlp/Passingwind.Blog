@@ -82,7 +82,7 @@ namespace Passingwind.Blog.Services
 				{
 					Name = name,
 					Value = value.ToString(),
-					ValueType = item.PropertyType.Name,
+					ValueType = item.PropertyType.Name, 
 				});
 			}
 
