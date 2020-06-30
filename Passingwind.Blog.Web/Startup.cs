@@ -211,7 +211,7 @@ namespace Passingwind.Blog.Web
 					c.Options.SourcePath = "ClientApp";
 
 #if DEBUG
-					// c.UseProxyToSpaDevelopmentServer("http://localhost:8080/admin");
+					c.UseProxyToSpaDevelopmentServer("http://localhost:8080/admin");
 #endif
 				});
 			});
