@@ -2,8 +2,11 @@
 export default {
     title: "admin",
 
-    baseUrl: '/',
-    apiBaseUrl: (process.env.NODE_ENV == "development" ? 'https://localhost:44327/' : '/'),
+    baseUrl: "/",
+    apiBaseUrl:
+        process.env.NODE_ENV == "development"
+            ? "https://localhost:44317/"
+            : "/",
 
-    loginUrl: '/account/login'
+    loginUrl: "/account/login"
 };
