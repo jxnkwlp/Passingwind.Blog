@@ -1,4 +1,3 @@
-
 <template>
     <div>
         <el-row>
@@ -10,21 +9,30 @@
                 class="theme-item"
             >
                 <el-card :body-style="{ padding: '0px' }">
-                    <img :src="item.previewUrl" class="image" v-if="item.previewUrl" />
+                    <img
+                        :src="item.previewUrl"
+                        class="image"
+                        v-if="item.previewUrl"
+                    />
                     <div class="image" v-else>
                         <i class="el-icon-picture"></i>
                     </div>
                     <div style="padding: 14px;">
-                        <span>{{item.name}}</span>
+                        <span>{{ item.name }}</span>
                         <div class="clearfix action">
                             <el-button
                                 type="primary"
                                 size="mini"
                                 class="pull-left"
-                                :disabled="item.id == current "
+                                :disabled="item.id == current"
                                 @click="handleSetTheme(item.id)"
-                            >SET</el-button>
-                            <el-button icon="el-icon-info" size="mini" class="pull-right"></el-button>
+                                >Apply</el-button
+                            >
+                            <el-button
+                                icon="el-icon-info"
+                                size="mini"
+                                class="pull-right"
+                            ></el-button>
                         </div>
                     </div>
                 </el-card>
