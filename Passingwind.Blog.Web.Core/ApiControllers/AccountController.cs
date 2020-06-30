@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Passingwind.Blog.Services;
@@ -38,10 +38,12 @@ namespace Passingwind.Blog.Web.ApiControllers
 
 			_userFactory.ToEntity(model, user);
 
+			user.UserName = user.Email;
+
 			await _userManager.UpdateAsync(user);
 		}
 
-		[HttpGet("login")]
+		[HttpGet("externallogin")]
 		public async Task<IEnumerable<UserLoginInfo>> GetLogins()
 		{
 			var cp = _httpContextAccessor.HttpContext.User;
@@ -61,7 +63,7 @@ namespace Passingwind.Blog.Web.ApiControllers
 			return logins.Select(t => new { t.Name, t.DisplayName });
 		}
 
-		[HttpPost("removelogin")]
+		[HttpDelete("externallogin")]
 		public async Task RemoveLoginAsync([FromBody] RemoveLoginRequest request)
 		{
 			var cp = _httpContextAccessor.HttpContext.User;
