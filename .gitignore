@@ -261,11 +261,12 @@ __pycache__/
 *.pyc
 *.pubxml
 
-# blog custom
+# blog custom ignore file[s]
 blog.db
-/Passingwind.Blog.Web/wwwroot/[Uu]ploads/
+/Passingwind.Blog.Web/[Ww]wwroot/[Uu]ploads/
 /Passingwind.Blog.Web/[Pp]lugins/
 /Passingwind.Blog.Web/[Ww]idgets/
 /Passingwind.Blog.Web/App_Data/[Ss]tore/
-/Passingwind.Blog.Web/App_Data/widgets.json
+/Passingwind.Blog.Web/App_Data/[Ww]idgets.json
 /Passingwind.Blog.Web/App_Data/[Cc]onfig/
+/Passingwind.Blog.Web/Themes/[Tt]heme.json
