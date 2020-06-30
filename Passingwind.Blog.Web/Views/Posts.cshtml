@@ -1,7 +1,7 @@
 @inject BasicSettings basicSettings
 
 @{
-    
+
 }
 @model PostsViewModel
 
@@ -49,4 +49,4 @@
     </div>
 }
 
-<pager data="Model.Posts" class="paging-wrap" />
+<pager total="Model.Posts.TotalCount" page-size="Model.Posts.PageSize" current-page="Model.Posts.PageNumber" show-title="true" pagination-class="paging-wrap" first-page-show="Never" last-page-show="Never" previou-page-show="Never" next-page-show="Never"/>
