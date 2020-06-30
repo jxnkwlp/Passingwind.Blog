@@ -10,24 +10,18 @@ import "element-ui/lib/theme-chalk/index.css";
 
 Vue.use(ElementUI);
 
-import axios from 'axios'
+import axios from "axios";
 
-Vue.prototype.$http = axios
+Vue.prototype.$http = axios;
 
 import "@/assets/css/site.less";
 
-import 'nprogress/nprogress.css'
+import "nprogress/nprogress.css";
 
-import importDirective from '@/directive'
+import importDirective from "@/directive";
 importDirective(Vue);
 
-import httpClient from '@/libs/httpclient'
-
-httpClient.when({
-    401: function () {
-        console.log('401');
-    }
-})
+import httpClient from "@/libs/httpclient";
 
 Vue.config.productionTip = false;
 

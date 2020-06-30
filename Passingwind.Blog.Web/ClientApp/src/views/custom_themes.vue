@@ -9,11 +9,7 @@
                 class="theme-item"
             >
                 <el-card :body-style="{ padding: '0px' }">
-                    <img
-                        :src="item.previewUrl"
-                        class="image"
-                        v-if="item.previewUrl"
-                    />
+                    <img :src="item.previewUrl" class="image" v-if="item.previewUrl" />
                     <div class="image" v-else>
                         <i class="el-icon-picture"></i>
                     </div>
@@ -26,13 +22,8 @@
                                 class="pull-left"
                                 :disabled="item.id == current"
                                 @click="handleSetTheme(item.id)"
-                                >Apply</el-button
-                            >
-                            <el-button
-                                icon="el-icon-info"
-                                size="mini"
-                                class="pull-right"
-                            ></el-button>
+                            >Apply</el-button>
+                            <el-button icon="el-icon-info" size="mini" class="pull-right"></el-button>
                         </div>
                     </div>
                 </el-card>
