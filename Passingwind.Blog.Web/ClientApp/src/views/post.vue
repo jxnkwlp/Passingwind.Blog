@@ -8,7 +8,7 @@
                             type="primary"
                             icon="el-icon-plus"
                             @click="handleNew"
-                            v-permission="['post.edit']"
+                            v-permission="['post.create']"
                         >New</el-button>
                         <el-button
                             type="danger"
@@ -314,7 +314,7 @@ export default {
         // new
         handleNew() {
             this.$router.push({
-                name: "postEdit"
+                name: "postCreate"
             });
         },
 

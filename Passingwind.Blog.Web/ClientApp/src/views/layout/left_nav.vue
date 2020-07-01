@@ -107,12 +107,12 @@ export default {
                     children: [
                         {
                             title: "Post",
-                            index: "/post/edit",
-                            permissionKey: ["post.edit"]
+                            index: "/post/create",
+                            permissionKey: ["post.create"]
                         },
                         {
                             title: "Page",
-                            index: "/page/edit",
+                            index: "/page/create",
                             permissionKey: ["page.create"]
                         },
                         {
