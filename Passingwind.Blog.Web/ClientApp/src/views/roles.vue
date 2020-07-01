@@ -70,6 +70,7 @@
                             <el-collapse-item name="Post" title="Post">
                                 <el-checkbox-group v-model="formModelData.permissionKeys">
                                     <el-checkbox label="post.list">Post list</el-checkbox>
+                                    <el-checkbox label="post.create">Post create</el-checkbox>
                                     <el-checkbox label="post.edit">Post edit</el-checkbox>
                                     <el-checkbox label="post.delete">Post delete</el-checkbox>
                                     <el-checkbox label="post.published">Post published</el-checkbox>

@@ -8,7 +8,7 @@
                             type="primary"
                             icon="el-icon-plus"
                             @click="handleNew"
-                            v-permission="['page.delete']"
+                            v-permission="['page.create']"
                         >New</el-button>
                         <el-button
                             type="danger"
@@ -134,7 +134,7 @@ export default {
         // new
         handleNew() {
             this.$router.push({
-                name: "pageEdit"
+                name: "pageCreate"
             });
         },
         // row delete
