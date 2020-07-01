@@ -12,10 +12,6 @@
     <ItemGroup>
         <Content Remove="$(SpaRoot)**" />
         <None Remove="$(SpaRoot)**" />
-<<<<<<< HEAD
-=======
-        <None Remove="$(SpaRoot)**" />
->>>>>>> dev-v3
         <EmbeddedResource Remove="$(SpaRoot)**" />
     </ItemGroup>
 
@@ -42,12 +38,8 @@
         <PackageReference Include="MailKit" Version="2.6.0" />
         <PackageReference Include="MaxMind.GeoIP2" Version="3.2.0" />
 
-        <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
-<<<<<<< HEAD
-=======
-
         <PackageReference Include="Scrutor" Version="3.2.1" />
->>>>>>> dev-v3
+        <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
         <PackageReference Include="VueCliMiddleware" Version="3.1.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
@@ -82,11 +74,7 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
-<<<<<<< HEAD
 
-=======
-     
->>>>>>> dev-v3
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' ">
         <Message Importance="high" Text="Check node version ..." />
         <!-- Build Target:  Ensure Node.js is installed -->
@@ -95,11 +83,7 @@
         </Exec>
         <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
     </Target>
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> dev-v3
     <Target Name="EnsureNodeModulesInstalled" BeforeTargets="Build" Inputs="package.json" Outputs="packages-lock.json" Condition=" '$(Configuration)' == 'Release' ">
         <!-- Build Target: Restore NPM packages using npm -->
         <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
@@ -122,11 +106,7 @@
         </ItemGroup>
     </Target>
 
-<<<<<<< HEAD
     <Target Name="CopyWidgets" AfterTargets="ComputeFilesToPublish">
-=======
-    <Target Name="CopyWidgets" AfterTargets="ComputeFilesToPublish"> 
->>>>>>> dev-v3
         <ItemGroup>
             <DistFiles Include="widgets\**" />
             <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
