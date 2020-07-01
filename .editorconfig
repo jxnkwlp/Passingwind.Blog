@@ -9,7 +9,6 @@ indent_size              = 4
 insert_final_newline     = true
 trim_trailing_whitespace = true
 
-[*.{cs,vb}]
+[{*.cs,*.vb}]
 indent_style = tab
-indent_size  = 4
 tab_width    = 4

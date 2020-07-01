@@ -11,10 +11,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
+using Passingwind.Blog.DependencyInjection;
 
 namespace Passingwind.Blog.Services
 {
-	public class BlogUserManager : Microsoft.AspNetCore.Identity.UserManager<User>
+	public class BlogUserManager : Microsoft.AspNetCore.Identity.UserManager<User>, IScopedDependency
 	{
 		public BlogUserManager(IUserStore<User> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<User> passwordHasher, IEnumerable<IUserValidator<User>> userValidators, IEnumerable<IPasswordValidator<User>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<User>> logger) : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
 		{
