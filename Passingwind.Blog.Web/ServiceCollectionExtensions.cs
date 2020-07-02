@@ -168,6 +168,7 @@ namespace Passingwind.Blog.Web
 			services.Configure<ForwardedHeadersOptions>(options =>
 			{
 				options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+				
 			});
 
 
@@ -231,6 +232,11 @@ namespace Passingwind.Blog.Web
 				options.AddDefaultPolicy(b => b.AllowAnyMethod().AllowAnyHeader().AllowCredentials().SetIsOriginAllowed(_ => true));
 			});
 #endif
+
+			//services.AddRouting(options =>
+			//{
+			//	options.LowercaseUrls = true;
+			//});
 
 			services.AddResponseCaching();
 			services.AddResponseCompression();
