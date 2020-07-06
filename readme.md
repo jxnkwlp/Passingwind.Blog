@@ -17,5 +17,5 @@ Build by asp.net core 3.1、microsoft.identity.core、 entity framework core 。
 - [x] Roles
 - [ ] Multi-Blog
 - [ ] Multi-Language
-- [ ] Themes
+- [x] Themes
 - [x] Widgets
