@@ -4,13 +4,13 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- master
+- dev
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  buildConfiguration: 'Release' 
+  buildConfiguration: 'Release'
 
 steps:
 
@@ -27,30 +27,30 @@ steps:
 # npm install vue-cli
 # - script: npm install -g @vue/cli
 #   displayName: 'Install vue-cli'
-#   workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
-  
-# - task: Npm@1 
+#   workingDirectory: 'Passingwind.Blog.Web/ClientApp'
+
+# - task: Npm@1
 #   inputs:
 #     command: 'custom'
 #     customCommand: install -g @vue/cli
-#     workingDir: 'Passingwind.Blog.Web/ClientApp'  
+#     workingDir: 'Passingwind.Blog.Web/ClientApp'
 
-# npm install 
+# npm install
 # - task: Npm@1
 #   displayName: 'Install npm packages'
 #   inputs:
 #     command: 'install'
-#     workingDir: 'Passingwind.Blog.Web/ClientApp'  
+#     workingDir: 'Passingwind.Blog.Web/ClientApp'
 
-# - task: Npm@1 
+# - task: Npm@1
 #   inputs:
 #     command: 'custom'
 #     customCommand: run build
-#     workingDir: 'Passingwind.Blog.Web/ClientApp'  
+#     workingDir: 'Passingwind.Blog.Web/ClientApp'
 
 # - script: npm run build
 #   displayName: 'Install vue-cli'
-#   workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
+#   workingDirectory: 'Passingwind.Blog.Web/ClientApp'
 
 # - task: DotNetCoreCLI@2
 #   displayName: 'Dotnet restore'
@@ -69,14 +69,14 @@ steps:
   displayName: 'Dotnet publish web project'
   inputs:
     command: 'publish'
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) ' 
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) '
     publishWebProjects: true
     zipAfterPublish: true
-    
+
 # this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
-- task: PublishBuildArtifacts@1 
+- task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
 
 
