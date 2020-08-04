@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.IO;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
@@ -35,9 +36,11 @@ namespace Passingwind.Blog.Web
 				StringValues file = new StringValues();
 				if (httpContext.Request.Query.TryGetValue("picture", out file))
 				{
-					var path = file.ToString();
+					var pathFragment = file.ToString().Split('/');
 
-					var filePath = Path.Combine($"/uploads/picture{path}");
+					var newPath = string.Join("/", pathFragment.Select(t => System.Net.WebUtility.UrlEncode(t)));
+
+					var filePath = Path.Combine($"/uploads/picture{newPath}");
 
 					httpContext.Response.Redirect(filePath, false);
 				}
