@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import NProgress from "nprogress"
+import NProgress from "nprogress";
 
 Vue.use(VueRouter);
 
@@ -25,7 +25,7 @@ const routes = [
                 path: "/profile",
                 name: "profile",
                 meta: {
-                    title: "Profile",
+                    title: "Profile"
                 },
                 component: () => import("@/views/profile.vue")
             },
@@ -34,7 +34,7 @@ const routes = [
                 path: "/category",
                 name: "category",
                 meta: {
-                    title: "Category",
+                    title: "Category"
                 },
                 component: () => import("@/views/category.vue")
             },
@@ -42,7 +42,7 @@ const routes = [
                 path: "/tags",
                 name: "tags",
                 meta: {
-                    title: "Tags",
+                    title: "Tags"
                 },
                 component: () => import("@/views/tags.vue")
             },
@@ -50,15 +50,25 @@ const routes = [
                 path: "/page",
                 name: "page",
                 meta: {
-                    title: 'Page'
+                    title: "Page"
                 },
                 component: () => import("@/views/page.vue")
             },
+
+            {
+                path: "/page/create",
+                name: "pageCreate",
+                meta: {
+                    title: "Page create"
+                },
+                component: () => import("@/views/page_create.vue")
+            },
+
             {
                 path: "/page/edit/:id?",
                 name: "pageEdit",
                 meta: {
-                    title: "Page edit",
+                    title: "Page edit"
                 },
                 component: () => import("@/views/page_edit.vue")
             },
@@ -66,15 +76,23 @@ const routes = [
                 path: "/post",
                 name: "post",
                 meta: {
-                    title: "Post",
+                    title: "Post"
                 },
                 component: () => import("@/views/post.vue")
+            },
+            {
+                path: "/post/create",
+                name: "postCreate",
+                meta: {
+                    title: "Post create"
+                },
+                component: () => import("@/views/post_create.vue")
             },
             {
                 path: "/post/edit/:id?",
                 name: "postEdit",
                 meta: {
-                    title: "Post edit",
+                    title: "Post edit"
                 },
                 component: () => import("@/views/post_edit.vue")
             },
@@ -82,7 +100,7 @@ const routes = [
                 path: "/comments",
                 name: "comments",
                 meta: {
-                    title: "Comments",
+                    title: "Comments"
                 },
                 component: () => import("@/views/comments.vue")
             },
@@ -90,7 +108,7 @@ const routes = [
                 path: "/users",
                 name: "users",
                 meta: {
-                    title: "Users",
+                    title: "Users"
                 },
                 component: () => import("@/views/users_roles.vue")
             },
@@ -98,7 +116,7 @@ const routes = [
                 path: "/settings",
                 name: "settings",
                 meta: {
-                    title: "Settings",
+                    title: "Settings"
                 },
                 component: () => import("@/views/settings.vue")
             },
@@ -106,7 +124,7 @@ const routes = [
                 path: "/custom",
                 name: "Custom",
                 meta: {
-                    title: "Custom",
+                    title: "Custom"
                 },
                 component: () => import("@/views/custom.vue")
             }
@@ -117,7 +135,7 @@ const routes = [
         path: "*",
         name: "404",
         component: () => import("@/views/404.vue")
-    },
+    }
 ];
 
 const router = new VueRouter({

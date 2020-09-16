@@ -1,0 +1,48 @@
+
+@{
+    
+}
+@model PostModel
+
+	<div class="post-entry">
+		<p class="post-title"><h2>@Model.Title</h2></p>
+		<hr />
+
+		<div class="post-meta clearfix text-secondary">
+			<span>
+				<time class="entry-date published" datetime="@Model.PublishedTime.ToUniversalTime().ToString()"><span class="fa fa-clock-o"></span> @Model.PublishedTime</time>
+			</span>
+			<span>
+				<i class="fa fa-user-o"></i>
+				<i class="post-by"><a asp-route="author" asp-route-author="@(Model.User?.UserName)">@(Model.User == null ? null : Model.User.DisplayName)</a></i>
+			</span>
+			<span>
+				<i class="fa fa-comment-o"></i>
+				<a asp-route="post" asp-route-slug="@Model.Slug" asp-fragment="comments">@Model.CommentsCount Comments</a>
+			</span>
+
+			<partial name="_PostCategoriesPartial" model="Model.Categories" />
+			<partial name="_PostTagsPartial" model="Model.Tags" />
+		</div>
+		 
+		<div class="post-content text-wrap" asp-html="true" asp-markdown="true">
+			@Model.Content
+		</div>
+
+		<hr />
+
+	</div>
+
+@(await Component.InvokeAsync("Comments", new { postId = Model.Id }))
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <environment names="Development">
+        <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+        <script src="~/Themes/Bootstrapv4/js/comments.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="https://cdn.bootcss.com/sweetalert/2.1.2/sweetalert.min.js"></script>
+        <script src="~/js/comments.es5.min.js" asp-append-version="true"></script>
+    </environment>
+}

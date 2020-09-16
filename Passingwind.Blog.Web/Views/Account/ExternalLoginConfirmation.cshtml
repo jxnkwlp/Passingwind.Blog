@@ -14,7 +14,7 @@
 </p>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6 mb-5">
         <form asp-action="ExternalLoginConfirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="LoginProvider" />

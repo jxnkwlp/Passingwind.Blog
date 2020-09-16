@@ -1,0 +1,151 @@
+/**
+*
+*
+*
+**/
+
+pre {
+    font-size: 87.5%;
+    color: #e83e8c;
+    word-wrap: break-word;
+    background: #e8e8e8;
+    padding: 0.5rem;
+}
+
+.site-content {
+    margin-top: 20px;
+}
+
+.post-entry {
+    & + & {
+        margin-top: 20px;
+    }
+
+    .post-title {
+        font-size: 18px;
+        margin-bottom: 5px;
+
+        a {
+        }
+    }
+
+    .post-meta {
+        font-size: 14px;
+
+        > span {
+            margin-right: 10px;
+        }
+    }
+}
+
+.post-content {
+    margin-top: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+
+    p {
+        margin-bottom: 0.5rem;
+    }
+
+    img {
+        max-width: 100%;
+    }
+}
+
+.comments-area {
+    .comment {
+    }
+}
+
+.archives {
+    .archive-item-list-title {
+    }
+
+    .archive-item-list {
+        .archive-item {
+            margin-bottom: 0.5rem;
+
+            .date {
+                font-size: 14px;
+            }
+
+            .comment-count {
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+/* widgets */
+
+.widget {
+    margin-bottom: 2rem;
+
+    .widget-title {
+        font-size: 1.4rem;
+        margin-bottom: 0.6rem;
+    }
+    .widget-body {
+        padding-left: 0.2rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+    }
+
+    .widget-link-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+            padding: 2px 0;
+        }
+    }
+
+    .widget-archives-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        > li {
+            &.show {
+                ul {
+                    display: block;
+                }
+            }
+            margin-bottom: 0.3rem;
+        }
+
+        h3 {
+            font-size: 1.12rem;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        ul {
+            display: none;
+            margin: 0;
+            padding-left: 2rem;
+            // list-style: none;
+        }
+    }
+
+    .widget-userprofile {
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+    }
+
+    .rsswidget {
+        margin-left: 2px;
+    }
+
+    .fa {
+        color: #000;
+    }
+}
+
+/*  end widget */

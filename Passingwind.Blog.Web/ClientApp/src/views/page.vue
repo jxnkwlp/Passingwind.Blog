@@ -8,7 +8,7 @@
                             type="primary"
                             icon="el-icon-plus"
                             @click="handleNew"
-                            v-permission="['page.delete']"
+                            v-permission="['page.create']"
                         >New</el-button>
                         <el-button
                             type="danger"
@@ -69,7 +69,7 @@
 
 <script>
 import * as page from "@/services/page";
-import * as userService from "@/services/userservice";
+import * as identity from "@/services/identity";
 
 export default {
     mounted() {
@@ -89,7 +89,7 @@ export default {
     },
     computed: {
         canEdit() {
-            return userService.hasPermission("page.update");
+            return identity.hasPermission("page.update");
         }
     },
     methods: {
@@ -134,7 +134,7 @@ export default {
         // new
         handleNew() {
             this.$router.push({
-                name: "pageEdit"
+                name: "pageCreate"
             });
         },
         // row delete

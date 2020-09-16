@@ -8,5 +8,6 @@ namespace Passingwind.Blog.Data.Widgets
 		string UserId { get; set; }
 		Guid WidgetId { get; set; }
 
+
 	}
 }

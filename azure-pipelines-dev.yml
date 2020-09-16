@@ -4,20 +4,20 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- master
+- dev
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  buildConfiguration: 'Release' 
+  buildConfiguration: 'Release'
 
 steps:
 
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
-    version: '3.1.x'
+    version: '3.x'
 
 # check npm
 - task: UseNode@1
@@ -27,60 +27,60 @@ steps:
 # npm install vue-cli
 # - script: npm install -g @vue/cli
 #   displayName: 'Install vue-cli'
-#   workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
-  
-# - task: Npm@1 
+#   workingDirectory: 'Passingwind.Blog.Web/ClientApp'
+
+# - task: Npm@1
 #   inputs:
 #     command: 'custom'
 #     customCommand: install -g @vue/cli
-#     workingDir: 'Passingwind.Blog.Web/ClientApp'  
+#     workingDir: 'Passingwind.Blog.Web/ClientApp'
 
-# npm install 
+# npm install
 # - task: Npm@1
 #   displayName: 'Install npm packages'
 #   inputs:
 #     command: 'install'
-#     workingDir: 'Passingwind.Blog.Web/ClientApp'  
+#     workingDir: 'Passingwind.Blog.Web/ClientApp'
 
-# - task: Npm@1 
+# - task: Npm@1
 #   inputs:
 #     command: 'custom'
 #     customCommand: run build
-#     workingDir: 'Passingwind.Blog.Web/ClientApp'  
+#     workingDir: 'Passingwind.Blog.Web/ClientApp'
 
 # - script: npm run build
 #   displayName: 'Install vue-cli'
-#   workingDirectory: 'Passingwind.Blog.Web/ClientApp'  
+#   workingDirectory: 'Passingwind.Blog.Web/ClientApp'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Dotnet restore'
-  inputs:
-    command: 'restore'
-    feedsToUse: 'select'
+# - task: DotNetCoreCLI@2
+#   displayName: 'Dotnet restore'
+#   inputs:
+#     command: 'restore'
+#     feedsToUse: 'select'
 
 - task: DotNetCoreCLI@2
   displayName: 'Dotnet build widgets'
   inputs:
     command: 'build'
-    projects: 'Widgets/**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
+    projects: 'Widgets/**/*.csproj'
 
 - task: DotNetCoreCLI@2
   displayName: 'Dotnet publish web project'
   inputs:
     command: 'publish'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) '
     publishWebProjects: true
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) ' 
     zipAfterPublish: true
-    
+
 # this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
-- task: PublishBuildArtifacts@1 
+- task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
 
 
-# github release / tag
+#github release / tag
 - task: GitHubRelease@1
   displayName: 'GitHub release'
   inputs:
@@ -89,8 +89,8 @@ steps:
     action: 'create'
     target: '$(Build.SourceVersion)'
     tagSource: 'userSpecifiedTag'
-    tag: 'v$(Build.BuildNumber)'
-    title: 'v$(Build.BuildNumber)'
+    tag: 'v$(Build.BuildNumber)-pre'
+    title: 'v$(Build.BuildNumber)-pre'
     isDraft: false
     isPreRelease: true
     changeLogCompareToRelease: 'lastFullRelease'

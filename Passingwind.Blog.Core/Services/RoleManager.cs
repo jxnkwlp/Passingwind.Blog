@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Passingwind.Blog.Data;
 using Passingwind.Blog.Data.Domains;
+using Passingwind.Blog.DependencyInjection;
 using Passingwind.Blog.Extensions;
 using Passingwind.Blog.Services.Models;
 using Passingwind.PagedList;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Services
 {
-	public class BlogRoleManager : RoleManager<Role>
+	public class BlogRoleManager : RoleManager<Role>, IScopedDependency
 	{
 		private readonly IRepository<Role, string> _repository;
 
@@ -74,29 +75,19 @@ namespace Passingwind.Blog.Services
 
 		public async Task UpdatePermissionsAsync(string roleId, IEnumerable<string> keys)
 		{
-			var role = await _repository.GetByIdAsync(roleId);
+			var role = await _repository.Includes(t => t.Permissions).FirstOrDefaultAsync(t => t.Id == roleId);
 
 			if (role == null)
 				throw new Exception("The role not found.");
 
-			await _repository.LoadCollectionAsync(role, t => t.Permissions);
 
-			if (keys?.Any() == true)
+			var rolePermissionList = keys?.Select(t => new RolePermission()
 			{
-				var needRemove = role.Permissions.Select(t => t.Key).Except(keys);
-				var needAdd = keys.Except(role.Permissions.Select(t => t.Key));
+				Key = t.Trim(),
+				RoleId = role.Id
+			}) ?? Enumerable.Empty<RolePermission>();
 
-				needRemove.ForEach((_) => role.Permissions.Remove(role.Permissions.First(t => t.Key == _)));
-
-				needAdd.ForEach((_) => role.Permissions.Add(new RolePermission() { Key = _ }));
-			}
-			else
-			{
-				role.Permissions.Clear();
-			}
-
-			await _repository.UpdateAsync(role);
+			await _repository.UpdateCollectionAsync(role, t => t.Permissions, rolePermissionList, t => t.Key);
 		}
-
 	}
 }

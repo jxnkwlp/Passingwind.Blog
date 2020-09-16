@@ -104,10 +104,15 @@ namespace Passingwind.Blog.Web.Controllers
 		{
 			var vm = new PostsViewModel();
 
+			var limit = _basicSettings.PageShowCount;
+
+			if (limit <= 0) limit = 1;
+			if (limit > 100) limit = 100;
+
 			var listInputModel = new PostListInputModel()
 			{
 				Skip = 0,
-				Limit = 10,
+				Limit = limit,
 				IsDraft = false,
 				IncludeOptions = new PostIncludeOptions()
 				{
@@ -140,7 +145,7 @@ namespace Passingwind.Blog.Web.Controllers
 		}
 
 		[Route("/", Name = "home")]
-		public async Task<IActionResult> GetPosts([FromQuery] string q = null, [FromQuery]int page = 1)
+		public async Task<IActionResult> GetPosts([FromQuery] string q = null, [FromQuery] int page = 1)
 		{
 			return await GetPostsAsync(new GetPostListRequestModel()
 			{
@@ -150,7 +155,7 @@ namespace Passingwind.Blog.Web.Controllers
 		}
 
 		[Route("/author/{author}", Name = "author")]
-		public async Task<IActionResult> GetListByAuthor([FromRoute]string author, [FromQuery]int page = 1)
+		public async Task<IActionResult> GetListByAuthor([FromRoute] string author, [FromQuery] int page = 1)
 		{
 			var user = await _blogUserManager.FindByNameAsync(author);
 			if (user == null)
@@ -166,7 +171,7 @@ namespace Passingwind.Blog.Web.Controllers
 		}
 
 		[Route("/category/{category}", Name = "category")]
-		public async Task<IActionResult> GetListByCategory([FromRoute]string category, [FromQuery]int page = 1)
+		public async Task<IActionResult> GetListByCategory([FromRoute] string category, [FromQuery] int page = 1)
 		{
 			var cat = await _categoryService.GetBySlugAsync(category);
 			if (cat == null)
@@ -182,7 +187,7 @@ namespace Passingwind.Blog.Web.Controllers
 		}
 
 		[Route("/tags/{tags}", Name = "tags")]
-		public async Task<IActionResult> GetListByTags([FromRoute]string tags, [FromQuery]int page = 1)
+		public async Task<IActionResult> GetListByTags([FromRoute] string tags, [FromQuery] int page = 1)
 		{
 			var t = await _tagsService.GetByNameAsync(tags);
 			if (t == null)
@@ -198,7 +203,7 @@ namespace Passingwind.Blog.Web.Controllers
 		}
 
 		[Route("/{year:int}/{month:range(1,12)}", Name = "month")]
-		public async Task<IActionResult> GetListByMonth([FromRoute]int year, [FromRoute]int month, [FromQuery]int page = 1)
+		public async Task<IActionResult> GetListByMonth([FromRoute] int year, [FromRoute] int month, [FromQuery] int page = 1)
 		{
 			return await GetPostsAsync(new GetPostListRequestModel()
 			{
@@ -212,7 +217,7 @@ namespace Passingwind.Blog.Web.Controllers
 		#region Post
 
 		[Route("/post/{slug}", Name = "post")]
-		public async Task<IActionResult> PostAsync([FromRoute]string slug, [FromQuery] int id = 0)
+		public async Task<IActionResult> PostAsync([FromRoute] string slug, [FromQuery] int id = 0)
 		{
 			if (string.IsNullOrEmpty(slug) && id <= 0)
 				return NotFound();
@@ -254,7 +259,7 @@ namespace Passingwind.Blog.Web.Controllers
 		#region Page
 
 		[Route("/page/{slug}", Name = "page")]
-		public async Task<IActionResult> PageAsync([FromRoute]string slug, [FromQuery] int id = 0)
+		public async Task<IActionResult> PageAsync([FromRoute] string slug, [FromQuery] int id = 0)
 		{
 			if (string.IsNullOrEmpty(slug) && id <= 0)
 				return NotFound();
@@ -293,14 +298,15 @@ namespace Passingwind.Blog.Web.Controllers
 
 			foreach (var item in categories)
 			{
-				var posts = (await _postService.GetListAsync(t => t.Categories.Any(c => c.CategoryId == item.Id))).OrderByDescending(t => t.PublishedTime);
+				var posts = (await _postService.GetListAsync(t => t.IsDraft == false && t.Categories.Any(c => c.CategoryId == item.Id))).OrderByDescending(t => t.PublishedTime);
 
 				var category = _categoryFactory.ToModel(item, new CategoryListItemModel());
 
 				vm.CategoryPosts[category] = posts.Select(p => _postFactory.ToModel(p, new Models.PostModel())).ToArray();
 			}
 
-			var noCategoryPosts = (await _postService.GetListAsync(t => t.Categories.Any() == false)).OrderByDescending(t => t.PublishedTime);
+			var noCategoryPosts = (await _postService.GetListAsync(t => t.IsDraft == false && t.Categories.Any() == false)).OrderByDescending(t => t.PublishedTime);
+
 			vm.NoCategoryPosts = noCategoryPosts.Select(p => _postFactory.ToModel(p, new Models.PostModel())).ToArray();
 
 			await SetPageTitleAndMetadataAsync();
@@ -453,43 +459,47 @@ namespace Passingwind.Blog.Web.Controllers
 
 		#endregion
 
+		#region Utils
+
 		protected async Task SetPageTitleAndMetadataAsync(GetPostListRequestModel model)
 		{
-			string title = $"{_basicSettings.Title} | {_basicSettings.Description}";
-			string description = _basicSettings.Description;
-			string keywords = "";
+			AppendPageTitle(_basicSettings.Title);
 
 			if (model.Category != null)
 			{
-				title = ($"{model.Category.Name} | { _basicSettings.Title}");
-				description = ($"{model.Category.Description} | {_basicSettings.Description}");
+				InsertPageTitle(model.Category.Name);
+				SetPageDescription($"{model.Category.Description}. {_basicSettings.Description}");
 			}
 			else if (model.Tags != null)
 			{
-				title = ($"{model.Tags.Name} | { _basicSettings.Title}");
-				description = ($"{_basicSettings.Description}");
+				InsertPageTitle(model.Tags.Name);
+				SetPageDescription($"{_basicSettings.Description}");
 			}
 			else if (model.Author != null)
 			{
-				title = ($"{model.Author.DisplayName} | {model.Author.Bio} | {_basicSettings.Title}");
-				description = ($"{model.Author.DisplayName} | {model.Author.Bio}{_basicSettings.Description}");
+				InsertPageTitle(model.Author.DisplayName);
+
+				SetPageDescription($"{model.Author.DisplayName}. {model.Author.Bio}{_basicSettings.Description}");
 			}
-
-			keywords = (string.Join(",", (await _categoryService.GetListAsync()).Select(t => t.Name)));
-
-			if (model.Page > 2)
+			else
 			{
-				title = $"Page {model.Page} | " + title;
+				AppendPageTitle(_basicSettings.Description);
+				SetPageDescription(_basicSettings.Description);
 			}
 
-			SetPageTitle(title);
-			SetPageDescription(description);
+			if (model.Page >= 2)
+			{
+				InsertPageTitle($"Page {model.Page}");
+			}
+
+			var keywords = (string.Join(",", (await _categoryService.GetListAsync()).Select(t => t.Name)));
 			SetPageKeywords(keywords);
 		}
 
 		protected void SetPageTitleAndMetadata(PostModel model)
 		{
-			SetPageTitle($"{model.Title} | {_basicSettings.Title}");
+			AppendPageTitle(model.Title);
+			AppendPageTitle(_basicSettings.Title);
 			SetPageDescription(model.Description);
 			if (model.Tags != null)
 				SetPageKeywords(string.Join(",", model.Tags));
@@ -497,7 +507,8 @@ namespace Passingwind.Blog.Web.Controllers
 
 		protected async Task SetPageTitleAndMetadataAsync(PageModel model)
 		{
-			SetPageTitle($"{model.Title} | {_basicSettings.Title}");
+			AppendPageTitle(model.Title);
+			AppendPageTitle(_basicSettings.Title);
 			SetPageDescription(model.Description);
 
 			var keywords = (string.Join(",", (await _categoryService.GetListAsync()).Select(t => t.Name)));
@@ -506,11 +517,14 @@ namespace Passingwind.Blog.Web.Controllers
 
 		protected async Task SetPageTitleAndMetadataAsync()
 		{
-			SetPageTitle($"Archive | {_basicSettings.Title}");
+			AppendPageTitle($"Archive");
+			AppendPageTitle(_basicSettings.Title);
 			SetPageDescription(_basicSettings.Description);
 
 			var keywords = (string.Join(",", (await _categoryService.GetListAsync()).Select(t => t.Name)));
 			SetPageKeywords(keywords);
 		}
+
+		#endregion
 	}
 }

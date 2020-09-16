@@ -70,6 +70,7 @@
                             <el-collapse-item name="Post" title="Post">
                                 <el-checkbox-group v-model="formModelData.permissionKeys">
                                     <el-checkbox label="post.list">Post list</el-checkbox>
+                                    <el-checkbox label="post.create">Post create</el-checkbox>
                                     <el-checkbox label="post.edit">Post edit</el-checkbox>
                                     <el-checkbox label="post.delete">Post delete</el-checkbox>
                                     <el-checkbox label="post.published">Post published</el-checkbox>
@@ -143,7 +144,7 @@
 
 <script>
 import * as role from "@/services/role";
-import * as userService from "@/services/userservice";
+import * as identity from "@/services/identity";
 
 export default {
     data() {
@@ -175,8 +176,8 @@ export default {
     },
     methods: {
         loadData() {
-            //console.log(userService.hasPermission("role.list"));
-            if (!userService.hasPermission("role.list")) {
+            //console.log(identity.hasPermission("role.list"));
+            if (!identity.hasPermission("role.list")) {
                 return;
             }
 

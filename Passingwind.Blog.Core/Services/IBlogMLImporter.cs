@@ -1,11 +1,12 @@
 using Passingwind.Blog.Data.Domains;
+using Passingwind.Blog.DependencyInjection;
 using System.Threading.Tasks;
 
 namespace Passingwind.Blog.Services
 {
-	public interface IBlogMLImporter
+	public interface IBlogMLImporter : IScopedDependency
 	{
-		Task<BlogMLImporterResult> ImportAsync(User user, string xml); 
+		Task<BlogMLImporterResult> ImportAsync(User user, string xml);
 	}
 
 	public class BlogMLImporterResult

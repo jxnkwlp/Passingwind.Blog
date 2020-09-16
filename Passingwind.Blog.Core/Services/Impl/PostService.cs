@@ -5,11 +5,11 @@ using Passingwind.Blog.Extensions;
 using Passingwind.Blog.Services.Models;
 using Passingwind.PagedList;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq.Dynamic.Core;
-using System.Collections.Generic;
 
 namespace Passingwind.Blog.Services.Impl
 {
@@ -72,6 +72,13 @@ namespace Passingwind.Blog.Services.Impl
 		{
 			entity.Slug = await _slugService.NormalarAsync(entity.Slug);
 			await base.UpdateAsync(entity, cancellationToken);
+		}
+
+		public virtual async Task UpdateAsync(Post entity, IEnumerable<PostCategory> categories, IEnumerable<PostTags> tags, CancellationToken cancellationToken = default)
+		{
+			await UpdateAsync(entity);
+			await UpdateCategoriesAsync(entity, categories);
+			await UpdateTagsAsync(entity, tags);
 		}
 
 		public async Task<Post> GetByIdAsync(int id, PostIncludeOptions includeOptions = null, CancellationToken cancellationToken = default)
@@ -187,6 +194,16 @@ namespace Passingwind.Blog.Services.Impl
 			return result;
 		}
 
+		public async Task UpdateCategoriesAsync(Post post, IEnumerable<PostCategory> postCategories)
+		{
+			await _repository.UpdateCollectionAsync(post, t => t.Categories, postCategories, x => x.CategoryId);
+		}
+
+		public async Task UpdateTagsAsync(Post post, IEnumerable<PostTags> postTags)
+		{
+			await _repository.UpdateCollectionAsync(post, t => t.Tags, postTags, x => x.TagsId);
+		}
+
 
 
 		//#region Category
@@ -276,5 +293,4 @@ namespace Passingwind.Blog.Services.Impl
 		//#endregion Comments
 
 	}
-
 }

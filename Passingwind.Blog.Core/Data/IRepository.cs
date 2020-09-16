@@ -39,6 +39,8 @@ namespace Passingwind.Blog.Data
 
 		Task<IQueryable<TProperty>> LoadCollectionQueryAsync<TProperty>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> propertyName, CancellationToken cancellationToken = default) where TProperty : class;
 
+		Task UpdateCollectionAsync<TProperty, TPropertyKey>(TEntity entity, Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, IEnumerable<TProperty> newCollections, Func<TProperty, TPropertyKey> idResolve, bool save = true, CancellationToken cancellationToken = default) where TProperty : class;
+
 		IQueryable<TEntity> GetQueryable();
 	}
 }

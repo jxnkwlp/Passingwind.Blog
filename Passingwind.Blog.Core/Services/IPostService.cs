@@ -1,15 +1,18 @@
 using Passingwind.Blog.Data.Domains;
+using Passingwind.Blog.DependencyInjection;
 using Passingwind.Blog.Services.Models;
 using Passingwind.PagedList;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace Passingwind.Blog.Services
 {
-	public interface IPostService : IService<Post>
+	public interface IPostService : IService<Post>, IScopedDependency
 	{
+		Task UpdateAsync(Post entity, IEnumerable<PostCategory> categories, IEnumerable<PostTags> tags, CancellationToken cancellationToken = default);
+
 		Task<Post> FindBySlugAsync(string slug, PostIncludeOptions includeOptions = null, CancellationToken cancellationToken = default);
 
 		Task<Post> GetByIdAsync(int id, PostIncludeOptions includeOptions = null, CancellationToken cancellationToken = default);
@@ -25,5 +28,9 @@ namespace Passingwind.Blog.Services
 		Task<IEnumerable<Post>> GetPostListAsync(PostListInputModel input, CancellationToken cancellationToken = default);
 
 		Task<SortedDictionary<DateTime, int>> GetCountsByPublishYearAndMonthAsync();
+
+		Task UpdateCategoriesAsync(Post post, IEnumerable<PostCategory> postCategories);
+
+		Task UpdateTagsAsync(Post post, IEnumerable<PostTags> postTags);
 	}
 }

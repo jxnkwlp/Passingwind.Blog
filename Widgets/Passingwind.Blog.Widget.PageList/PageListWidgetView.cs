@@ -17,7 +17,7 @@ namespace Passingwind.Blog.Widget.PageList
 
 		public async Task<IWidgetComponentViewResult> InvokeAsync()
 		{
-			var list = (await _pageService.GetListAsync())
+			var list = (await _pageService.GetListAsync(t => t.Published))
 							.Select(entity => new PageModel()
 							{
 								Id = entity.Id,
@@ -25,7 +25,7 @@ namespace Passingwind.Blog.Widget.PageList
 								ParentId = entity.ParentId,
 								Description = entity.Description,
 								Keywords = entity.Keywords,
-								IsShowInList = entity.IsShowInList,
+								//IsShowInList = entity.IsShowInList,
 								IsFrontPage = entity.IsFrontPage,
 								Published = entity.Published,
 								Slug = entity.Slug,

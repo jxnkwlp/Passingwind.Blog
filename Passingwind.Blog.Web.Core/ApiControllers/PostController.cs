@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Passingwind.Blog.Data.Domains;
-using Passingwind.Blog.Extensions;
 using Passingwind.Blog.Services;
 using Passingwind.Blog.Services.Models;
 using Passingwind.Blog.Web.Authorization;
@@ -32,49 +31,44 @@ namespace Passingwind.Blog.Web.ApiControllers
 			_tagsService = tagsService;
 		}
 
-		protected async Task PreparePostAsync(Post post, PostEditModel model)
+		protected Task<IEnumerable<PostCategory>> GetPostCategoriesAsync(Post post, PostEditModel model)
 		{
 			if (model.Categories?.Any() == true)
 			{
 				var categoryIds = model.Categories;
-				if (post.Categories?.Any() == true)
+				var newList = categoryIds.Select(t => new PostCategory()
 				{
-					var needRemove = post.Categories.Select(t => t.CategoryId).Except(categoryIds).ToArray();
-					var needAdd = categoryIds.Except(post.Categories.Select(t => t.CategoryId)).ToArray();
+					CategoryId = t,
+					PostId = post.Id,
+				});
 
-					needRemove.ForEach((_) =>
-					{
-						post.Categories.Remove(post.Categories.First(t => t.CategoryId == _));
-					});
-					needAdd.ForEach((_) => post.Categories.Add(new PostCategory()
-					{
-						CategoryId = _,
-					}));
-				}
-				else
-				{
-					post.Categories = categoryIds.Select(t => new PostCategory() { CategoryId = t }).ToList();
-				}
-			}
-			else
-			{
-				post.Categories?.Clear();
+				return Task.FromResult(newList);
 			}
 
+			return Task.FromResult(Enumerable.Empty<PostCategory>());
+		}
+
+		protected async Task<IEnumerable<PostTags>> GetPostTagsAsync(Post post, PostEditModel model)
+		{
 			if (model.Tags?.Any() == true)
 			{
-				var tagsList = new List<PostTags>();
+				var tags = new List<Tags>();
 				foreach (var item in model.Tags)
 				{
 					var tag = await _tagsService.GetOrCreateAsync(item);
-					tagsList.Add(new PostTags() { Tags = tag });
+					tags.Add(tag);
 				}
-				post.Tags = tagsList;
+
+				var newList = tags.Select(t => new PostTags()
+				{
+					TagsId = t.Id,
+					PostId = post.Id,
+				});
+
+				return newList;
 			}
-			else
-			{
-				post.Tags?.Clear();
-			}
+
+			return Enumerable.Empty<PostTags>();
 		}
 
 		[HttpGet("{id}")]
@@ -125,24 +119,30 @@ namespace Passingwind.Blog.Web.ApiControllers
 		{
 			if (model.Id > 0)
 			{
-				var entity = await _postService.GetByIdAsync(model.Id, new PostIncludeOptions() { IncludeTags = true, IncludeCategory = true, });
+				var entity = await _postService.GetByIdAsync(model.Id, new PostIncludeOptions()
+				{
+					IncludeTags = true,
+					IncludeCategory = true,
+				});
 
 				if (entity == null)
 					return null;
 
-				//Inject(model, entity);
-
 				entity = _postFactory.ToEntity(model, entity);
 
-				await PreparePostAsync(entity, model);
+				var categories = await GetPostCategoriesAsync(entity, model);
+				var tags = await GetPostTagsAsync(entity, model);
 
-				await _postService.UpdateAsync(entity);
+				await _postService.UpdateAsync(entity, categories, tags);
 			}
 			else
 			{
 				var entity = _postFactory.ToEntity(model);
 
-				await PreparePostAsync(entity, model);
+				var categories = await GetPostCategoriesAsync(entity, model);
+				var tags = await GetPostTagsAsync(entity, model);
+				entity.Categories = categories.ToList();
+				entity.Tags = tags.ToList();
 
 				await _postService.InsertAsync(entity);
 

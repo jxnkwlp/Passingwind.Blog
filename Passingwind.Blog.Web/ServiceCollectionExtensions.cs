@@ -12,10 +12,12 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyModel;
 using Microsoft.OpenApi.Models;
 using Passingwind.Blog.Data;
 using Passingwind.Blog.Data.Domains;
 using Passingwind.Blog.Data.Settings;
+using Passingwind.Blog.DependencyInjection;
 using Passingwind.Blog.EventBus;
 using Passingwind.Blog.Guids;
 using Passingwind.Blog.Json;
@@ -23,11 +25,14 @@ using Passingwind.Blog.Services;
 using Passingwind.Blog.Services.Impl;
 using Passingwind.Blog.Web.Authorization;
 using Passingwind.Blog.Web.Captcha;
+using Passingwind.Blog.Web.DependencyInjection;
 using Passingwind.Blog.Web.Factory;
 using Passingwind.Blog.Web.Json;
 using Passingwind.Blog.Web.Mvc.Json;
 using Passingwind.Blog.Web.Razor;
 using Passingwind.Blog.Web.Services;
+using Passingwind.Blog.Web.Themes;
+using Passingwind.Blog.Web.UI.Theme;
 using Passingwind.Blog.Web.WebApi;
 using System;
 using System.Collections.Generic;
@@ -108,34 +113,25 @@ namespace Passingwind.Blog.Web
 
 		public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services)
 		{
-			services.AddTransient<IEmailSender, EmailSender>();
 			services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 			services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
-			services.AddScoped<IPostRepository, PostRepository>();
 
-			services.AddScoped<IPostService, PostService>();
-			services.AddScoped<IPageService, PageService>();
-			services.AddScoped<ICategoryService, CategoryService>();
-			services.AddScoped<ITagsService, TagsService>();
-			services.AddScoped<ISettingService, SettingService>();
-			services.AddScoped<ICommentService, CommentService>();
+			services.AddTransient<IEmailSender, EmailSender>();
 
-			services.AddScoped<ICategoryFactory, CategoryFactory>();
-			services.AddScoped<ITagsFactory, TagsFactory>();
-			services.AddScoped<IPageFactory, PageFactory>();
-			services.AddScoped<IPostFactory, PostFactory>();
-			services.AddScoped<IUserFactory, UserFactory>();
-			services.AddScoped<IRoleFactory, RoleFactory>();
-			services.AddScoped<ICommentFactory, CommentFactory>();
+			services.Scan(s =>
+				s.FromDependencyContext(DependencyContext.Default)
+				.AddClasses(t => t.AssignableTo<ISingletonDependency>())
+					.AsImplementedInterfaces().WithSingletonLifetime()
+				.AddClasses(t => t.AssignableTo<ITransientDependency>())
+					.AsImplementedInterfaces().WithTransientLifetime()
+				.AddClasses(t => t.AssignableTo<IScopedDependency>())
+					.AsImplementedInterfaces().WithScopedLifetime()
+			);
 
 			services.AddSingleton<IJsonSerializer, JsonSerializer>();
 
 			services.AddScoped<ICaptchaService, CaptchaService>();
-
-			services.AddSingleton<IThemeAccessor, ThemeAccessor>();
 			services.AddSingleton<IMarkdownService, DefaultMarkdownService>();
-
-			services.AddTransient<ISpamService, NullSpamService>();
 
 			services.AddTransient<BasicSettings>(LoadSettings<BasicSettings>);
 			services.AddTransient<CommentsSettings>(LoadSettings<CommentsSettings>);
@@ -143,19 +139,12 @@ namespace Passingwind.Blog.Web
 			services.AddTransient<AdvancedSettings>(LoadSettings<AdvancedSettings>);
 			services.AddTransient<EmailSettings>(LoadSettings<EmailSettings>);
 
-			services.AddTransient<IBlogMLImporter, BlogMLImporter>();
-			services.AddTransient<IBlogMLExporter, BlogMLExporter>();
-
-			services.AddTransient<IIPAddressService, NullIPAddressService>();
-			services.AddSingleton<ISlugService, SlugServices>();
-
 			services.AddSingleton<IGuidGenerator, SequentialGuidGenerator>();
 
 			services.AddTransient<IRazorViewService, RazorViewService>();
 
-			services.AddScoped<IFileService, LocalFileService>();
-
 			services.AddScoped<IWidgetDynamicContentService, WidgetDynamicContentService>();
+
 
 			return services;
 		}
@@ -179,6 +168,7 @@ namespace Passingwind.Blog.Web
 			services.Configure<ForwardedHeadersOptions>(options =>
 			{
 				options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+				
 			});
 
 
@@ -210,6 +200,7 @@ namespace Passingwind.Blog.Web
 
 			services.AddHttpContextAccessor();
 
+			services.AddMemoryCache();
 			services.AddDistributedMemoryCache();
 
 			services.AddSession(options =>
@@ -221,7 +212,7 @@ namespace Passingwind.Blog.Web
 			services.Configure<RazorViewEngineOptions>(options =>
 			{
 				options.ViewLocationExpanders.Add(new BlogViewLocationExpander());
-				//options.ViewLocationExpanders.Add(new ThemeViewLocationExpander());
+				options.ViewLocationExpanders.Add(new ThemeViewLocationExpander());
 			});
 
 			//services.Configure<RequestLocalizationOptions>(options =>
@@ -241,6 +232,14 @@ namespace Passingwind.Blog.Web
 				options.AddDefaultPolicy(b => b.AllowAnyMethod().AllowAnyHeader().AllowCredentials().SetIsOriginAllowed(_ => true));
 			});
 #endif
+
+			//services.AddRouting(options =>
+			//{
+			//	options.LowercaseUrls = true;
+			//});
+
+			services.AddResponseCaching();
+			services.AddResponseCompression();
 
 			return services;
 		}

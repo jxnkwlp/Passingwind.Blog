@@ -1,0 +1,47 @@
+@{
+	ViewData["Title"] = "Login";
+}
+@inject AdvancedSettings advancedSettings
+@model LoginViewModel
+
+
+<div class="row">
+	<div class="col-md-6">
+		<section>
+			<h4>Login</h4>
+			<hr />
+
+			<div asp-validation-summary="All" class="text-danger"></div>
+
+			<form asp-route="login" asp-route-returnUrl="@(ViewData["ReturnUrl"])">
+				<div class="form-group">
+					<label asp-for="Email">Email</label>
+					<input type="email" class="form-control" asp-for="Email" />
+					<small class="form-text text-danger"><span asp-validation-for="Email"></span></small>
+				</div>
+				<div class="form-group">
+					<label asp-for="Password">Password</label>
+					<input type="password" class="form-control" asp-for="Password" />
+					<small class="form-text text-danger"><span asp-validation-for="Password"></span></small>
+				</div>
+				<div class="form-group form-check">
+					<input type="checkbox" class="form-check-input" asp-for="RememberMe" />
+					<label class="form-check-label" asp-for="RememberMe">Remember me?</label>
+				</div> <div class="form-group">
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+			<div class="form-group">
+				<p>
+					<a id="forgot-password" asp-route="forgotpassword">Forgot your password?</a>
+				</p>
+				<p asp-condition="advancedSettings.EnableRegister">
+					<a asp-route="register">Register?</a>
+				</p>
+			</div>
+		</section>
+	</div>
+	<div class="col-md-6 col-md-offset-2">
+		@(await Component.InvokeAsync("ExternalLogins"))
+	</div>
+</div>

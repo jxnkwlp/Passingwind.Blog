@@ -8,7 +8,7 @@
                             type="primary"
                             icon="el-icon-plus"
                             @click="handleNew"
-                            v-permission="['post.edit']"
+                            v-permission="['post.create']"
                         >New</el-button>
                         <el-button
                             type="danger"
@@ -175,7 +175,7 @@
 
 <script>
 import * as post from "@/services/post";
-import * as userService from "@/services/userservice";
+import * as identity from "@/services/identity";
 
 export default {
     data() {
@@ -196,7 +196,7 @@ export default {
     },
     computed: {
         canEdit() {
-            return userService.hasPermission("page.update");
+            return identity.hasPermission("page.update");
         }
     },
     mounted() {
@@ -314,7 +314,7 @@ export default {
         // new
         handleNew() {
             this.$router.push({
-                name: "postEdit"
+                name: "postCreate"
             });
         },
 

@@ -1,0 +1,85 @@
+@model CommentFormViewModel
+
+
+<div id="comment-respond" class="comment-respond">
+	<form id="commentForm" asp-route="SubmitCommend" asp-route-postId="@Model.PostId">
+		<div class="card">
+			<div class="card-header">New Comment</div>
+			<div class="card-body">
+
+				<input type="hidden" asp-for="ParentId" />
+
+				<input type="hidden" name="_guid_" value="@Guid.NewGuid()" />
+
+				<div class="form-group comment-form-comment ">
+					<textarea asp-for="@Model.Content" class="form-control" rows="5" placeholder="write something ... " required></textarea>
+					<span asp-validation-for="Content" class="text-danger"></span>
+				</div>
+				<div class="form-group comment-form-author">
+					<label for="author">Name <span class="required">*</span></label>
+					<input class="form-control" asp-for="@Model.Author" placeholder="you name " required />
+					<span asp-validation-for="Author"  class="text-danger"></span>
+				</div>
+				<div class="form-group comment-form-email">
+					<label for="author">Email  <span class="required">*</span></label>
+					<input class="form-control" asp-for="@Model.Email" placeholder="you email " required />
+					<span asp-validation-for="Email"  class="text-danger"></span>
+				</div>
+				<div class="form-group comment-form-url">
+					<label for="author">Website </label>
+					<input class="form-control" asp-for="@Model.Website" placeholder="(Optional) eg: http://www.youname.com" />
+					<span asp-validation-for="Website"  class="text-danger"></span>
+				</div>
+
+				<div class="form-group comment-form-captchacode" asp-condition="@Model.EnableCaptchaCode">
+					<label for="author">Captcha <span class="required">*</span></label>
+					<input class="form-control" asp-for="@Model.CaptchaCode" autocomplete="off" placeholder="" maxlength="6" required />
+					<span asp-validation-for="CaptchaCode" class="text-danger"></span>
+				</div>
+
+				<div class="form-group comment-form-captchaimg" asp-condition="@Model.EnableCaptchaCode">
+					<captcha-img></captcha-img>
+				</div>
+				 
+			</div>
+			<div class="card-footer">
+				<div class="form-submit">
+					<input name="submit" type="submit" class="btn btn-primary" value="Submit" />
+
+					<a href="javascript:void(0);" class="cancel" onclick="canelCommentForm(this)" style="display:none;">Cancel</a>
+				</div>
+			</div>
+		</div>
+	</form>
+
+
+
+
+</div>
+
+
+<script id="commentTemplate" type="text/html">
+	<li class="comment" data-id="">
+		<article class="comment-body">
+			<header class="comment-meta">
+				<span class="comment-time">
+					<time class="comment-time" datetime=""></time>
+				</span>
+
+				<div class="comment-author">
+					<img alt="" src="" class="avatar" height="40" width="40">
+					<span class="author-wrap">
+						<span class="author-name">
+							<a href="javascript:void(0);" rel="external nofollow" class="url"></a>
+						</span>
+					</span>
+				</div>
+			</header>
+
+			<div class="comment-content">
+				<p></p>
+			</div>
+		</article>
+		<ul class="children"></ul>
+	</li>
+</script>

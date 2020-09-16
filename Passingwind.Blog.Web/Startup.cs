@@ -13,9 +13,14 @@ using Passingwind.Blog.EntityFramework.MySql;
 using Passingwind.Blog.EntityFramework.PostgreSQL;
 using Passingwind.Blog.EntityFramework.Sqlite;
 using Passingwind.Blog.EntityFramework.SqlServer;
+using Passingwind.Blog.Web.Middlewares;
 using Passingwind.Blog.Web.Services;
+using Passingwind.Blog.Web.Themes;
+using Passingwind.Blog.Web.UI.Widgets;
 using Passingwind.Blog.Widgets;
+using Passingwind.Blog.Widgets.WidgetComponents;
 using System;
+using System.Text.Unicode;
 
 namespace Passingwind.Blog.Web
 {
@@ -113,21 +118,24 @@ namespace Passingwind.Blog.Web
 			services.AddSingleton<IWidgetManager, WidgetManager>();
 			services.AddWidgets(options =>
 			{
+				options.ShardTypes = new[] { typeof(Startup), typeof(BlogOptions), typeof(IWidget) };
 			});
+			services.Replace<IWidgetViewLocationExpander, WidgetViewLocationExpander>(ServiceLifetime.Scoped);
 
+			services.AddThemes(HostEnvironment);
 
 			services.AddSpaStaticFiles(options =>
 			{
 				options.RootPath = "ClientApp/dist";
 			});
 
-			services.AddResponseCaching();
-			services.AddResponseCompression();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
 		{
+			app.UseForwardedHeaders();
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
@@ -149,10 +157,6 @@ namespace Passingwind.Blog.Web
 
 			app.UseImageAxdMiddleware();
 
-			app.UseWidgets();
-
-			app.UseThemeMiddleware();
-
 			if (Configuration.GetValue("HttpsRedirection", false))
 				app.UseHttpsRedirection();
 
@@ -161,6 +165,9 @@ namespace Passingwind.Blog.Web
 
 			app.UseStaticFiles();
 			app.UseSpaStaticFiles(new StaticFileOptions() { RequestPath = new PathString("/admin"), });
+
+			app.UseWidgets();
+			app.UseThemeMiddleware();
 
 			//app.UseRequestLocalization();
 
@@ -206,7 +213,7 @@ namespace Passingwind.Blog.Web
 					c.Options.SourcePath = "ClientApp";
 
 #if DEBUG
-					// c.UseProxyToSpaDevelopmentServer("http://localhost:8080/admin");
+					c.UseProxyToSpaDevelopmentServer("http://localhost:8080/admin");
 #endif
 				});
 			});

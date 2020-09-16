@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using Passingwind.Blog.Data.Settings;
 using Passingwind.Blog.Services;
 using Passingwind.Blog.Web.Models.Account;
 using Passingwind.Blog.Web.Services;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -54,7 +56,7 @@ namespace Passingwind.Blog.Web.Controllers
 		{
 			var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 			code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-			var callbackUrl = Url.Action("ConfirmEmail", ControllerName, new { area = "", userId = user.Id, code = code }, protocol: Request.Scheme);
+			var callbackUrl = Url.Action("ConfirmEmail", ControllerName, new { area = "", userId = user.Id, code = code }, protocol: _blogOptions.HostUri.Scheme, host: _blogOptions.HostUri.GetComponents(UriComponents.HostAndPort, UriFormat.UriEscaped));
 
 			// TODO 
 			await _emailSender.SendEmailAsync(user.Email, "Confirm your email",
@@ -65,7 +67,7 @@ namespace Passingwind.Blog.Web.Controllers
 		{
 			var code = await _userManager.GeneratePasswordResetTokenAsync(user);
 			code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-			var callbackUrl = Url.Action("ResetPassword", ControllerName, new { area = "", userId = user.Id, code }, protocol: Request.Scheme);
+			var callbackUrl = Url.Action("ResetPassword", ControllerName, new { area = "", userId = user.Id, code }, protocol: _blogOptions.HostUri.Scheme, host: _blogOptions.HostUri.GetComponents(UriComponents.HostAndPort, UriFormat.UriEscaped));
 
 			await _emailSender.SendEmailAsync(
 				user.Email,
@@ -95,9 +97,14 @@ namespace Passingwind.Blog.Web.Controllers
 
 			if (ModelState.IsValid)
 			{
-				// This doesn't count login failures towards account lockout
-				// To enable password failures to trigger account lockout, set lockoutOnFailure: true
-				var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: _blogOptions.Account.LockoutOnFailure);
+				var user = await _userManager.FindByEmailAsync(model.Email);
+				if (user == null)
+				{
+					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+					return View(model);
+				}
+
+				var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: _blogOptions.Account.LockoutOnFailure);
 				if (result.Succeeded)
 				{
 					_logger.LogInformation("User logged in.");
@@ -116,6 +123,8 @@ namespace Passingwind.Blog.Web.Controllers
 				}
 				else
 				{
+					_logger.LogWarning("User account '{Email}' Invalid login attempt.", model.Email);
+
 					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
 					return View(model);
 				}
@@ -347,6 +356,10 @@ namespace Passingwind.Blog.Web.Controllers
 				}
 				return View();
 			}
+			else
+			{
+				_logger.LogInformation("User '{Email}' set password.", user.Email);
+			}
 
 			await _signInManager.RefreshSignInAsync(user);
 			StatusMessage = StatusMessageViewModel.Succeed("Your password has been set.");
@@ -404,6 +417,8 @@ namespace Passingwind.Blog.Web.Controllers
 
 			if (result.Succeeded)
 			{
+				_logger.LogInformation("User '{Email}' reset password.", user.Email);
+
 				return RedirectToAction(nameof(ResetPasswordConfirmation));
 			}
 
@@ -444,6 +459,11 @@ namespace Passingwind.Blog.Web.Controllers
 
 			StatusMessage = new StatusMessageViewModel(result.Succeeded, result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.");
 
+			if (result.Succeeded)
+			{
+				_logger.LogInformation("User '{Email}' confirm the email.", user.Email);
+			}
+
 			return View();
 		}
 
@@ -456,7 +476,8 @@ namespace Passingwind.Blog.Web.Controllers
 		public IActionResult ExternalLogin(string provider, string returnUrl = null)
 		{
 			// Request a redirect to the external login provider.
-			var redirectUrl = Url.Action("ExternalLoginCallback", new { returnUrl });
+			var redirectUrl = Url.Action("ExternalLoginCallback", ControllerName, new { returnUrl }, protocol: _blogOptions.HostUri.Scheme, host: _blogOptions.HostUri.GetComponents(UriComponents.HostAndPort, UriFormat.UriEscaped));
+
 			var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
 			return new ChallengeResult(provider, properties);
 
@@ -583,6 +604,53 @@ namespace Passingwind.Blog.Web.Controllers
 			return View(model);
 		}
 
+		[HttpGet]
+		public async Task<ActionResult> LinkLoginAsync(string provider)
+		{
+			if (string.IsNullOrWhiteSpace(provider))
+				return NotFound();
+
+			// Clear the existing external cookie to ensure a clean login process
+			await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+			// Request a redirect to the external login provider to link a login for the current user
+			var redirectUrl = Url.Action("LinkLoginCallback", ControllerName, new { }, protocol: _blogOptions.HostUri.Scheme, host: _blogOptions.HostUri.GetComponents(UriComponents.HostAndPort, UriFormat.UriEscaped));
+
+			var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
+
+			return new ChallengeResult(provider, properties);
+		}
+
+		public async Task<ActionResult> LinkLoginCallbackAsync()
+		{
+			var user = await _userManager.GetUserAsync(User);
+			if (user == null)
+			{
+				return NotFound($"Unable to load user with ID 'user.Id'.");
+			}
+
+			var info = await _signInManager.GetExternalLoginInfoAsync(user.Id);
+			if (info == null)
+			{
+				throw new InvalidOperationException($"Unexpected error occurred loading external login info for user with ID '{user.Id}'.");
+			}
+
+			var result = await _userManager.AddLoginAsync(user, info);
+			if (!result.Succeeded)
+			{
+				StatusMessage = StatusMessageViewModel.Error("The external login was not added. External logins can only be associated with one account.");
+				return View("LinkLoginCallbackConfirmation");
+			}
+
+			_logger.LogInformation("User '{Email}' link new login '{LoginProvider}'.", user.Email, info.LoginProvider);
+
+			// Clear the existing external cookie to ensure a clean login process
+			await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+			//StatusMessage = "The external login was added.";
+			return Redirect("~/admin#/profile");
+		}
+
 		#endregion
 
 		#region ForgotPassword
@@ -624,5 +692,6 @@ namespace Passingwind.Blog.Web.Controllers
 		}
 
 		#endregion
+
 	}
 }

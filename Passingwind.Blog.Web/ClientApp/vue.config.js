@@ -5,16 +5,16 @@ module.exports = {
     lintOnSave: false,
     productionSourceMap: false,
     runtimeCompiler: true,
-    devServer: {
-        // proxy: "https://localhost:44327/"
-    },
+    // devServer: {
+    //     proxy: "https://localhost:44317/"
+    // },
     css: {
         loaderOptions: {
             less: {
                 javascriptEnabled: true
             }
         }
-    },
+    }
     //configureWebpack: {
     //    output: {
     //        filename: `js/[name].${buildVersion}.js`,
