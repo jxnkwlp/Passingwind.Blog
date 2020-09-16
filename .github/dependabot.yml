@@ -1,0 +1,14 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "21:00"
+  open-pull-requests-limit: 10
+- package-ecosystem: npm
+  directory: "/Passingwind.Blog.Web/ClientApp"
+  schedule:
+    interval: daily
+    time: "21:00"
+  open-pull-requests-limit: 10
