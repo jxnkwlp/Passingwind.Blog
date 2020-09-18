@@ -38,6 +38,6 @@
         "prettier": "^1.19.1",
         "vue-template-compiler": "^2.6.11",
         "less": "^3.11.0",
-        "less-loader": "^5.0.0"
+        "less-loader": "^7.0.1"
     }
 }
