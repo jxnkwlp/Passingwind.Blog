@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/jxnkwlp/Passingwind-Blog/_apis/build/status/dev-v3-CI?branchName=dev-v3)](https://dev.azure.com/jxnkwlp/Passingwind-Blog/_build/latest?definitionId=6&branchName=dev-v3)
+[![Build Status](https://dev.azure.com/jxnkwlp/Passingwind-Blog/_apis/build/status/Dev-CI?branchName=dev)](https://dev.azure.com/jxnkwlp/Passingwind-Blog/_build/latest?definitionId=8&branchName=dev)
 
 
 # Blog
@@ -19,3 +19,10 @@ Build by asp.net core 3.1、microsoft.identity.core、 entity framework core 。
 - [ ] Multi-Language
 - [x] Themes
 - [x] Widgets
+
+## 支持数据库
+
+- [x] Sqlite
+- [x] Mysql
+- [x] SqlServer
+- [x] PostgreSQL
