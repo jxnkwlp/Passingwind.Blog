@@ -8,17 +8,17 @@
     <ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.4" /> 
-        <PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="1.1.0" /> 
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" /> 
+        <PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="3.2.2" /> 
 
-        <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="1.7.0" />
+        <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="1.8.2" />
 
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.4" /> 
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.8" /> 
 
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
         <PackageReference Include="Passingwind.PagedList" Version="0.1.0" />
-        <PackageReference Include="Nito.AsyncEx" Version="5.0.0" />
-        <PackageReference Include="Markdig" Version="0.20.0" />
+        <PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
+        <PackageReference Include="Markdig" Version="0.22.0" />
 
     </ItemGroup>
 

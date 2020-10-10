@@ -18,5 +18,13 @@
   {
     "outputFile": "Themes/Bootstrapv4/wwwroot/css/site.css",
     "inputFile": "Themes/Bootstrapv4/wwwroot/css/site.less"
+  },
+  {
+    "outputFile": "Themes/Bootstrapv4/wwwroot/js/comments.es5.js",
+    "inputFile": "Themes/Bootstrapv4/wwwroot/js/comments.js"
+  },
+  {
+    "outputFile": "Themes/Bootstrapv4/wwwroot/js/site.es5.js",
+    "inputFile": "Themes/Bootstrapv4/wwwroot/js/site.js"
   }
 ]
