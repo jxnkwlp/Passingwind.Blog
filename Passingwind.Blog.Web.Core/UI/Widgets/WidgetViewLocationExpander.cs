@@ -25,7 +25,7 @@ namespace Passingwind.Blog.Web.UI.Widgets
 			// source path "/{0}/Views/{1}";
 			// theme view path = "/{0}/Themes/{2}/{1}";
 
-			if (!themeName.Equals("default", StringComparison.InvariantCultureIgnoreCase))
+			if (!string.Equals(themeName, "Default", StringComparison.InvariantCultureIgnoreCase))
 			{
 				var themeViewLocation = $"/{{0}}/Themes/{themeName}/{{1}}";
 

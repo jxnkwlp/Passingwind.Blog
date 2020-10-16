@@ -86,7 +86,7 @@ namespace Passingwind.Blog.Web.Themes
 					_logger.LogError(ex, "Load theme config failed.");
 				}
 
-				return Task.FromResult<string>(null);
+				return Task.FromResult<string>("Default");
 			});
 		}
 
