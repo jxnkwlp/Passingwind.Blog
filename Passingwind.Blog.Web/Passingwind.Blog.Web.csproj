@@ -48,7 +48,7 @@
         <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.3" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
         <PackageReference Include="VueCliMiddleware" Version="3.1.1" />
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
         <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.2.1" />
         <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.2.1" />
 
