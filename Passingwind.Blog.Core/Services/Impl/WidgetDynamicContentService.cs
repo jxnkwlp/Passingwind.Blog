@@ -21,6 +21,14 @@ namespace Passingwind.Blog.Services.Impl
 			return await Repository.Includes(t => t.Properties).FirstOrDefaultAsync(t => t.Id == key);
 		}
 
+		public override async Task DeleteByIdAsync(int key, CancellationToken cancellationToken = default)
+		{
+			var entity = await Repository.Includes(t => t.Properties).FirstOrDefaultAsync(t => t.Id == key);
+
+			if (entity != null)
+				await Repository.DeleteAsync(entity);
+		}
+
 		public async Task DeleteAsync(Guid widgetId, string userId)
 		{
 			if (!string.IsNullOrWhiteSpace(userId))
@@ -86,35 +94,9 @@ namespace Passingwind.Blog.Services.Impl
 
 			// TODO  update it once
 
+			await Repository.LoadCollectionAsync(entity, t => t.Properties);
 
-			var originalProperties = entity.Properties;
-
-			if (originalProperties.Any())
-			{
-				var addPropertyNames = originalProperties.Select(t => t.Name).Except(dyContent.Properties.Select(t => t.Name));
-
-				foreach (var item in addPropertyNames)
-				{
-					originalProperties.Add(dyContent.Properties.First(t => t.Name == item));
-				}
-
-				foreach (var item in originalProperties)
-				{
-					if (item.Id != 0)
-					{
-						var update = dyContent.Properties.FirstOrDefault(t => t.Name == item.Name);
-
-						if (update != null)
-						{
-							item.Value = update.Value;
-						}
-					}
-				}
-			}
-			else
-			{
-				entity.Properties = dyContent.Properties;
-			}
+			entity.Properties = dyContent.Properties;
 
 			await Repository.UpdateAsync(entity);
 

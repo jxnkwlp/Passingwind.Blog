@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using AutoMapper;
 using EasyCaching.Core.Configurations;
 using Microsoft.AspNetCore.Authentication;
@@ -25,13 +26,10 @@ using Passingwind.Blog.Services;
 using Passingwind.Blog.Services.Impl;
 using Passingwind.Blog.Web.Authorization;
 using Passingwind.Blog.Web.Captcha;
-using Passingwind.Blog.Web.DependencyInjection;
-using Passingwind.Blog.Web.Factory;
 using Passingwind.Blog.Web.Json;
 using Passingwind.Blog.Web.Mvc.Json;
 using Passingwind.Blog.Web.Razor;
 using Passingwind.Blog.Web.Services;
-using Passingwind.Blog.Web.Themes;
 using Passingwind.Blog.Web.UI.Theme;
 using Passingwind.Blog.Web.WebApi;
 using System;
@@ -168,7 +166,7 @@ namespace Passingwind.Blog.Web
 			services.Configure<ForwardedHeadersOptions>(options =>
 			{
 				options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-				
+
 			});
 
 
@@ -403,6 +401,28 @@ namespace Passingwind.Blog.Web
 
 				}
 			});
+
+			return services;
+		}
+
+		public static IServiceCollection ConfigureRateLimit(this IServiceCollection services, IConfiguration configuration)
+		{
+			//load general configuration from appsettings.json
+			services.Configure<IpRateLimitOptions>(configuration.GetSection("IpRateLimiting"));
+
+			//load ip rules from appsettings.json
+			services.Configure<IpRateLimitPolicies>(configuration.GetSection("IpRateLimitPolicies"));
+
+			// inject counter and rules stores
+			services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+			services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+
+			// configuration (resolvers, counter key builders)
+			services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+			//// inject counter and rules distributed cache stores
+			//services.AddSingleton<IIpPolicyStore, DistributedCacheIpPolicyStore>();
+			//services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
 
 			return services;
 		}

@@ -91,6 +91,7 @@ namespace Passingwind.Blog.Web.Controllers
 
 		[AllowAnonymous]
 		[HttpPost(Name = "login")]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> LoginAsync(LoginViewModel model, string returnUrl = null)
 		{
 			returnUrl = returnUrl ?? Url.Content("~/");
@@ -158,6 +159,7 @@ namespace Passingwind.Blog.Web.Controllers
 
 		[AllowAnonymous]
 		[HttpPost(Name = "register")]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> RegisterAsync(RegisterViewModel model, string returnUrl = null)
 		{
 			if (!_advancedSettings.EnableRegister)
@@ -284,6 +286,7 @@ namespace Passingwind.Blog.Web.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> ChangePasswordAsync(ChangePasswordViewModel model)
 		{
 			if (!ModelState.IsValid)
@@ -333,6 +336,7 @@ namespace Passingwind.Blog.Web.Controllers
 			return View();
 		}
 
+		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public async Task<IActionResult> SetPasswordAsync(SetPasswordViewModel model)
 		{
@@ -397,6 +401,7 @@ namespace Passingwind.Blog.Web.Controllers
 
 		[AllowAnonymous]
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> ResetPasswordAsync(ResetPasswordViewModel model)
 		{
 			if (!ModelState.IsValid)
@@ -473,6 +478,7 @@ namespace Passingwind.Blog.Web.Controllers
 
 		[AllowAnonymous]
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public IActionResult ExternalLogin(string provider, string returnUrl = null)
 		{
 			// Request a redirect to the external login provider.
@@ -533,6 +539,7 @@ namespace Passingwind.Blog.Web.Controllers
 
 		[AllowAnonymous]
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> ExternalLoginConfirmationAsync(ExternalLoginConfirmationViewModel model, string returnUrl)
 		{
 			returnUrl = returnUrl ?? Url.Content("~/");
@@ -663,6 +670,7 @@ namespace Passingwind.Blog.Web.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		[AllowAnonymous]
 		public async Task<IActionResult> ForgotPasswordAsync(ForgotPasswordViewModel model)
 		{

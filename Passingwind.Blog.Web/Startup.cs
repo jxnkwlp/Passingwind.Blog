@@ -1,7 +1,9 @@
+using AspNetCoreRateLimit;
 using EFCoreSecondLevelCacheInterceptor;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +22,6 @@ using Passingwind.Blog.Web.UI.Widgets;
 using Passingwind.Blog.Widgets;
 using Passingwind.Blog.Widgets.WidgetComponents;
 using System;
-using System.Text.Unicode;
 
 namespace Passingwind.Blog.Web
 {
@@ -124,11 +125,17 @@ namespace Passingwind.Blog.Web
 
 			services.AddThemes(HostEnvironment);
 
+			services.ConfigureRateLimit(Configuration);
+
 			services.AddSpaStaticFiles(options =>
 			{
 				options.RootPath = "ClientApp/dist";
 			});
 
+			if (Configuration.GetValue("HttpsRedirection", false))
+			{
+				services.Configure<MvcOptions>(options => options.Filters.Add(new RequireHttpsAttribute()));
+			}
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -151,6 +158,7 @@ namespace Passingwind.Blog.Web
 #if DEBUG
 			app.UseCors();
 #endif
+			app.UseIpRateLimiting();
 
 			if (BlogOptions.EnableMiniProfiler)
 				app.UseMiniProfiler();
@@ -158,7 +166,9 @@ namespace Passingwind.Blog.Web
 			app.UseImageAxdMiddleware();
 
 			if (Configuration.GetValue("HttpsRedirection", false))
+			{
 				app.UseHttpsRedirection();
+			}
 
 			app.UseResponseCaching();
 			app.UseResponseCompression();
@@ -179,11 +189,13 @@ namespace Passingwind.Blog.Web
 			app.UseAuthorization();
 
 			if (Configuration.GetValue("Swagger:Enabled", false))
-				app.UseSwagger();
-			app.UseSwaggerUI(c =>
 			{
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", "Blog API v1");
-			});
+				app.UseSwagger();
+				app.UseSwaggerUI(c =>
+				{
+					c.SwaggerEndpoint("/swagger/v1/swagger.json", "Blog API v1");
+				});
+			}
 
 			app.UseEndpoints(endpoints =>
 			{
@@ -213,7 +225,7 @@ namespace Passingwind.Blog.Web
 					c.Options.SourcePath = "ClientApp";
 
 #if DEBUG
-					c.UseProxyToSpaDevelopmentServer("http://localhost:8080/admin");
+					//c.UseProxyToSpaDevelopmentServer("http://localhost:8080/admin");
 #endif
 				});
 			});

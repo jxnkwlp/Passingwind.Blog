@@ -8,6 +8,6 @@ namespace Passingwind.Blog.Data.Domains
 		public string UserId { get; set; }
 		public Guid WidgetId { get; set; }
 
-		public virtual ICollection<WidgetDynamicContentProperty> Properties { get; set; } = new List<WidgetDynamicContentProperty>();
+		public virtual List<WidgetDynamicContentProperty> Properties { get; set; } = new List<WidgetDynamicContentProperty>();
 	}
 }

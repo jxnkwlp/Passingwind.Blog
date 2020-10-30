@@ -2,10 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Passingwind.Blog.Data.Domains;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Loader;
 
 namespace Passingwind.Blog.Data
 {
@@ -66,9 +62,9 @@ namespace Passingwind.Blog.Data
 			builder.Entity<UserRole>().HasOne(t => t.Role).WithMany(t => t.UserRoles).HasForeignKey(t => t.RoleId).IsRequired();
 
 
-			builder.Entity<WidgetDynamicContent>().HasMany(t => t.Properties);
+			builder.Entity<WidgetDynamicContent>().HasMany(t => t.Properties).WithOne(t => t.WidgetDynamicContent).HasForeignKey(t => t.WidgetDynamicContentId);
 
-
+			builder.Entity<WidgetDynamicContentProperty>().HasKey(t => new { t.WidgetDynamicContentId, t.Name });
 
 			//var customModelBuilderTypes = AssemblyLoadContext.Default.Assemblies.SelectMany(t => t.ExportedTypes).Where(t => typeof(ICustomModelBuilder).IsAssignableFrom(t));
 

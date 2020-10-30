@@ -17,6 +17,7 @@ namespace Passingwind.Blog.Services
 		Task<WidgetDynamicContent> UpdateAsync(IWidgetDynamicContent content); 
 
 		Task DeleteAsync(Guid widgetId, string userId);
-		Task DeleteAsync(Guid widgetId, string userId, Dictionary<string, object> properties);
+		Task DeleteAsync(Guid widgetId, string userId, Dictionary<string, object> properties); 
+
 	}
 }

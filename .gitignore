@@ -262,7 +262,7 @@ __pycache__/
 *.pubxml
 
 # blog custom ignore file[s]
-blog.db
+*blog.db*
 /Passingwind.Blog.Web/[Ww]wwroot/[Uu]ploads/
 /Passingwind.Blog.Web/[Pp]lugins/
 /Passingwind.Blog.Web/[Ww]idgets/
