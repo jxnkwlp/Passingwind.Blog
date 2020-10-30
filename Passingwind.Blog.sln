@@ -51,6 +51,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passingwind.Blog.EntityFram
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Passingwind.Blog.EntityFramework.PostgreSQL", "Passingwind.Blog.EntityFramework.PostgreSQL\Passingwind.Blog.EntityFramework.PostgreSQL.csproj", "{3BFC780F-29D9-4B80-A03B-A6C497ECE2DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Passingwind.Blog.Application", "Passingwind.Blog.Application\Passingwind.Blog.Application.csproj", "{1191BD24-F10B-4C16-BFE0-9CE6EE9E994A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,10 @@ Global
 		{3BFC780F-29D9-4B80-A03B-A6C497ECE2DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BFC780F-29D9-4B80-A03B-A6C497ECE2DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BFC780F-29D9-4B80-A03B-A6C497ECE2DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1191BD24-F10B-4C16-BFE0-9CE6EE9E994A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1191BD24-F10B-4C16-BFE0-9CE6EE9E994A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1191BD24-F10B-4C16-BFE0-9CE6EE9E994A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1191BD24-F10B-4C16-BFE0-9CE6EE9E994A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
